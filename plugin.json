@@ -1,18 +1,18 @@
 {
-  "name": "plugin-sample-vite-svelte",
+  "name": "sy-docs-flow",
   "author": "frostime",
-  "url": "https://github.com/siyuan-note/plugin-sample-vite-svelte",
-  "version": "0.1.8",
+  "url": "https://github.com/frostime/sy-docs-flow",
+  "version": "0.1.0",
   "minAppVersion": "2.9.0",
   "backends": ["all"],
   "frontends": ["all"],
   "displayName": {
-    "en_US": "Plugin sample with vite and svelte",
-    "zh_CN": "插件样例 vite + svelte 版"
+    "en_US": "Documents Flow",
+    "zh_CN": "文档流"
   },
   "description": {
-    "en_US": "SiYuan plugin sample with vite and svelte",
-    "zh_CN": "使用 vite 和 svelte 开发的思源插件样例"
+    "en_US": "View documents in a flow page",
+    "zh_CN": "将文档放入一个流式页面中查看"
   },
   "readme": {
     "en_US": "README.md",
