@@ -12,13 +12,13 @@ import "@/index.scss";
 import DocsFlow from "@/docs-flow.svelte";
 import SettingPannel from "@/libs/setting-panel.svelte";
 
-import { confirmDialog, notebooks } from "@/utils";
-import { MatchRule, childOfCurrentDocument, sqlQuery } from "@/rules";
+import { confirmDialog } from "@/utils";
+import { MatchRule, RuleFactory } from "@/rules";
 
 const frontEnd = getFrontend();
 const isMobile = frontEnd === "mobile" || frontEnd === "browser-mobile";
 
-export default class PluginSample extends Plugin {
+export default class DocsFlowPlugin extends Plugin {
 
     tab: any;
 
@@ -67,7 +67,7 @@ export default class PluginSample extends Plugin {
             icon: "iconInfo",
             label: "子文裆",
             click: () => {
-                this.openFlow(childOfCurrentDocument);
+                this.openFlow(RuleFactory("ChildDocument"));
             }
         });
         menu.addItem({
@@ -82,8 +82,7 @@ export default class PluginSample extends Plugin {
                         showMessage("SQL语句不正确");
                         return;
                     }
-                    let rule = sqlQuery(sql);
-                    this.openFlow(rule);
+                    this.openFlow(RuleFactory("SQL", sql));
                 });
             }
         });
@@ -102,7 +101,7 @@ export default class PluginSample extends Plugin {
 
     async openFlow(rule: MatchRule) {
         let ids = await rule.getIds();
-        if (ids.length === 0) {
+        if (!ids || ids.length === 0) {
             showMessage("无法匹配对应的文档");
             return;
         }
@@ -156,3 +155,7 @@ export default class PluginSample extends Plugin {
         });
     }
 }
+
+const tabhub = {
+    tabs: [],
+};
