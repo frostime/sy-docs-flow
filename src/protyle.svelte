@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-07-28 22:50:09
+ LastEditTime : 2023-07-29 15:14:41
  Description  : 
 -->
 <script lang="ts">
@@ -23,14 +23,14 @@
         title = doc.content;
         protyle = new Protyle(app, divProtyle, {
             blockId: blockId,
-            render: {
-                background: false,
-                title: false,
-                gutter: true,
-                scroll: true,
-                breadcrumb: true,
-                breadcrumbDocName: false,
-            }
+            // render: {
+            //     background: false,
+            //     title: false,
+            //     gutter: true,
+            //     scroll: true,
+            //     breadcrumb: true,
+            //     breadcrumbDocName: false,
+            // }
         });
     });
     onDestroy(() => {

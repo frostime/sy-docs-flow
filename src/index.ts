@@ -11,6 +11,8 @@ import "@/index.scss";
 import DocsFlow from "@/docs-flow.svelte";
 import SettingPannel from "@/libs/setting-panel.svelte";
 
+import { MatchRule, childOfCurrentDocument } from "@/rules";
+
 
 export default class PluginSample extends Plugin {
 
@@ -32,7 +34,7 @@ export default class PluginSample extends Plugin {
             title: this.i18n.addTopBarIcon,
             position: "right",
             callback: () => {
-                this.openFlow();
+                this.openFlow(childOfCurrentDocument);
             }
         });
     }
@@ -47,12 +49,14 @@ export default class PluginSample extends Plugin {
         console.log("onunload");
     }
 
-    openFlow() {
+    async openFlow(rule: MatchRule) {
+        let ids = await rule.getIds();
         let tabDiv = document.createElement("div");
         new DocsFlow({
             target: tabDiv,
             props: {
                 app: this.app,
+                listDocuemntsId: ids
             }
         });
         let tab = this.addTab({
