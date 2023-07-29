@@ -112,8 +112,8 @@ export default class PluginSample extends Plugin {
         openTab({
             app: this.app,
             custom: {
-                icon: "iconFace",
-                title: "Custom Tab",
+                icon: "iconFlow",
+                title: "流式文档",
                 fn: tab
             },
         })
