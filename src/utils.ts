@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2023-07-29 20:18:59
+ * @LastEditTime : 2023-07-29 20:35:17
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
@@ -49,3 +49,10 @@ export const confirmDialog = (title: string, text: string, confirm?: (ele?: HTML
         dialog.destroy();
     });
 };
+
+
+export const notebooks: {[key: string]: string} = {};
+for (let notebook of window.siyuan.notebooks) {
+    console.log(notebook);
+    notebooks[notebook.id] = notebook.name;
+}

@@ -3,13 +3,14 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-07-29 19:50:53
+ LastEditTime : 2023-07-29 20:36:28
  Description  : 
 -->
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
     import { Protyle } from "siyuan";
     import { getBlockByID } from "./api";
+    import { notebooks } from "./utils";
 
     export let app: any;
     export let blockId: BlockId;
@@ -24,7 +25,10 @@
         let rootId: BlockId = doc.root_id;
         doc = await getBlockByID(rootId);
         title = doc.content;
-        hpath = doc.hpath;
+        let notebookName: string = notebooks[doc.box];
+        let prefix = notebookName? `/${notebookName}` : '';
+        hpath = prefix + doc.hpath;
+        console.log(notebookName, hpath);
         protyle = new Protyle(app, divProtyle, {
             blockId: blockId,
             render: {

@@ -12,7 +12,7 @@ import "@/index.scss";
 import DocsFlow from "@/docs-flow.svelte";
 import SettingPannel from "@/libs/setting-panel.svelte";
 
-import { confirmDialog } from "@/utils";
+import { confirmDialog, notebooks } from "@/utils";
 import { MatchRule, childOfCurrentDocument, sqlQuery } from "@/rules";
 
 const frontEnd = getFrontend();
