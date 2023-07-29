@@ -1,5 +1,5 @@
 export const setting = {
-    protyleScroll: false,
+    protyleScroll: true,
     protyleMaxHeight: "auto",
 
     getMaxHeight() {
@@ -8,6 +8,7 @@ export const setting = {
         }
         let ele = document.querySelector("#layouts .layout__center div[data-type=\"wnd\"]>.layout-tab-container");
         let height = ele.clientHeight;
+        console.log("getMaxHeight", height);
         return height;
     }
 }

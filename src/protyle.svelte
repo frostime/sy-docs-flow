@@ -28,8 +28,11 @@
     let styleProtyleMaxHeight: string = "";
 
     $: {
-        let maxHeight: string = setting.protyleScroll? setting.getMaxHeight() : null;
-        styleProtyleMaxHeight = maxHeight? `max-height: ${maxHeight};` : "";
+        let maxHeight: number = setting.protyleScroll? setting.getMaxHeight() : null;
+        if (maxHeight) {
+            maxHeight = maxHeight - heightBreadcrumb * 3 - heightTitle;
+        }
+        styleProtyleMaxHeight = maxHeight? `max-height: ${maxHeight}px;` : "";
     }
 
     onMount(async () => {
@@ -76,7 +79,7 @@
             {hpath}
         </span>
     </span>
-    <div class="docs-flow__protyle protyle-content" bind:clientHeight={heightTitle}>
+    <div class="docs-flow__title protyle-content" bind:clientHeight={heightTitle}>
         <div
             class="protyle-title protyle-wysiwyg--attr"
             style="margin: 16px 434px 0px;"
@@ -100,6 +103,13 @@
 <style>
     div.docs-flow__doc {
         background-color: var(--b3-theme-background);
-        border-top: 2px double var(--b3-theme-primary);
+    }
+    span.protyle-breadcrumb__item {
+        border-top: 3px solid var(--b3-theme-primary);
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    div.docs-flow__title {
+        border-bottom: 1px solid var(--b3-theme-primary);
     }
 </style>
