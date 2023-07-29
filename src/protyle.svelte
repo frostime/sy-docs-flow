@@ -35,6 +35,15 @@
         styleProtyleMaxHeight = maxHeight? `max-height: ${maxHeight}px;` : "";
     }
 
+    let titleMargin: number = 434;
+
+    function updateWidth() {
+        let wysiwyg: HTMLElement = divProtyle.querySelector(".protyle-wysiwyg");
+        let left = parseInt(wysiwyg.style.paddingLeft);
+        console.log(left);
+        titleMargin = left;
+    }
+
     onMount(async () => {
         let doc: Block = await getBlockByID(blockId);
         let rootId: BlockId = doc.root_id;
@@ -64,6 +73,7 @@
             //     breadcrumbDocName: false,
             // }
         });
+        updateWidth();
     });
     onDestroy(() => {
         protyle.destroy();
@@ -82,7 +92,7 @@
     <div class="docs-flow__title protyle-content" bind:clientHeight={heightTitle}>
         <div
             class="protyle-title protyle-wysiwyg--attr"
-            style="margin: 16px 434px 0px;"
+            style="margin: 16px {titleMargin}px 0px;"
             data-node-id={blockId}
         >
             <div
@@ -97,10 +107,10 @@
             <div class="protyle-attr" />
         </div>
     </div>
-    <div class="docs-flow__protyle" bind:this={divProtyle} style="overflow-y: auto; {styleProtyleMaxHeight}"/>
+    <div class="docs-flow__protyle" bind:this={divProtyle} style="{styleProtyleMaxHeight}"/>
 </div>
 
-<style>
+<style lang="scss">
     div.docs-flow__doc {
         background-color: var(--b3-theme-background);
     }
@@ -111,5 +121,8 @@
     }
     div.docs-flow__title {
         border-bottom: 1px solid var(--b3-theme-primary);
+    }
+    div.docs-flow__protyle {
+        overflow-y: auto;
     }
 </style>
