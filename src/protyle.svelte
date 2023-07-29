@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-07-29 16:54:57
+ LastEditTime : 2023-07-29 19:50:53
  Description  : 
 -->
 <script lang="ts">
@@ -21,6 +21,8 @@
 
     onMount(async () => {
         let doc: Block = await getBlockByID(blockId);
+        let rootId: BlockId = doc.root_id;
+        doc = await getBlockByID(rootId);
         title = doc.content;
         hpath = doc.hpath;
         protyle = new Protyle(app, divProtyle, {

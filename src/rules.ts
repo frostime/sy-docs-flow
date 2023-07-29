@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
+ * @Author       : Yp Z
+ * @Date         : 2023-07-29 15:17:15
+ * @FilePath     : /src/rules.ts
+ * @LastEditTime : 2023-07-29 20:28:02
+ * @Description  : 
+ */
+import {sql} from "@/api";
 import { getChildDocs } from "./utils";
 
 export interface MatchRule {
@@ -20,3 +29,13 @@ export const childOfCurrentDocument: MatchRule = {
         return [dataId, ...child];
     }
 };
+
+export const sqlQuery = (sqlCode: string): MatchRule => {
+    return {
+        getIds: async () => {
+            let result = await sql(sqlCode);
+            let ids = result.map((item) => item?.id).filter((item) => typeof item === "string");
+            return ids ?? [];
+        }
+    };
+}

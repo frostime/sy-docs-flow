@@ -12,7 +12,8 @@ import "@/index.scss";
 import DocsFlow from "@/docs-flow.svelte";
 import SettingPannel from "@/libs/setting-panel.svelte";
 
-import { MatchRule, childOfCurrentDocument } from "@/rules";
+import { confirmDialog } from "@/utils";
+import { MatchRule, childOfCurrentDocument, sqlQuery } from "@/rules";
 
 const frontEnd = getFrontend();
 const isMobile = frontEnd === "mobile" || frontEnd === "browser-mobile";
@@ -64,9 +65,26 @@ export default class PluginSample extends Plugin {
         const menu = new Menu();
         menu.addItem({
             icon: "iconInfo",
-            label: "子文裆流",
+            label: "子文裆",
             click: () => {
                 this.openFlow(childOfCurrentDocument);
+            }
+        });
+        menu.addItem({
+            icon: "iconInfo",
+            label: "SQL查询文档",
+            click: () => {
+                confirmDialog('SQL', `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {
+                    let text: HTMLTextAreaElement = ele.querySelector("textarea");
+                    let sql = text.value;
+                    let pat = /select\s+([\s\S]+?)\s+from\s+([\s\S]+?)\s*$/i;
+                    if (!pat.test(sql)) {
+                        showMessage("SQL语句不正确");
+                        return;
+                    }
+                    let rule = sqlQuery(sql);
+                    this.openFlow(rule);
+                });
             }
         });
 
