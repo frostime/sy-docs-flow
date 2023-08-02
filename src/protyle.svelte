@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-08-02 20:30:13
+ LastEditTime : 2023-08-02 21:20:30
  Description  : 
 -->
 <script lang="ts">
@@ -17,7 +17,6 @@
     export let app: any;
     export let blockId: BlockId;
 
-    let title: string;
     let hpath: string = "";
     let divProtyle: HTMLDivElement;
     let protyle: Protyle;
@@ -71,7 +70,7 @@
         toggleGutterDisplay(false);
     });
     onDestroy(() => {
-        protyle.destroy();
+        protyle?.destroy();
     });
 
     function toggleGutterDisplay(display: boolean = true) {

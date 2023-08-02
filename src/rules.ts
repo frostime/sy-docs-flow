@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-07-29 21:37:06
+ * @LastEditTime : 2023-08-02 20:59:23
  * @Description  : 
  */
 import {sql} from "@/api";
@@ -62,12 +62,30 @@ class SQL extends MatchRule {
     }
 }
 
-export const RuleFactory = (type: string, input?: any) => {
+
+class IdList extends MatchRule {
+    constructor(ids: BlockId[]) {
+        super();
+        this.type = "IdList";
+        this.input = ids;
+        this.hash = `IdList@${ids.sort().join("$")}`;
+    }
+
+    async getIds() {
+        return this.input;
+    }
+}
+
+export type TRuleType = "ChildDocument" | "SQL" | "IdList";
+
+export const RuleFactory = (type: TRuleType, input?: any) => {
     switch (type) {
         case "ChildDocument":
             return new ChildDocument();
         case "SQL":
             return new SQL(input);
+        case "IdList":
+            return new IdList(input);
         default:
             return null;
     }

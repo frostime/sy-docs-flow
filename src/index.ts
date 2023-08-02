@@ -61,8 +61,8 @@ class TabHub {
                 this.element.appendChild(tabDiv);
             },
             beforeDestroy() {
-                flow.$destroy();
-                tabDiv.remove();
+                flow?.$destroy();
+                tabDiv?.remove();
             },
             destroy: () => {
                 delete Tabs[hash];
@@ -160,6 +160,18 @@ export default class DocsFlowPlugin extends Plugin {
                     }
                     // this.openFlow(RuleFactory("SQL", sql));
                     this.tabHub.open(RuleFactory("SQL", sql));
+                });
+            }
+        });
+        menu.addItem({
+            icon: "iconInfo",
+            label: "自定义ID",
+            click: () => {
+                confirmDialog('自定义ID', `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {
+                    let text: HTMLTextAreaElement = ele.querySelector("textarea");
+                    let ids = text.value;
+                    let idList = ids.split(/[\s,，]/).filter((id) => id);
+                    this.tabHub.open(RuleFactory("IdList", idList));
                 });
             }
         });
