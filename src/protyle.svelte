@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-08-02 20:15:54
+ LastEditTime : 2023-08-02 20:29:09
  Description  : 
 -->
 <script lang="ts">
@@ -21,6 +21,8 @@
     let hpath: string = "";
     let divProtyle: HTMLDivElement;
     let protyle: Protyle;
+
+    let divGutter: HTMLDivElement;
 
     let heightBreadcrumb: number;
 
@@ -48,7 +50,7 @@
             render: {
                 background: false,
                 title: true,  //true will raise error
-                gutter: false,
+                gutter: true,
                 scroll: setting.protyleScroll,
                 breadcrumb: true, //false will raise error
                 breadcrumbDocName: false,
@@ -63,10 +65,19 @@
             //     breadcrumbDocName: false,
             // }
         });
+        divGutter = divProtyle.querySelector(".protyle-gutters");
+        toggleGutterDisplay(false);
     });
     onDestroy(() => {
         protyle.destroy();
     });
+
+    function toggleGutterDisplay(display: boolean = true) {
+        if (divGutter) {
+            divGutter.style.display = display? "block" : "none";
+        }
+    }
+
 </script>
 
 <div class="docs-flow__doc">
@@ -78,7 +89,10 @@
             {hpath}
         </span>
     </span>
-    <div class="docs-flow__protyle" bind:this={divProtyle} style="{styleProtyleMaxHeight}"/>
+    <div class="docs-flow__protyle" bind:this={divProtyle} style="{styleProtyleMaxHeight}"
+        on:mouseenter={() => toggleGutterDisplay(true)}
+        on:mouseleave={() => toggleGutterDisplay(false)}
+    />
 </div>
 
 <style lang="scss">

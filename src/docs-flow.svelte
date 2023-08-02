@@ -17,7 +17,7 @@
     <!-- <Protyle app={app} blockId={blockID} />
     <Protyle app={app} blockId='20230515005454-d5mob4n' /> -->
     {#each listDocuemntsId as did}
-        <Protyle app={app} blockId={did} />
+        <Protyle app={app} blockId={did}/>
     {/each}
 </div>
 
