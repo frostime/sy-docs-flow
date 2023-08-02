@@ -3,9 +3,10 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-02 20:59:23
+ * @LastEditTime : 2023-08-02 21:24:20
  * @Description  : 
  */
+import { showMessage } from "siyuan";
 import {sql} from "@/api";
 import { getChildDocs } from "./utils";
 
@@ -14,6 +15,7 @@ export abstract class MatchRule {
     type: string;
     input: any;
     abstract getIds(): DocumentId[] | Promise<DocumentId[]>;
+    precheck() { return true; } // 针对输入格式的检查
 }
 
 class ChildDocument extends MatchRule {
@@ -55,6 +57,16 @@ class SQL extends MatchRule {
         this.hash = `SQL@${sqlCode.toLowerCase().replace(/\s+/g, "$")}`;
     }
 
+    precheck(): boolean {
+        //是否是 SQL 语法
+        let pat = /select\s+([\s\S]+?)\s+from\s+([\s\S]+?)\s*$/i;
+        if (!pat.test(this.input)) {
+            showMessage("SQL语句不正确");
+            return false;
+        }
+        return true;
+    }
+
     async getIds() {
         let result = await sql(this.input);
         let ids = result.map((item) => item?.id).filter((item) => typeof item === "string");
@@ -69,6 +81,18 @@ class IdList extends MatchRule {
         this.type = "IdList";
         this.input = ids;
         this.hash = `IdList@${ids.sort().join("$")}`;
+    }
+
+    precheck(): boolean {
+        //20230612122134-urgfgsx
+        let pat = /^\d{14}-[a-z0-9]{7}$/
+        for (let id of this.input) {
+            if (!pat.test(id)) {
+                showMessage(`ID格式不正确: ${id}`);
+                return false;
+            }
+        }
+        return true;
     }
 
     async getIds() {

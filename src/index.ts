@@ -40,6 +40,10 @@ class TabHub {
             this.openTab(hash);
             return;
         }
+        if (!rule.precheck()) {
+            return;
+        }
+
         let ids = await rule.getIds();
         if (!ids || ids.length === 0) {
             showMessage("无法匹配对应的文档");

@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-08-02 21:20:30
+ LastEditTime : 2023-08-02 21:22:02
  Description  : 
 -->
 <script lang="ts">
@@ -41,7 +41,6 @@
         let doc: Block = await getBlockByID(blockId);
         let rootId: BlockId = doc.root_id;
         doc = await getBlockByID(rootId);
-        title = doc.content;
         let notebookName: string = notebooks[doc.box];
         let prefix = notebookName ? `/${notebookName}` : "";
         hpath = prefix + doc.hpath;
