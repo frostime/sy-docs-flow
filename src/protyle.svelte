@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-07-29 22:29:01
+ LastEditTime : 2023-08-02 20:15:54
  Description  : 
 -->
 <script lang="ts">
@@ -23,25 +23,15 @@
     let protyle: Protyle;
 
     let heightBreadcrumb: number;
-    let heightTitle: number;
 
     let styleProtyleMaxHeight: string = "";
 
     $: {
         let maxHeight: number = setting.protyleScroll? setting.getMaxHeight() : null;
         if (maxHeight) {
-            maxHeight = maxHeight - heightBreadcrumb * 3 - heightTitle;
+            maxHeight = maxHeight - heightBreadcrumb * 3;
         }
         styleProtyleMaxHeight = maxHeight? `max-height: ${maxHeight}px;` : "";
-    }
-
-    let titleMargin: number = 434;
-
-    function updateWidth() {
-        let wysiwyg: HTMLElement = divProtyle.querySelector(".protyle-wysiwyg");
-        let left = parseInt(wysiwyg.style.paddingLeft);
-        console.log(left);
-        titleMargin = left;
     }
 
     onMount(async () => {
@@ -57,7 +47,7 @@
             blockId: blockId,
             render: {
                 background: false,
-                title: false,  //true will raise error
+                title: true,  //true will raise error
                 gutter: false,
                 scroll: setting.protyleScroll,
                 breadcrumb: true, //false will raise error
@@ -73,7 +63,6 @@
             //     breadcrumbDocName: false,
             // }
         });
-        updateWidth();
     });
     onDestroy(() => {
         protyle.destroy();
@@ -89,24 +78,6 @@
             {hpath}
         </span>
     </span>
-    <div class="docs-flow__title protyle-content" bind:clientHeight={heightTitle}>
-        <div
-            class="protyle-title protyle-wysiwyg--attr"
-            style="margin: 16px {titleMargin}px 0px;"
-            data-node-id={blockId}
-        >
-            <div
-                contenteditable="false"
-                data-position="center"
-                spellcheck="false"
-                class="protyle-title__input"
-                data-render="true"
-            >
-                {title}
-            </div>
-            <div class="protyle-attr" />
-        </div>
-    </div>
     <div class="docs-flow__protyle" bind:this={divProtyle} style="{styleProtyleMaxHeight}"/>
 </div>
 
@@ -118,8 +89,6 @@
         border-top: 3px solid var(--b3-theme-primary);
         border-top-left-radius: 0;
         border-top-right-radius: 0;
-    }
-    div.docs-flow__title {
         border-bottom: 1px solid var(--b3-theme-primary);
     }
     div.docs-flow__protyle {
