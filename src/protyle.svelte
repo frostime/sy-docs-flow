@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-08-02 20:29:09
+ LastEditTime : 2023-08-02 20:30:13
  Description  : 
 -->
 <script lang="ts">
@@ -29,11 +29,13 @@
     let styleProtyleMaxHeight: string = "";
 
     $: {
-        let maxHeight: number = setting.protyleScroll? setting.getMaxHeight() : null;
+        let maxHeight: number = setting.protyleScroll
+            ? setting.getMaxHeight()
+            : null;
         if (maxHeight) {
             maxHeight = maxHeight - heightBreadcrumb * 3;
         }
-        styleProtyleMaxHeight = maxHeight? `max-height: ${maxHeight}px;` : "";
+        styleProtyleMaxHeight = maxHeight ? `max-height: ${maxHeight}px;` : "";
     }
 
     onMount(async () => {
@@ -42,19 +44,19 @@
         doc = await getBlockByID(rootId);
         title = doc.content;
         let notebookName: string = notebooks[doc.box];
-        let prefix = notebookName? `/${notebookName}` : '';
+        let prefix = notebookName ? `/${notebookName}` : "";
         hpath = prefix + doc.hpath;
         console.log(notebookName, hpath);
         protyle = new Protyle(app, divProtyle, {
             blockId: blockId,
             render: {
                 background: false,
-                title: true,  //true will raise error
+                title: true, //true will raise error
                 gutter: true,
                 scroll: setting.protyleScroll,
                 breadcrumb: true, //false will raise error
                 breadcrumbDocName: false,
-            }
+            },
             // default
             // render: {
             //     background: false,
@@ -74,22 +76,28 @@
 
     function toggleGutterDisplay(display: boolean = true) {
         if (divGutter) {
-            divGutter.style.display = display? "block" : "none";
+            divGutter.style.display = display ? "block" : "none";
         }
     }
-
 </script>
 
 <div class="docs-flow__doc">
-    <span class="protyle-breadcrumb__item protyle-breadcrumb__item--active" data-id=""
+    <span
+        class="protyle-breadcrumb__item protyle-breadcrumb__item--active"
+        data-id=""
         bind:clientHeight={heightBreadcrumb}
     >
-        <svg class="popover__block" data-id=""><use xlink:href="#iconFile"></use></svg>
+        <svg class="popover__block" data-id=""
+            ><use xlink:href="#iconFile" /></svg
+        >
         <span class="protyle-breadcrumb__text" title="点击跳转到文档">
             {hpath}
         </span>
     </span>
-    <div class="docs-flow__protyle" bind:this={divProtyle} style="{styleProtyleMaxHeight}"
+    <div
+        class="docs-flow__protyle"
+        bind:this={divProtyle}
+        style={styleProtyleMaxHeight}
         on:mouseenter={() => toggleGutterDisplay(true)}
         on:mouseleave={() => toggleGutterDisplay(false)}
     />

@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/docs-flow.svelte
- LastEditTime : 2023-07-29 22:30:54
+ LastEditTime : 2023-08-02 20:30:20
  Description  : 
 -->
 <script lang="ts">
@@ -17,7 +17,6 @@
     <!-- <Protyle app={app} blockId={blockID} />
     <Protyle app={app} blockId='20230515005454-d5mob4n' /> -->
     {#each listDocuemntsId as did}
-        <Protyle app={app} blockId={did}/>
+        <Protyle {app} blockId={did} />
     {/each}
 </div>
-
