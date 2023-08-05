@@ -66,14 +66,19 @@ class TabHub {
         flow.$on("renameThis", ({detail}) => {
             console.log("renameThis", detail);
             let ruleHash = detail.ruleHash;
+            const rule = this.tabs[ruleHash].rule;
+
             confirmDialog("重命名",
-                `<input type="text" class="b3-text-field fn__block" value="${detail.title}">`,
+                `<input type="text" class="b3-text-field fn__block" value="${rule.title}">`,
                 (ele) => {
                     let text: HTMLInputElement = ele.querySelector("input");
                     let title = text.value;
-                    console.log("rename", title);
-                    let tab = this.tabs[ruleHash].tab;
-                    console.log(tab);
+                    // console.log("rename", title);
+                    rule.title = title;
+                    const span: HTMLSpanElement = document.querySelector(
+                        "ul.layout-tab-bar>li.item--focus>span.item__text"
+                    );
+                    span.innerText = title;
                 }
             );
         });
@@ -107,7 +112,7 @@ class TabHub {
             app: this.plugin.app,
             custom: {
                 icon: "iconFlow",
-                title: `流式文档-${rule.type}`,
+                title: rule.title,
                 data: hash, //关键, 思源靠这个判断是否是同一个tab
                 fn: tab,
             },

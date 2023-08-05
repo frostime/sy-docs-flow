@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/docs-flow.svelte
- LastEditTime : 2023-08-05 23:38:50
+ LastEditTime : 2023-08-06 00:31:29
  Description  : 
 -->
 <script lang="ts">
@@ -17,7 +17,7 @@
 
     const dispatch = createEventDispatcher();
 
-    let showToolbar: boolean = true;
+    let showToolbar: boolean = false;
 
     function onRenameThis() {
         dispatch("renameThis", { ruleHash });
@@ -35,8 +35,8 @@
         showToolbar = true;
     }}
     on:mouseleave={() => {
-        // showToolbar = false;
-        showToolbar = true;
+        showToolbar = false;
+        // showToolbar = true;
     }}
 >
     {#if showToolbar}
@@ -47,7 +47,7 @@
             <div>工具栏</div>
             <div id="space" />
             <button class="b3-button" on:click={onRenameThis}>命名页签</button>
-            <button class="b3-button" on:click={onSaveThis}>保存文档流</button>
+            <button class="b3-button" on:click={onSaveThis}>保存规则</button>
         </section>
     {/if}
 </div>
@@ -62,19 +62,23 @@
 
 <style lang="scss">
     .docs-flow__toolbar {
-        height: 2rem;
+        height: 5rem;
         padding: 0;
 
         position: absolute;
-        width: 40%;
-        left: 30%;
+        width: 70%;
+        left: 15%;
         top: 20px;
         z-index: 2;
 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
         > section {
             padding: 0.5rem;
-            width: 100%;
-            height: 100%;
+            width: 40rem;
+
             background-color: var(--b3-theme-surface);
             opacity: 1;
             border-radius: 0.5rem;

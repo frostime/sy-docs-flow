@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-05 23:45:36
+ * @LastEditTime : 2023-08-05 23:52:20
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -15,14 +15,21 @@ export abstract class MatchRule {
     hash: string;
     type: string;
     input: any;
+
+    constructor(type: string) {
+        this.type = type;
+        this.hash = "";
+        this.input = null;
+        this.title = `流式文档-${this.type}`
+    }
+
     abstract getIds(): DocumentId[] | Promise<DocumentId[]>;
     precheck() { return true; } // 针对输入格式的检查
 }
 
 class ChildDocument extends MatchRule {
     constructor() {
-        super();
-        this.type = "ChildDocument";
+        super("ChildDocument");
         this.input = null;
         const currentDocument = document.querySelector(
             ".layout-tab-container.fn__flex-1>div.fn__flex-1.protyle:not(.fn__none)"
@@ -52,8 +59,7 @@ class ChildDocument extends MatchRule {
 
 class SQL extends MatchRule {
     constructor(sqlCode: string) {
-        super();
-        this.type = "SQL";
+        super("SQL");
         this.input = sqlCode;
         this.hash = `SQL@${sqlCode.toLowerCase().replace(/\s+/g, "$")}`;
     }
@@ -78,8 +84,7 @@ class SQL extends MatchRule {
 
 class IdList extends MatchRule {
     constructor(ids: BlockId[]) {
-        super();
-        this.type = "IdList";
+        super("IdList");
         this.input = ids;
         this.hash = `IdList@${ids.sort().join("$")}`;
     }
