@@ -79,6 +79,7 @@ class TabHub {
                         "ul.layout-tab-bar>li.item--focus>span.item__text"
                     );
                     span.innerText = title;
+                    showMessage("重命名完毕!");
                 }
             );
         });

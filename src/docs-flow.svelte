@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/docs-flow.svelte
- LastEditTime : 2023-08-06 00:31:29
+ LastEditTime : 2023-08-06 00:38:27
  Description  : 
 -->
 <script lang="ts">
@@ -36,7 +36,6 @@
     }}
     on:mouseleave={() => {
         showToolbar = false;
-        // showToolbar = true;
     }}
 >
     {#if showToolbar}
@@ -44,7 +43,7 @@
             in:fly={{ y: -20, duration: 200 }}
             out:fly={{ y: -20, duration: 200 }}
         >
-            <div>工具栏</div>
+            <div>文档数: {listDocuemntsId.length}</div>
             <div id="space" />
             <button class="b3-button" on:click={onRenameThis}>命名页签</button>
             <button class="b3-button" on:click={onSaveThis}>保存规则</button>
@@ -53,8 +52,6 @@
 </div>
 
 <div class="docs-flow">
-    <!-- <Protyle app={app} blockId={blockID} />
-    <Protyle app={app} blockId='20230515005454-d5mob4n' /> -->
     {#each listDocuemntsId as did}
         <Protyle {app} blockId={did} />
     {/each}
@@ -73,7 +70,7 @@
 
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: start;
 
         > section {
             padding: 0.5rem;

@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-08-05 22:12:53
+ LastEditTime : 2023-08-06 00:37:26
  Description  : 
 -->
 <script lang="ts">
@@ -119,8 +119,7 @@
     }
     span.protyle-breadcrumb__item {
         border-top: 3px solid var(--b3-theme-primary);
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
+        border-radius: 0;
         border-bottom: 1px solid var(--b3-theme-primary);
     }
     div.docs-flow__protyle {
