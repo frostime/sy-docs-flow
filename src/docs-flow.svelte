@@ -3,17 +3,20 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/docs-flow.svelte
- LastEditTime : 2023-08-06 00:38:27
+ LastEditTime : 2023-08-06 00:58:39
  Description  : 
 -->
 <script lang="ts">
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
     import { createEventDispatcher } from "svelte";
+    import { setting } from "./settings";
 
     export let app: any;
     export let listDocuemntsId: DocumentId[] = [];
     export let ruleHash: string = "";
+
+    let enableScroll: boolean = setting.protyleScroll;
 
     const dispatch = createEventDispatcher();
 
@@ -27,6 +30,13 @@
         dispatch("saveThis", { ruleHash });
     }
 
+    const reload = () => {
+        const oldListDocuemntsId = listDocuemntsId;
+        listDocuemntsId = [];
+        setTimeout(() => {
+            listDocuemntsId = oldListDocuemntsId;
+        }, 500);
+    };
 </script>
 
 <div
@@ -45,7 +55,19 @@
         >
             <div>文档数: {listDocuemntsId.length}</div>
             <div id="space" />
+            <label class="b3-label__text" for="enableScroll" style="margin-top: 0px;">
+                滚动模式
+            </label>
+            <input
+                id="enableScroll"
+                class="b3-switch fn__flex-center"
+                type="checkbox"
+                bind:checked={enableScroll}
+                on:change={reload}
+            />
+            <span class="fn__space" />
             <button class="b3-button" on:click={onRenameThis}>命名页签</button>
+            <span class="fn__space" />
             <button class="b3-button" on:click={onSaveThis}>保存规则</button>
         </section>
     {/if}
@@ -53,7 +75,7 @@
 
 <div class="docs-flow">
     {#each listDocuemntsId as did}
-        <Protyle {app} blockId={did} />
+        <Protyle {app} blockId={did} scroll={enableScroll} />
     {/each}
 </div>
 
@@ -84,10 +106,6 @@
 
             display: flex;
             align-items: center;
-
-            >button {
-                margin-left: 0.5rem;
-            }
 
             #space {
                 flex: 1;

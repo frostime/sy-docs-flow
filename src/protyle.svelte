@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-08-06 00:37:26
+ LastEditTime : 2023-08-06 00:47:01
  Description  : 
 -->
 <script lang="ts">
@@ -16,6 +16,7 @@
 
     export let app: any;
     export let blockId: BlockId;
+    export let scroll: boolean;
 
     let hpath: string = "";
     let divProtyle: HTMLDivElement;
@@ -28,7 +29,7 @@
     let styleProtyleMaxHeight: string = "";
 
     $: {
-        let maxHeight: number = setting.protyleScroll
+        let maxHeight: number = scroll
             ? setting.getMaxHeight()
             : null;
         if (maxHeight) {
@@ -59,7 +60,7 @@
                 background: false,
                 title: true, //true will raise error
                 gutter: true,
-                scroll: setting.protyleScroll,
+                scroll: scroll,
                 breadcrumb: true, //false will raise error
                 breadcrumbDocName: false,
             },
