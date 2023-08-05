@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-02 21:24:20
+ * @LastEditTime : 2023-08-05 23:45:36
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -11,6 +11,7 @@ import {sql} from "@/api";
 import { getChildDocs } from "./utils";
 
 export abstract class MatchRule {
+    title: string = "";
     hash: string;
     type: string;
     input: any;

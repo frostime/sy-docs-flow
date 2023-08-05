@@ -3,17 +3,30 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/docs-flow.svelte
- LastEditTime : 2023-08-05 23:09:42
+ LastEditTime : 2023-08-05 23:38:50
  Description  : 
 -->
 <script lang="ts">
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
+    import { createEventDispatcher } from "svelte";
 
     export let app: any;
     export let listDocuemntsId: DocumentId[] = [];
+    export let ruleHash: string = "";
+
+    const dispatch = createEventDispatcher();
 
     let showToolbar: boolean = true;
+
+    function onRenameThis() {
+        dispatch("renameThis", { ruleHash });
+    }
+
+    function onSaveThis() {
+        dispatch("saveThis", { ruleHash });
+    }
+
 </script>
 
 <div
@@ -33,9 +46,8 @@
         >
             <div>工具栏</div>
             <div id="space" />
-            <button class="b3-button">全部折叠</button>
-            <button class="b3-button">命名页签</button>
-            <button class="b3-button">保存文档流</button>
+            <button class="b3-button" on:click={onRenameThis}>命名页签</button>
+            <button class="b3-button" on:click={onSaveThis}>保存文档流</button>
         </section>
     {/if}
 </div>
@@ -54,8 +66,8 @@
         padding: 0;
 
         position: absolute;
-        width: 60%;
-        left: 20%;
+        width: 40%;
+        left: 30%;
         top: 20px;
         z-index: 2;
 

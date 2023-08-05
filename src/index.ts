@@ -54,8 +54,28 @@ class TabHub {
             target: tabDiv,
             props: {
                 app: this.plugin.app,
-                listDocuemntsId: ids
+                listDocuemntsId: ids,
+                ruleHash: hash
             }
+        });
+
+        flow.$on("saveThis", ({detail}) => {
+            console.log("saveThis", detail);
+            let ruleHash = detail.ruleHash;
+        });
+        flow.$on("renameThis", ({detail}) => {
+            console.log("renameThis", detail);
+            let ruleHash = detail.ruleHash;
+            confirmDialog("重命名",
+                `<input type="text" class="b3-text-field fn__block" value="${detail.title}">`,
+                (ele) => {
+                    let text: HTMLInputElement = ele.querySelector("input");
+                    let title = text.value;
+                    console.log("rename", title);
+                    let tab = this.tabs[ruleHash].tab;
+                    console.log(tab);
+                }
+            );
         });
 
         const Tabs = this.tabs;
