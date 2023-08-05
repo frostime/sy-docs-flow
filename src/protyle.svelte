@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-08-02 21:22:02
+ LastEditTime : 2023-08-05 22:12:53
  Description  : 
 -->
 <script lang="ts">
@@ -45,6 +45,14 @@
         let prefix = notebookName ? `/${notebookName}` : "";
         hpath = prefix + doc.hpath;
         console.log(notebookName, hpath);
+        load();
+    });
+    onDestroy(() => {
+        // protyle?.destroy();
+        unload();
+    });
+
+    function load() {
         protyle = new Protyle(app, divProtyle, {
             blockId: blockId,
             render: {
@@ -67,11 +75,15 @@
         });
         divGutter = divProtyle.querySelector(".protyle-gutters");
         toggleGutterDisplay(false);
-    });
-    onDestroy(() => {
+    }
+    
+    function unload() {
         protyle?.destroy();
-    });
+        divProtyle.innerHTML = '';
+        divGutter = null;
+    }
 
+    
     function toggleGutterDisplay(display: boolean = true) {
         if (divGutter) {
             divGutter.style.display = display ? "block" : "none";
