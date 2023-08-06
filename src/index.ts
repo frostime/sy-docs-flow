@@ -21,7 +21,7 @@ const isMobile = frontEnd === "mobile" || frontEnd === "browser-mobile";
 
 
 class TabHub {
-    plugin: Plugin;
+    plugin: DocsFlowPlugin;
     tabs: {
         [key: string]: {
             rule: MatchRule;
@@ -29,7 +29,7 @@ class TabHub {
         }
     }
 
-    constructor(plugin: Plugin) {
+    constructor(plugin: DocsFlowPlugin) {
         this.plugin = plugin;
         this.tabs = {};
     }
@@ -59,11 +59,13 @@ class TabHub {
             }
         });
 
-        flow.$on("saveThis", ({detail}) => {
+        flow.$on("saveThis", ({ detail }) => {
             console.log("saveThis", detail);
             let ruleHash = detail.ruleHash;
+            const rule = this.tabs[ruleHash].rule;
+            this.plugin.saveRule(rule);
         });
-        flow.$on("renameThis", ({detail}) => {
+        flow.$on("renameThis", ({ detail }) => {
             console.log("renameThis", detail);
             let ruleHash = detail.ruleHash;
             const rule = this.tabs[ruleHash].rule;
@@ -127,6 +129,8 @@ class TabHub {
 export default class DocsFlowPlugin extends Plugin {
 
     tabHub: TabHub;
+
+    savedRules: { [key: string]: IRule } = {};
 
     async onload() {
         this.tabHub = new TabHub(this);
@@ -206,6 +210,27 @@ export default class DocsFlowPlugin extends Plugin {
             }
         });
 
+        menu.addSeparator();
+
+        let submenu = [];
+        for (let key in this.savedRules) {
+            submenu.push({
+                label: this.savedRules[key].title,
+                click: () => {
+                    let rule = RuleFactory(this.savedRules[key].type, this.savedRules[key].input);
+                    rule.load(this.savedRules[key]);
+                    this.tabHub.open(rule);
+                }
+            });
+        }
+
+        menu.addItem({
+            label: "已保存的规则",
+            type: "submenu",
+            icon: "iconInbox",
+            submenu: submenu
+        });
+
         if (isMobile) {
             menu.fullscreen();
         } else {
@@ -215,6 +240,13 @@ export default class DocsFlowPlugin extends Plugin {
                 isLeft: true,
             });
         }
+    }
+
+    saveRule(rule: MatchRule) {
+        let rule_obj: IRule = rule.dump();
+        this.savedRules[rule_obj.hash] = rule_obj;
+        this.saveData("saved-rules.json", this.savedRules);
+        showMessage(`保存成功!`);
     }
 
     /**

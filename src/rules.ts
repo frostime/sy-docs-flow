@@ -13,14 +13,30 @@ import { getChildDocs } from "./utils";
 export abstract class MatchRule {
     title: string = "";
     hash: string;
-    type: string;
+    type: TRuleType;
     input: any;
 
-    constructor(type: string) {
+    constructor(type: TRuleType) {
         this.type = type;
         this.hash = "";
         this.input = null;
         this.title = `流式文档-${this.type}`
+    }
+
+    dump(): IRule {
+        return {
+            title: this.title,
+            hash: this.hash,
+            type: this.type,
+            input: this.input,
+        }
+    }
+
+    load(rule: IRule) {
+        this.title = rule.title;
+        this.hash = rule.hash;
+        this.type = rule.type;
+        this.input = rule.input;
     }
 
     abstract getIds(): DocumentId[] | Promise<DocumentId[]>;
@@ -105,8 +121,6 @@ class IdList extends MatchRule {
         return this.input;
     }
 }
-
-export type TRuleType = "ChildDocument" | "SQL" | "IdList";
 
 export const RuleFactory = (type: TRuleType, input?: any) => {
     switch (type) {
