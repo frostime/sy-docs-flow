@@ -40,6 +40,10 @@ class TabHub {
             this.openTab(hash);
             return;
         }
+        if (!rule.precheck()) {
+            return;
+        }
+
         let ids = await rule.getIds();
         if (!ids || ids.length === 0) {
             showMessage("无法匹配对应的文档");
@@ -50,8 +54,34 @@ class TabHub {
             target: tabDiv,
             props: {
                 app: this.plugin.app,
-                listDocuemntsId: ids
+                listDocuemntsId: ids,
+                ruleHash: hash
             }
+        });
+
+        flow.$on("saveThis", ({detail}) => {
+            console.log("saveThis", detail);
+            let ruleHash = detail.ruleHash;
+        });
+        flow.$on("renameThis", ({detail}) => {
+            console.log("renameThis", detail);
+            let ruleHash = detail.ruleHash;
+            const rule = this.tabs[ruleHash].rule;
+
+            confirmDialog("重命名",
+                `<input type="text" class="b3-text-field fn__block" value="${rule.title}">`,
+                (ele) => {
+                    let text: HTMLInputElement = ele.querySelector("input");
+                    let title = text.value;
+                    // console.log("rename", title);
+                    rule.title = title;
+                    const span: HTMLSpanElement = document.querySelector(
+                        "ul.layout-tab-bar>li.item--focus>span.item__text"
+                    );
+                    span.innerText = title;
+                    showMessage("重命名完毕!");
+                }
+            );
         });
 
         const Tabs = this.tabs;
@@ -61,8 +91,8 @@ class TabHub {
                 this.element.appendChild(tabDiv);
             },
             beforeDestroy() {
-                flow.$destroy();
-                tabDiv.remove();
+                flow?.$destroy();
+                tabDiv?.remove();
             },
             destroy: () => {
                 delete Tabs[hash];
@@ -83,7 +113,7 @@ class TabHub {
             app: this.plugin.app,
             custom: {
                 icon: "iconFlow",
-                title: `流式文档-${rule.type}`,
+                title: rule.title,
                 data: hash, //关键, 思源靠这个判断是否是同一个tab
                 fn: tab,
             },
@@ -160,6 +190,18 @@ export default class DocsFlowPlugin extends Plugin {
                     }
                     // this.openFlow(RuleFactory("SQL", sql));
                     this.tabHub.open(RuleFactory("SQL", sql));
+                });
+            }
+        });
+        menu.addItem({
+            icon: "iconInfo",
+            label: "自定义ID",
+            click: () => {
+                confirmDialog('自定义ID', `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {
+                    let text: HTMLTextAreaElement = ele.querySelector("textarea");
+                    let ids = text.value;
+                    let idList = ids.split(/[\s,，]/).filter((id) => id);
+                    this.tabHub.open(RuleFactory("IdList", idList));
                 });
             }
         });

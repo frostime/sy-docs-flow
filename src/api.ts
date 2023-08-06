@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/api.ts
- * @LastEditTime : 2023-07-29 15:16:47
+ * @LastEditTime : 2023-08-02 20:51:42
  * @Description  : 
  */
 /**
@@ -264,6 +264,32 @@ export async function transferBlockRef(fromID: BlockId, toID: BlockId, refIDs: B
         refIDs: refIDs
     }
     let url = '/api/block/transferBlockRef';
+    return request(url, data);
+}
+
+
+export interface IBacklink2 {
+    backlinks: {
+        id: BlockId;
+        count: number;
+        box: NotebookId;
+    }[];
+    backmentions: {
+        id: BlockId;
+        count: number;
+        box: NotebookId;
+    }[];
+}
+
+export async function getBacklink2(id: BlockId): Promise<IBacklink2> {
+    let data = {
+        id: id,
+        k: "",
+        mSort: "3",
+        mk: "",
+        sort: "3"
+    }
+    let url = '/api/ref/getBacklink2';
     return request(url, data);
 }
 
