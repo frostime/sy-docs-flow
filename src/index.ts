@@ -159,6 +159,8 @@ export default class DocsFlowPlugin extends Plugin {
                 // this.openFlow(childOfCurrentDocument);
             }
         });
+
+        this.savedRules = await this.loadData("saved-rules.json");
     }
 
     onLayoutReady() {
@@ -174,14 +176,12 @@ export default class DocsFlowPlugin extends Plugin {
     addMenu(rect?) {
         const menu = new Menu();
         menu.addItem({
-            icon: "iconInfo",
             label: "子文裆",
             click: () => {
                 this.tabHub.open(RuleFactory("ChildDocument"));
             }
         });
         menu.addItem({
-            icon: "iconInfo",
             label: "SQL查询文档",
             click: () => {
                 confirmDialog('SQL', `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {
@@ -198,7 +198,6 @@ export default class DocsFlowPlugin extends Plugin {
             }
         });
         menu.addItem({
-            icon: "iconInfo",
             label: "自定义ID",
             click: () => {
                 confirmDialog('自定义ID', `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {
@@ -229,6 +228,13 @@ export default class DocsFlowPlugin extends Plugin {
             type: "submenu",
             icon: "iconInbox",
             submenu: submenu
+        });
+        menu.addItem({
+            label: "设置",
+            icon: "iconSettings",
+            click: () => {
+                showMessage("暂无，敬请期待");
+            }
         });
 
         if (isMobile) {
