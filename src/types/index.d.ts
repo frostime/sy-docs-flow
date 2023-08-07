@@ -80,3 +80,11 @@ interface Window {
         languages: any;
     };
 }
+
+type TRuleType = "ChildDocument" | "SQL" | "IdList";
+interface IRule {
+    title: string;
+    hash: string;
+    type: TRuleType;
+    input: any;
+}
