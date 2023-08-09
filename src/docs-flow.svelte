@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/docs-flow.svelte
- LastEditTime : 2023-08-06 00:58:39
+ LastEditTime : 2023-08-09 19:44:56
  Description  : 
 -->
 <script lang="ts">
@@ -85,8 +85,8 @@
         padding: 0;
 
         position: absolute;
-        width: 70%;
-        left: 15%;
+        width: 60%;
+        left: 20%;
         top: 20px;
         z-index: 2;
 

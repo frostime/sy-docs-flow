@@ -12,6 +12,7 @@ import "@/index.scss";
 
 import DocsFlow from "@/docs-flow.svelte";
 import SettingPannel from "@/libs/setting-panel.svelte";
+import SavedRules from "@/saved-rules.svelte";
 
 import { confirmDialog } from "@/utils";
 import { MatchRule, RuleFactory } from "@/rules";
@@ -126,6 +127,9 @@ class TabHub {
     }
 }
 
+// const SETTING_NAME = "docs-flow-setting.json";
+const SAVE_RULE_NAME = "saved-rules.json";
+
 export default class DocsFlowPlugin extends Plugin {
 
     tabHub: TabHub;
@@ -160,7 +164,8 @@ export default class DocsFlowPlugin extends Plugin {
             }
         });
 
-        this.savedRules = await this.loadData("saved-rules.json");
+        this.savedRules = await this.loadData(SAVE_RULE_NAME);
+        this.savedRules = this.savedRules || {};
     }
 
     onLayoutReady() {
@@ -222,6 +227,36 @@ export default class DocsFlowPlugin extends Plugin {
                 }
             });
         }
+        if (submenu.length > 0) {
+            submenu.push({
+                type: "separator"
+            });
+            submenu.push({
+                label: "更改",
+                click: () => {
+                    let dialog = new Dialog({
+                        title: "更改保存的规则",
+                        width: "20rem",
+                        content: `<div id="AlterSavedRules" style="height: 100%; width: 100%;"></div>`,
+                    });
+                    dialog.element.style.maxHeight = "70%";
+                    const div = dialog.element.querySelector("#AlterSavedRules");
+                    const compo = new SavedRules({
+                        target: div,
+                        props: {
+                            savedRules: this.savedRules,
+                        },
+                    });
+                    compo.$on("cancel", () => { dialog.destroy() });
+                    compo.$on("confirm", ({ detail }) => {
+                        this.savedRules = detail;
+                        this.saveData(SAVE_RULE_NAME, this.savedRules);
+                        showMessage("更新成功!");
+                        dialog.destroy();
+                    });
+                }
+            });
+        }
 
         menu.addItem({
             label: "已保存的规则",
@@ -234,6 +269,7 @@ export default class DocsFlowPlugin extends Plugin {
             icon: "iconSettings",
             click: () => {
                 showMessage("暂无，敬请期待");
+                this.openSetting();
             }
         });
 
@@ -251,7 +287,7 @@ export default class DocsFlowPlugin extends Plugin {
     saveRule(rule: MatchRule) {
         let rule_obj: IRule = rule.dump();
         this.savedRules[rule_obj.hash] = rule_obj;
-        this.saveData("saved-rules.json", this.savedRules);
+        this.saveData(SAVE_RULE_NAME, this.savedRules);
         showMessage(`保存成功!`);
     }
 

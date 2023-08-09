@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2023-07-29 20:35:17
+ * @LastEditTime : 2023-08-09 18:11:02
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
@@ -11,6 +11,9 @@ import { getBlockByID, listDocsByPath } from "./api";
 
 export async function getChildDocs(documentId: DocumentId) {
     let doc: Block = await getBlockByID(documentId);
+    if (!doc) {
+        return null;
+    }
     let box = doc.box;
     let path = doc.path;
 

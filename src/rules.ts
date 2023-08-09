@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-05 23:52:20
+ * @LastEditTime : 2023-08-09 20:14:36
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -68,7 +68,7 @@ class ChildDocument extends MatchRule {
             return [];
         }
         let child = await getChildDocs(this.input);
-        return [this.input, ...child];
+        return child ? [this.input, ...child] : null;
     }
 }
 
@@ -76,7 +76,7 @@ class ChildDocument extends MatchRule {
 class SQL extends MatchRule {
     constructor(sqlCode: string) {
         super("SQL");
-        this.input = sqlCode;
+        this.input = sqlCode.toLowerCase();
         this.hash = `SQL@${sqlCode.toLowerCase().replace(/\s+/g, "$")}`;
     }
 
