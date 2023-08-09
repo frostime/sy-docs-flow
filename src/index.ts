@@ -165,6 +165,7 @@ export default class DocsFlowPlugin extends Plugin {
         });
 
         this.savedRules = await this.loadData(SAVE_RULE_NAME);
+        this.savedRules = this.savedRules || {};
     }
 
     onLayoutReady() {

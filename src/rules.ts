@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-09 17:09:31
+ * @LastEditTime : 2023-08-09 20:14:36
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -76,7 +76,7 @@ class ChildDocument extends MatchRule {
 class SQL extends MatchRule {
     constructor(sqlCode: string) {
         super("SQL");
-        this.input = sqlCode;
+        this.input = sqlCode.toLowerCase();
         this.hash = `SQL@${sqlCode.toLowerCase().replace(/\s+/g, "$")}`;
     }
 
