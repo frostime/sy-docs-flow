@@ -11,6 +11,9 @@ import { getBlockByID, listDocsByPath } from "./api";
 
 export async function getChildDocs(documentId: DocumentId) {
     let doc: Block = await getBlockByID(documentId);
+    if (!doc) {
+        return null;
+    }
     let box = doc.box;
     let path = doc.path;
 
