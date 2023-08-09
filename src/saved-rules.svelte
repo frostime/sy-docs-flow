@@ -10,6 +10,13 @@
         savedRules = { ...savedRules };
     };
 
+    const onTextChange = (e) => {
+        let ele = e.target as HTMLInputElement;
+        let hash = ele.getAttribute("data-hash");
+        savedRules[hash].title = ele.innerText;
+        // savedRules = { ...savedRules };
+    };
+
     const cancel = () => {
         dispatch("cancel");
     };
@@ -23,8 +30,13 @@
     <div class="ft__breakword">
         <div class="save-rule-list">
             {#each Object.entries(savedRules) as [hash, rule]}
-                <div class="b3-menu__item" data-hash={hash}>
-                    <div class="b3-menu__label" contenteditable="true">
+                <div class="b3-menu__item">
+                    <div
+                        class="b3-menu__label"
+                        contenteditable="true"
+                        data-hash={hash}
+                        on:input={(e) => onTextChange(e)}
+                    >
                         {rule.title}
                     </div>
                     <span class="fn__space" />
