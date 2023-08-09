@@ -138,14 +138,13 @@ export default class DocsFlowPlugin extends Plugin {
 
     async onload() {
         this.tabHub = new TabHub(this);
-        console.log("loading plugin-sample", this.i18n);
         // 图标的制作参见帮助文档
         this.addIcons(`<symbol id="iconFlow" viewBox="0 0 1024 1024"><path d="M1024 640v384H0v-384h128v256h768v-256zM192 704h640v128H192z m15.168-138.56l27.712-124.992 624.832 138.496L832 703.936zM279.68 308.544l54.08-116.032 580.032 270.464-54.08 116.032z m712.064 52.928l-77.952 101.568-507.776-389.632L462.336 0h58.24z" p-id="7558"></path></symbol>`);
 
         const topBarElement = this.addTopBar({
             icon: "iconFlow",
-            title: this.i18n.addTopBarIcon,
-            position: "left",
+            title: this.i18n.name,
+            position: "right",
             callback: () => {
                 if (isMobile) {
                     this.addMenu();

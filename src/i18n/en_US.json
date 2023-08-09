@@ -1,4 +1,5 @@
 {
+    "name": "Document flow",
     "rules": {
         "child": "Child document",
         "sql": "SQL query",
