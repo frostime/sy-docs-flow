@@ -1,3 +1,11 @@
+<!--
+ Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
+ Author       : Yp Z
+ Date         : 2023-08-09 18:08:55
+ FilePath     : /src/saved-rules.svelte
+ LastEditTime : 2023-08-09 22:01:13
+ Description  : 
+-->
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import { i18n } from "./utils";
@@ -7,8 +15,15 @@
     const dispatch = createEventDispatcher();
 
     const deleteRule = (hash: string) => {
-        delete savedRules[hash];
-        savedRules = { ...savedRules };
+        // delete savedRules[hash];
+        // savedRules = { ...savedRules };
+        let newSavedRules = {};
+        for (let key in savedRules) {
+            if (key !== hash) {
+                newSavedRules[key] = savedRules[key];
+            }
+        }
+        savedRules = newSavedRules;
     };
 
     const onTextChange = (e) => {
