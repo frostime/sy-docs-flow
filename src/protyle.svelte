@@ -3,12 +3,12 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-08-09 16:35:37
+ LastEditTime : 2023-08-09 19:42:11
  Description  : 
 -->
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
-    import { Protyle } from "siyuan";
+    import { Protyle, openTab } from "siyuan";
     import { getBlockByID } from "./api";
     import { notebooks } from "./utils";
 
@@ -29,9 +29,7 @@
     let styleProtyleMaxHeight: string = "";
 
     $: {
-        let maxHeight: number = scroll
-            ? setting.getMaxHeight()
-            : null;
+        let maxHeight: number = scroll ? setting.getMaxHeight() : null;
         if (maxHeight) {
             maxHeight = maxHeight - heightBreadcrumb * 3;
         }
@@ -77,14 +75,13 @@
         divGutter = divProtyle.querySelector(".protyle-gutters");
         toggleGutterDisplay(false);
     }
-    
+
     function unload() {
         protyle?.destroy();
-        divProtyle.innerHTML = '';
+        divProtyle.innerHTML = "";
         divGutter = null;
     }
 
-    
     function toggleGutterDisplay(display: boolean = true) {
         if (divGutter) {
             divGutter.style.display = display ? "block" : "none";
@@ -94,14 +91,24 @@
 
 <div class="docs-flow__doc">
     <span
-        class="protyle-breadcrumb__item protyle-breadcrumb__item--active"
+        class="protyle-breadcrumb__item"
         data-id=""
         bind:clientHeight={heightBreadcrumb}
+        on:keypress={() => {}}
+        on:click={() => {
+            openTab({
+                app: app,
+                doc: {
+                    id: blockId,
+                    zoomIn: false,
+                },
+            });
+        }}
     >
-        <svg class="popover__block" data-id=""
+        <!-- <svg class="popover__block" data-id=""
             ><use xlink:href="#iconFile" /></svg
-        >
-        <span class="protyle-breadcrumb__text" title="点击跳转到文档">
+        > -->
+        <span class="protyle-breadcrumb__text">
             {hpath}
         </span>
     </span>

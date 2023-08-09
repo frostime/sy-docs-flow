@@ -127,7 +127,7 @@ class TabHub {
     }
 }
 
-const SETTING_NAME = "docs-flow-setting.json";
+// const SETTING_NAME = "docs-flow-setting.json";
 const SAVE_RULE_NAME = "saved-rules.json";
 
 export default class DocsFlowPlugin extends Plugin {
@@ -238,6 +238,7 @@ export default class DocsFlowPlugin extends Plugin {
                         width: "20rem",
                         content: `<div id="AlterSavedRules" style="height: 100%; width: 100%;"></div>`,
                     });
+                    dialog.element.style.maxHeight = "70%";
                     const div = dialog.element.querySelector("#AlterSavedRules");
                     const compo = new SavedRules({
                         target: div,
@@ -248,6 +249,8 @@ export default class DocsFlowPlugin extends Plugin {
                     compo.$on("cancel", () => { dialog.destroy() });
                     compo.$on("confirm", ({ detail }) => {
                         this.savedRules = detail;
+                        this.saveData(SAVE_RULE_NAME, this.savedRules);
+                        showMessage("更新成功!");
                         dialog.destroy();
                     });
                 }
