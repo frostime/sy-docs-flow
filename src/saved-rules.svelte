@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import { i18n } from "./utils";
 
     export let savedRules: { [key: string]: IRule } = {};
 
@@ -50,7 +51,7 @@
                 </div>
             {:else}
                 <div class="b3-menu__item">
-                    <div class="b3-menu__label">空...</div>
+                    <div class="b3-menu__label">{i18n.empty}</div>
                 </div>
             {/each}
         </div>
