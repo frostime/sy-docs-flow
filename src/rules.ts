@@ -3,24 +3,31 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-09 20:14:36
+ * @LastEditTime : 2023-08-09 21:28:15
  * @Description  : 
  */
 import { showMessage } from "siyuan";
 import {sql} from "@/api";
 import { getChildDocs } from "./utils";
+import { setting } from "./settings";
 
 export abstract class MatchRule {
     title: string = "";
     hash: string;
     type: TRuleType;
     input: any;
+    config: {
+        scroll: boolean;
+    };
 
     constructor(type: TRuleType) {
         this.type = type;
         this.hash = "";
         this.input = null;
-        this.title = `流式文档-${this.type}`
+        this.title = `${this.type}`;
+        this.config = {
+            scroll: setting.protyleScroll
+        };
     }
 
     dump(): IRule {
@@ -29,6 +36,7 @@ export abstract class MatchRule {
             hash: this.hash,
             type: this.type,
             input: this.input,
+            config: this.config
         }
     }
 
@@ -37,6 +45,7 @@ export abstract class MatchRule {
         this.hash = rule.hash;
         this.type = rule.type;
         this.input = rule.input;
+        this.config = rule?.config ?? this.config;
     }
 
     abstract getIds(): DocumentId[] | Promise<DocumentId[]>;
