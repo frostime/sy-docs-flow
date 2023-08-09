@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/docs-flow.svelte
- LastEditTime : 2023-08-09 19:44:56
+ LastEditTime : 2023-08-09 21:04:17
  Description  : 
 -->
 <script lang="ts">
@@ -11,6 +11,7 @@
     import Protyle from "./protyle.svelte";
     import { createEventDispatcher } from "svelte";
     import { setting } from "./settings";
+    import { i18n } from "./utils";
 
     export let app: any;
     export let listDocuemntsId: DocumentId[] = [];
@@ -53,10 +54,14 @@
             in:fly={{ y: -20, duration: 200 }}
             out:fly={{ y: -20, duration: 200 }}
         >
-            <div>文档数: {listDocuemntsId.length}</div>
+            <div>{i18n.docsCnt}: {listDocuemntsId.length}</div>
             <div id="space" />
-            <label class="b3-label__text" for="enableScroll" style="margin-top: 0px;">
-                滚动模式
+            <label
+                class="b3-label__text"
+                for="enableScroll"
+                style="margin-top: 0px;"
+            >
+                {i18n.scrollMode}
             </label>
             <input
                 id="enableScroll"
@@ -66,9 +71,9 @@
                 on:change={reload}
             />
             <span class="fn__space" />
-            <button class="b3-button" on:click={onRenameThis}>命名页签</button>
+            <button class="b3-button" on:click={onRenameThis}>{i18n.nameTab}</button>
             <span class="fn__space" />
-            <button class="b3-button" on:click={onSaveThis}>保存规则</button>
+            <button class="b3-button" on:click={onSaveThis}>{i18n.saveRule}</button>
         </section>
     {/if}
 </div>

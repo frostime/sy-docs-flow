@@ -14,7 +14,7 @@ import DocsFlow from "@/docs-flow.svelte";
 import SettingPannel from "@/libs/setting-panel.svelte";
 import SavedRules from "@/saved-rules.svelte";
 
-import { confirmDialog } from "@/utils";
+import { confirmDialog, i18n, setI18n } from "@/utils";
 import { MatchRule, RuleFactory } from "@/rules";
 
 const frontEnd = getFrontend();
@@ -71,7 +71,7 @@ class TabHub {
             let ruleHash = detail.ruleHash;
             const rule = this.tabs[ruleHash].rule;
 
-            confirmDialog("重命名",
+            confirmDialog(i18n.saveRule,
                 `<input type="text" class="b3-text-field fn__block" value="${rule.title}">`,
                 (ele) => {
                     let text: HTMLInputElement = ele.querySelector("input");
@@ -82,7 +82,7 @@ class TabHub {
                         "ul.layout-tab-bar>li.item--focus>span.item__text"
                     );
                     span.innerText = title;
-                    showMessage("重命名完毕!");
+                    showMessage(i18n.msg.saveDone);
                 }
             );
         });
@@ -145,7 +145,7 @@ export default class DocsFlowPlugin extends Plugin {
         const topBarElement = this.addTopBar({
             icon: "iconFlow",
             title: this.i18n.addTopBarIcon,
-            position: "right",
+            position: "left",
             callback: () => {
                 if (isMobile) {
                     this.addMenu();
@@ -163,6 +163,7 @@ export default class DocsFlowPlugin extends Plugin {
                 // this.openFlow(childOfCurrentDocument);
             }
         });
+        setI18n(this.i18n);
 
         this.savedRules = await this.loadData(SAVE_RULE_NAME);
         this.savedRules = this.savedRules || {};
@@ -173,21 +174,18 @@ export default class DocsFlowPlugin extends Plugin {
     }
 
     onunload() {
-        console.log(this.i18n.byePlugin);
-        showMessage("Goodbye SiYuan Plugin");
-        console.log("onunload");
     }
 
     addMenu(rect?) {
         const menu = new Menu();
         menu.addItem({
-            label: "子文裆",
+            label: this.i18n.rules.child,
             click: () => {
                 this.tabHub.open(RuleFactory("ChildDocument"));
             }
         });
         menu.addItem({
-            label: "SQL查询文档",
+            label: this.i18n.rules.sql,
             click: () => {
                 confirmDialog('SQL', `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {
                     let text: HTMLTextAreaElement = ele.querySelector("textarea");
@@ -203,9 +201,9 @@ export default class DocsFlowPlugin extends Plugin {
             }
         });
         menu.addItem({
-            label: "自定义ID",
+            label: this.i18n.rules.customID,
             click: () => {
-                confirmDialog('自定义ID', `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {
+                confirmDialog(this.i18n.rules.customID, `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {
                     let text: HTMLTextAreaElement = ele.querySelector("textarea");
                     let ids = text.value;
                     let idList = ids.split(/[\s,，]/).filter((id) => id);
@@ -232,10 +230,10 @@ export default class DocsFlowPlugin extends Plugin {
                 type: "separator"
             });
             submenu.push({
-                label: "更改",
+                label: this.i18n.button.alterSaved,
                 click: () => {
                     let dialog = new Dialog({
-                        title: "更改保存的规则",
+                        title: this.i18n.msg.alterSaved,
                         width: "20rem",
                         content: `<div id="AlterSavedRules" style="height: 100%; width: 100%;"></div>`,
                     });
@@ -251,7 +249,7 @@ export default class DocsFlowPlugin extends Plugin {
                     compo.$on("confirm", ({ detail }) => {
                         this.savedRules = detail;
                         this.saveData(SAVE_RULE_NAME, this.savedRules);
-                        showMessage("更新成功!");
+                        showMessage(this.i18n.msg.alterDone);
                         dialog.destroy();
                     });
                 }
@@ -259,19 +257,19 @@ export default class DocsFlowPlugin extends Plugin {
         }
 
         menu.addItem({
-            label: "已保存的规则",
+            label: this.i18n.button.saved,
             type: "submenu",
             icon: "iconInbox",
             submenu: submenu
         });
-        menu.addItem({
-            label: "设置",
-            icon: "iconSettings",
-            click: () => {
-                showMessage("暂无，敬请期待");
-                this.openSetting();
-            }
-        });
+        // menu.addItem({
+        //     label: "设置",
+        //     icon: "iconSettings",
+        //     click: () => {
+        //         showMessage("暂无，敬请期待");
+        //         this.openSetting();
+        //     }
+        // });
 
         if (isMobile) {
             menu.fullscreen();
@@ -288,7 +286,7 @@ export default class DocsFlowPlugin extends Plugin {
         let rule_obj: IRule = rule.dump();
         this.savedRules[rule_obj.hash] = rule_obj;
         this.saveData(SAVE_RULE_NAME, this.savedRules);
-        showMessage(`保存成功!`);
+        showMessage(this.i18n.msg.saveDone);
     }
 
     /**

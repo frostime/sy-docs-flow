@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/protyle.svelte
- LastEditTime : 2023-08-09 19:42:11
+ LastEditTime : 2023-08-09 21:07:20
  Description  : 
 -->
 <script lang="ts">
@@ -56,21 +56,12 @@
             blockId: blockId,
             render: {
                 background: false,
-                title: true, //true will raise error
+                title: true,
                 gutter: true,
                 scroll: scroll,
-                breadcrumb: true, //false will raise error
+                breadcrumb: true,
                 breadcrumbDocName: false,
-            },
-            // default
-            // render: {
-            //     background: false,
-            //     title: false,
-            //     gutter: true,
-            //     scroll: false,
-            //     breadcrumb: true,
-            //     breadcrumbDocName: false,
-            // }
+            }
         });
         divGutter = divProtyle.querySelector(".protyle-gutters");
         toggleGutterDisplay(false);

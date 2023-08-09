@@ -3,11 +3,17 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2023-08-09 18:11:02
+ * @LastEditTime : 2023-08-09 21:03:49
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
 import { getBlockByID, listDocsByPath } from "./api";
+import zh_CN from "./i18n/zh_CN.json";
+
+export let i18n: typeof zh_CN;
+export function setI18n(i18nData: any) {
+    i18n = i18nData;
+}
 
 export async function getChildDocs(documentId: DocumentId) {
     let doc: Block = await getBlockByID(documentId);
