@@ -3,21 +3,20 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/docs-flow.svelte
- LastEditTime : 2023-08-09 21:04:17
+ LastEditTime : 2023-08-09 21:30:44
  Description  : 
 -->
 <script lang="ts">
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
     import { createEventDispatcher } from "svelte";
-    import { setting } from "./settings";
     import { i18n } from "./utils";
 
     export let app: any;
     export let listDocuemntsId: DocumentId[] = [];
     export let ruleHash: string = "";
-
-    let enableScroll: boolean = setting.protyleScroll;
+    export let config: any = {};
+    let enableScroll: boolean = config.scroll;
 
     const dispatch = createEventDispatcher();
 
@@ -34,6 +33,10 @@
     const reload = () => {
         const oldListDocuemntsId = listDocuemntsId;
         listDocuemntsId = [];
+        dispatch("configChanged", {
+            ruleHash,
+            config: { scroll: enableScroll },
+        });
         setTimeout(() => {
             listDocuemntsId = oldListDocuemntsId;
         }, 500);
@@ -71,9 +74,13 @@
                 on:change={reload}
             />
             <span class="fn__space" />
-            <button class="b3-button" on:click={onRenameThis}>{i18n.nameTab}</button>
+            <button class="b3-button" on:click={onRenameThis}
+                >{i18n.nameTab}</button
+            >
             <span class="fn__space" />
-            <button class="b3-button" on:click={onSaveThis}>{i18n.saveRule}</button>
+            <button class="b3-button" on:click={onSaveThis}
+                >{i18n.saveRule}</button
+            >
         </section>
     {/if}
 </div>

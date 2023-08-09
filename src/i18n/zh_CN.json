@@ -17,6 +17,7 @@
     "docsCnt": "文档数",
     "scrollMode": "滚动模式",
     "nameTab": "命名",
+    "renameRule": "重命名",
     "saveRule": "保存",
     "empty": "无..."
 }

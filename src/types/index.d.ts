@@ -1,5 +1,10 @@
-/**
- * Copyright (c) 2023 frostime. All rights reserved.
+/*
+ * Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
+ * @Author       : Yp Z
+ * @Date         : 2023-07-28 20:49:27
+ * @FilePath     : /src/types/index.d.ts
+ * @LastEditTime : 2023-08-09 21:21:41
+ * @Description  : 
  */
 
 /**
@@ -87,4 +92,7 @@ interface IRule {
     hash: string;
     type: TRuleType;
     input: any;
+    config?: {
+        scroll: boolean;
+    }
 }

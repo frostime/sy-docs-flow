@@ -56,10 +56,21 @@ class TabHub {
             props: {
                 app: this.plugin.app,
                 listDocuemntsId: ids,
-                ruleHash: hash
+                ruleHash: hash,
+                config: rule.config
             }
         });
 
+        flow.$on("configChanged", ({ detail }) => {
+            console.log("configChanged", detail);
+            let ruleHash = detail.ruleHash;
+            const rule = this.tabs[ruleHash].rule;
+            let config = detail.config;
+            for (let key in config) {
+                rule.config[key] = config[key];
+                console.log("configChanged", key, config[key]);
+            }
+        });
         flow.$on("saveThis", ({ detail }) => {
             console.log("saveThis", detail);
             let ruleHash = detail.ruleHash;
@@ -71,7 +82,7 @@ class TabHub {
             let ruleHash = detail.ruleHash;
             const rule = this.tabs[ruleHash].rule;
 
-            confirmDialog(i18n.saveRule,
+            confirmDialog(i18n.renameRule,
                 `<input type="text" class="b3-text-field fn__block" value="${rule.title}">`,
                 (ele) => {
                     let text: HTMLInputElement = ele.querySelector("input");
@@ -144,7 +155,7 @@ export default class DocsFlowPlugin extends Plugin {
         const topBarElement = this.addTopBar({
             icon: "iconFlow",
             title: this.i18n.name,
-            position: "right",
+            position: "left",
             callback: () => {
                 if (isMobile) {
                     this.addMenu();
@@ -274,9 +285,9 @@ export default class DocsFlowPlugin extends Plugin {
             menu.fullscreen();
         } else {
             menu.open({
-                x: rect.right,
+                x: rect.left,
                 y: rect.bottom,
-                isLeft: true,
+                isLeft: false,
             });
         }
     }
