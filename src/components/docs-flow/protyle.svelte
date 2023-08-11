@@ -3,13 +3,13 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-08-11 15:20:07
+ LastEditTime : 2023-08-11 18:05:00
  Description  : 
 -->
 <script lang="ts">
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { Protyle, openTab } from "siyuan";
-    import { getBlockByID } from "../../api";
+    import { getBlockByID, getBlockDOM, getBlockBreadcrumb } from "../../api";
     import { notebooks } from "../../utils";
 
     import { setting } from "../../settings";
@@ -21,6 +21,10 @@
     let hpath: string = "";
     let divProtyle: HTMLDivElement;
     let protyle: Protyle;
+
+    let rootDoc: Block;
+
+    let protyleBacklinkData: IBacklink[]; //如果 scroll 为 false，就需要把这个参数传给 Protyle
 
     let divGutter: HTMLDivElement;
 
@@ -43,13 +47,29 @@
         classArrowOpen = expanded ? "b3-list-item__arrow--open" : "";
     }
 
+    async function constructDom() {
+        let blockDom = await getBlockDOM(blockId);
+        let dom = blockDom.dom;
+        let breadcrumb = await getBlockBreadcrumb(blockId);
+        console.log(breadcrumb);
+        let backlink: IBacklink = {
+            dom: dom,
+            expand: false,
+            blockPaths: breadcrumb
+        };
+        protyleBacklinkData = [backlink];
+        console.log(blockDom);
+    }
+
     onMount(async () => {
         let doc: Block = await getBlockByID(blockId);
         let rootId: BlockId = doc.root_id;
         doc = await getBlockByID(rootId);
+        rootDoc = doc;
         let notebookName: string = notebooks[doc.box];
         let prefix = notebookName ? `/${notebookName}` : "";
         hpath = prefix + doc.hpath;
+
         console.log('Mount protyle:', notebookName, hpath, blockId);
         initialised = true;
     });
@@ -58,10 +78,14 @@
         unload();
     });
 
-    afterUpdate(() => {
+    afterUpdate(async () => {
         if (!initialised) {
             return; //由于 onMunt 是 async 所以会出现还没有执行完毕就调用了 afterUpdate 的情况
         }
+        if (scroll === false && protyleBacklinkData === undefined) {
+            await constructDom();
+        }
+
         console.log("afterUpdated", blockId, expanded);
         if (divProtyle && expanded) {
             load();
@@ -79,6 +103,8 @@
         protyle = new Protyle(app, divProtyle, {
             mode: "wysiwyg",
             blockId: blockId,
+            //@ts-ignore
+            backlinkData: protyleBacklinkData,
             render: {
                 background: false,
                 title: true,
@@ -88,6 +114,12 @@
                 breadcrumbDocName: false,
             },
         });
+        if (!scroll) {
+            //默认 API 在 backlink 下不会渲染标题, 只能手搓
+            //未公开的 api，自己扒拉代码扒出来的 https://github.com/siyuan-note/siyuan/blob/v2.9.9/app/src/protyle/index.ts#L166
+            //@ts-ignore
+            protyle.protyle.title.setTitle(rootDoc.content);
+        } 
         divGutter = divProtyle.querySelector(".protyle-gutters");
         toggleGutterDisplay(false);
     }

@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2023-08-09 21:21:41
+ * @LastEditTime : 2023-08-11 18:04:29
  * @Description  : 
  */
 
@@ -95,4 +95,18 @@ interface IRule {
     config?: {
         scroll: boolean;
     }
+}
+
+interface IBreadcrumb {
+    id: string,
+    name: string,
+    type: string,
+    subType: string,
+    children: []
+}
+
+interface IBacklink {
+    blockPaths: IBreadcrumb[],
+    dom: string
+    expand: boolean
 }
