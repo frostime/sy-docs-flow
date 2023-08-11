@@ -22,8 +22,12 @@ After enabling the plugin, click the icon in the top bar and select the desired 
 
 1. Hover over the top of the document stream to bring up the toolbar.
 
-    - Scroll mode: when enabled, the document will be loaded in a scrolling mode to save resources.
+    - Scroll mode
+        - Off: loads each document at once, may cause performance issue if the document is too large.
+        - On: dynamically loads each document in a scrolled window.
     - Naming Tab: Name the current document stream.
     - Save Rule: save the rules of the current document flow
 
 2. Click the breadcrumb of each document to open the corresponding document.
+
+3. Click on the icon to the left of the document breadcrumbs to collapse the document and save resources
