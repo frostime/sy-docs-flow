@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2023-08-11 18:04:29
+ * @LastEditTime : 2023-08-11 18:36:47
  * @Description  : 
  */
 
@@ -86,7 +86,7 @@ interface Window {
     };
 }
 
-type TRuleType = "ChildDocument" | "SQL" | "IdList";
+type TRuleType = "ChildDocument" | "SQL" | "IdList" | "DocBacklinks" | "DocBackmentions";
 interface IRule {
     title: string;
     hash: string;

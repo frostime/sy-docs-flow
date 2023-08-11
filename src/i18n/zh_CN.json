@@ -2,6 +2,8 @@
     "name": "文档流",
     "rules": {
         "child": "子文档",
+        "docBacklinks": "文档反链",
+        "docBackmentions": "文档提及",
         "sql": "SQL查询",
         "customID": "自定义ID"
     },
