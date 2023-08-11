@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/api.ts
- * @LastEditTime : 2023-08-02 20:51:42
+ * @LastEditTime : 2023-08-11 17:27:15
  * @Description  : 
  */
 /**
@@ -172,6 +172,22 @@ export async function upload(assetsDirPath: string, files: any[]): Promise<ResUp
     return request(url, form);
 }
 
+// **************************************** Ref ****************************************
+
+export type BacklinkDoc = {
+    backlinks: IBacklink[];
+}
+
+// /api/ref/getBacklinkDoc
+export async function getBacklinkDoc(id: BlockId): Promise<BacklinkDoc> {
+    let data = {
+        id: id
+    };
+    let url = '/api/ref/getBacklinkDoc';
+    return request(url, data);
+}
+
+
 // **************************************** Block ****************************************
 export type ResdoOperations = {
     doOperations: doOperation[];
@@ -265,6 +281,28 @@ export async function transferBlockRef(fromID: BlockId, toID: BlockId, refIDs: B
     }
     let url = '/api/block/transferBlockRef';
     return request(url, data);
+}
+
+export interface IBlockDOM {
+    id: BlockId;
+    dom: string;
+}
+
+// /api/block/getBlockDOM
+export async function getBlockDOM(id: BlockId): Promise<IBlockDOM> {
+    let data = {
+        id: id
+    };
+    let url = '/api/block/getBlockDOM';
+    return request(url, data);
+}
+
+
+// /api/block/getBlockBreadcrumb
+export async function getBlockBreadcrumb(id: BlockId) {
+    let payload = { id: id, excludeTypes: [] };
+    let url = '/api/block/getBlockBreadcrumb';
+    return request(url, payload);
 }
 
 
