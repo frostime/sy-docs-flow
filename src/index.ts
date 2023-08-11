@@ -195,6 +195,18 @@ export default class DocsFlowPlugin extends Plugin {
             }
         });
         menu.addItem({
+            label: this.i18n.rules.docBacklinks,
+            click: () => {
+                this.tabHub.open(RuleFactory("DocBacklinks"));
+            }
+        });
+        menu.addItem({
+            label: this.i18n.rules.docBackmentions,
+            click: () => {
+                this.tabHub.open(RuleFactory("DocBackmentions"));
+            }
+        });
+        menu.addItem({
             label: this.i18n.rules.sql,
             click: () => {
                 confirmDialog('SQL', `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {

@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-08-11 18:05:00
+ LastEditTime : 2023-08-11 18:19:21
  Description  : 
 -->
 <script lang="ts">
@@ -17,6 +17,7 @@
     export let app: any;
     export let blockId: BlockId;
     export let scroll: boolean;
+    export let expanded: boolean = true;
 
     let hpath: string = "";
     let divProtyle: HTMLDivElement;
@@ -41,7 +42,6 @@
         styleProtyleMaxHeight = maxHeight ? `max-height: ${maxHeight}px;` : "";
     };
 
-    let expanded: boolean = true;
     let classArrowOpen: string = "";
     $: {
         classArrowOpen = expanded ? "b3-list-item__arrow--open" : "";

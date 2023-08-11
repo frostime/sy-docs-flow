@@ -2,6 +2,8 @@
     "name": "Document flow",
     "rules": {
         "child": "Child document",
+        "docBacklinks": "Document backlinks",
+        "docBackmentions": "Document mentions",
         "sql": "SQL query",
         "customID": "Custom ID"
     },

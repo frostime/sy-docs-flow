@@ -3,11 +3,11 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-09 21:28:15
+ * @LastEditTime : 2023-08-11 18:39:21
  * @Description  : 
  */
 import { showMessage } from "siyuan";
-import {sql} from "@/api";
+import {getBacklink2, sql} from "@/api";
 import { getChildDocs } from "./utils";
 import { setting } from "./settings";
 
@@ -81,6 +81,66 @@ class ChildDocument extends MatchRule {
     }
 }
 
+class DocBacklinks extends MatchRule {
+    constructor() {
+        super("DocBacklinks");
+        this.input = null;
+        const currentDocument = document.querySelector(
+            ".layout-tab-container.fn__flex-1>div.fn__flex-1.protyle:not(.fn__none)"
+        );
+        
+        this.hash = `DocBacklinks`;
+
+        if (!currentDocument) {
+            return;
+        }
+
+        const eleTitle = currentDocument.querySelector(".protyle-title");
+        let dataId = eleTitle.getAttribute("data-node-id");
+        this.input = dataId;
+        this.hash = `DocBacklinks@${dataId}`;
+    }
+
+    async getIds() {
+        if (!this.input) {
+            return [];
+        }
+        let backlinks = await getBacklink2(this.input);
+        let backlinkIds = backlinks.backlinks.map((item) => item.id);
+        return backlinkIds ?? [];
+    }
+}
+
+class DocBackmentions extends MatchRule {
+    constructor() {
+        super("DocBackmentions");
+        this.input = null;
+        const currentDocument = document.querySelector(
+            ".layout-tab-container.fn__flex-1>div.fn__flex-1.protyle:not(.fn__none)"
+        );
+        
+        this.hash = `DocBackmentions`;
+
+        if (!currentDocument) {
+            return;
+        }
+
+        const eleTitle = currentDocument.querySelector(".protyle-title");
+        let dataId = eleTitle.getAttribute("data-node-id");
+        this.input = dataId;
+        this.hash = `DocBackmentions@${dataId}`;
+    }
+
+    async getIds() {
+        if (!this.input) {
+            return [];
+        }
+        let backlinks = await getBacklink2(this.input);
+        let backlinkIds = backlinks.backmentions.map((item) => item.id);
+        return backlinkIds ?? [];
+    }
+}
+
 
 class SQL extends MatchRule {
     constructor(sqlCode: string) {
@@ -135,6 +195,10 @@ export const RuleFactory = (type: TRuleType, input?: any) => {
     switch (type) {
         case "ChildDocument":
             return new ChildDocument();
+        case "DocBacklinks":
+            return new DocBacklinks();
+        case "DocBackmentions":
+            return new DocBackmentions();
         case "SQL":
             return new SQL(input);
         case "IdList":
