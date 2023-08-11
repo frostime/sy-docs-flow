@@ -2,15 +2,15 @@
  Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
- FilePath     : /src/docs-flow.svelte
- LastEditTime : 2023-08-09 21:30:44
+ FilePath     : /src/components/flow/docs-flow.svelte
+ LastEditTime : 2023-08-11 11:28:45
  Description  : 
 -->
 <script lang="ts">
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
     import { createEventDispatcher } from "svelte";
-    import { i18n } from "./utils";
+    import { i18n } from "../../utils";
 
     export let app: any;
     export let listDocuemntsId: DocumentId[] = [];

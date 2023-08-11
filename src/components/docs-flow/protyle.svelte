@@ -2,17 +2,17 @@
  Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
- FilePath     : /src/protyle.svelte
- LastEditTime : 2023-08-09 21:07:20
+ FilePath     : /src/components/flow/protyle.svelte
+ LastEditTime : 2023-08-11 11:28:40
  Description  : 
 -->
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
     import { Protyle, openTab } from "siyuan";
-    import { getBlockByID } from "./api";
-    import { notebooks } from "./utils";
+    import { getBlockByID } from "../../api";
+    import { notebooks } from "../../utils";
 
-    import { setting } from "./settings";
+    import { setting } from "../../settings";
 
     export let app: any;
     export let blockId: BlockId;
@@ -53,6 +53,7 @@
 
     function load() {
         protyle = new Protyle(app, divProtyle, {
+            mode: "wysiwyg",
             blockId: blockId,
             render: {
                 background: false,
