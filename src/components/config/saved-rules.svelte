@@ -2,13 +2,13 @@
  Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
  Author       : Yp Z
  Date         : 2023-08-09 18:08:55
- FilePath     : /src/saved-rules.svelte
- LastEditTime : 2023-08-09 22:01:13
+ FilePath     : /src/components/config/saved-rules.svelte
+ LastEditTime : 2023-08-11 11:29:43
  Description  : 
 -->
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import { i18n } from "./utils";
+    import { i18n } from "../../utils";
 
     export let savedRules: { [key: string]: IRule } = {};
 

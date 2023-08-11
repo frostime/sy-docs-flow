@@ -10,9 +10,9 @@ import {
 } from "siyuan";
 import "@/index.scss";
 
-import DocsFlow from "@/docs-flow.svelte";
+import DocsFlow from "@/components/docs-flow/docs-flow.svelte";
 import SettingPannel from "@/libs/setting-panel.svelte";
-import SavedRules from "@/saved-rules.svelte";
+import SavedRules from "@/components/config/saved-rules.svelte";
 
 import { confirmDialog, i18n, setI18n } from "@/utils";
 import { MatchRule, RuleFactory } from "@/rules";

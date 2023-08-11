@@ -14,7 +14,7 @@ export const setting = {
         if (this.protyleMaxHeight === "auto") {
             let ele = document.querySelector("#layouts .layout__center div[data-type=\"wnd\"]>.layout-tab-container");
             let height = ele.clientHeight;
-            console.log("getMaxHeight", height);
+            // console.log("getMaxHeight", height);
             return height;
         }
         return this.protyleMaxHeight;
