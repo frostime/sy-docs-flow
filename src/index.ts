@@ -17,6 +17,8 @@ import SavedRules from "@/components/config/saved-rules.svelte";
 import { confirmDialog, i18n, setI18n } from "@/utils";
 import { MatchRule, RuleFactory } from "@/rules";
 
+import { changelog } from "sy-plugin-changelog";
+
 const frontEnd = getFrontend();
 const isMobile = frontEnd === "mobile" || frontEnd === "browser-mobile";
 
@@ -189,6 +191,10 @@ export default class DocsFlowPlugin extends Plugin {
         this.eventBus.on('IdList', this.eventCustomIds.bind(this));
         //@ts-ignore
         this.eventBus.on('SQL', this.eventSQL.bind(this));
+
+        changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
+            ans.Dialog.setSize({ width: '35rem', height: '20rem' });
+        });
     }
 
     onLayoutReady() {
