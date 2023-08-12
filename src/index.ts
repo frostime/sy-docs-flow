@@ -141,6 +141,11 @@ class TabHub {
 // const SETTING_NAME = "docs-flow-setting.json";
 const SAVE_RULE_NAME = "saved-rules.json";
 
+function unescapeHTML(htmlString: string) {
+    var doc = new DOMParser().parseFromString(htmlString, 'text/html');
+    return doc.documentElement.textContent;
+}
+
 export default class DocsFlowPlugin extends Plugin {
 
     tabHub: TabHub;
@@ -178,6 +183,8 @@ export default class DocsFlowPlugin extends Plugin {
         this.savedRules = await this.loadData(SAVE_RULE_NAME);
         this.savedRules = this.savedRules || {};
 
+        this.eventBus.on("click-blockicon", this.onGutterClicked.bind(this));
+
         //@ts-ignore
         this.eventBus.on('IdList', this.eventCustomIds.bind(this));
         //@ts-ignore
@@ -189,6 +196,28 @@ export default class DocsFlowPlugin extends Plugin {
     }
 
     onunload() {
+    }
+
+    onGutterClicked({ detail }) {
+        let blockElements: any[] = detail.blockElements;
+        if (blockElements.length > 1) {
+            return;
+        }
+        let blockEle: HTMLDivElement = blockElements[0];
+        let datatype = blockEle.getAttribute("data-type");
+        if (datatype !== "NodeBlockQueryEmbed") {
+            return;
+        }
+        let sql = blockEle.getAttribute("data-content");
+        sql = unescapeHTML(sql);
+        let menu: Menu = detail.menu;
+        menu.addItem({
+            icon: "iconFlow",
+            label: i18n.button.openInDocFlow,
+            click: () => {
+                this.tabHub.open(RuleFactory("SQL", sql));
+            }
+        })
     }
 
     eventCustomIds(event: CustomEvent<CustomEventDetail<BlockId[]>>) {

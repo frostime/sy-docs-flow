@@ -39,3 +39,26 @@ After enabling the plugin, click the icon in the top bar and select the desired 
 2. Click the breadcrumb of each document to open the corresponding document.
 
 3. Click on the icon to the left of the document breadcrumbs to collapse the document and save resources
+
+## Developers
+
+This plugin exposes specific events for external code to call. Here's how to call them:
+
+1. Get the `eventBus` object of this plugin under `window.siyuan.ws.app.plugins`
+
+   ```js
+   window.siyuan.ws.app.plugins.find(p => p.name === 'sy-docs-flow')?.eventBus
+   ```
+
+2. Use `eventBus.emit(rule: TRuleType, e: CustomEventDetail)` to send a request to open the document flow.
+
+   ```ts
+   type TRuleType = "SQL" | "IdList";
+   interface CustomEventDetail {
+       input: any;
+       config?: any;
+   }
+   ```
+
+   - When `rule` is `"IdList"`, `input` should be an array of `BlockId`
+   - When `rule` is `"SQL"`, `input` should be a string.
