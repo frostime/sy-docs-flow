@@ -39,3 +39,26 @@
 
 2. 点击每个文档的面包屑，可以打开对应的文档
 3. 点击文档面包屑左侧图标，可以折叠文档，节省资源
+
+## 开发者
+
+本插件对外暴露特定的 Event 供外部的代码调用。调用方法如下:
+
+1. 获取 `window.siyuan.ws.app.plugins` 下本插件的 `eventBus` 对象
+
+    ```js
+    window.siyuan.ws.app.plugins.find(p => p.name === 'sy-docs-flow')?.eventBus
+    ```
+
+2. 使用 `eventBus.emit(rule: TRuleType, e: CustomEventDetail)` 来发送打开文档流的请求
+
+    ```ts
+    type TRuleType = "SQL" | "IdList";
+    interface CustomEventDetail {
+        input: any;
+        config?: any;
+    }
+    ```
+
+    - `rule` 为 `IdList`, `input` 为 `BlockId[]`
+    - `rule` 为 `SQL`, `input` 为 `string`
