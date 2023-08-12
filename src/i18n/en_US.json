@@ -9,7 +9,8 @@
     },
     "button": {
         "alterSaved": "Alter these",
-        "saved": "Saved rules"
+        "saved": "Saved rules",
+        "openInDocFlow": "Open in docflow"
     },
     "msg": {
         "alterSaved": "Alter saved rules",
