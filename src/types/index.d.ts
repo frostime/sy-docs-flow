@@ -110,3 +110,10 @@ interface IBacklink {
     dom: string
     expand: boolean
 }
+
+
+interface CustomEventDetail<T> {
+    input: T;
+    config?: any;
+}
+

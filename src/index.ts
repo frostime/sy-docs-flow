@@ -150,7 +150,7 @@ export default class DocsFlowPlugin extends Plugin {
     async onload() {
         this.tabHub = new TabHub(this);
         // 图标的制作参见帮助文档
-        this.addIcons(`<symbol id="iconFlow" viewBox="0 0 1024 1024"><path d="M1024 640v384H0v-384h128v256h768v-256zM192 704h640v128H192z m15.168-138.56l27.712-124.992 624.832 138.496L832 703.936zM279.68 308.544l54.08-116.032 580.032 270.464-54.08 116.032z m712.064 52.928l-77.952 101.568-507.776-389.632L462.336 0h58.24z" p-id="7558"></path></symbol>`);
+        this.addIcons(`<symbol id="iconFlow" viewBox="0 0 32 32"><path d="M1.038 16c0-0.652 0.529-1.181 1.181-1.181v0h2.362c0.652 0 1.181 0.529 1.181 1.181s-0.529 1.181-1.181 1.181v0h-2.362c-0.652 0-1.181-0.529-1.181-1.181v0zM7.338 16c0-0.652 0.529-1.181 1.181-1.181v0h2.363c0.652 0 1.181 0.529 1.181 1.181s-0.529 1.181-1.181 1.181v0h-2.363c-0.652 0-1.181-0.529-1.181-1.181v0zM13.637 16c0-0.652 0.529-1.181 1.181-1.181v0h2.362c0.652 0 1.181 0.529 1.181 1.181s-0.529 1.181-1.181 1.181v0h-2.363c-0.652 0-1.181-0.529-1.181-1.181v0zM19.938 16c0-0.652 0.529-1.181 1.181-1.181v0h2.363c0.652 0 1.181 0.529 1.181 1.181s-0.529 1.181-1.181 1.181v0h-2.363c-0.652 0-1.181-0.529-1.181-1.181v0zM26.237 16c0-0.652 0.529-1.181 1.181-1.181v0h2.363c0.652 0 1.181 0.529 1.181 1.181s-0.529 1.181-1.181 1.181v0h-2.363c-0.652 0-1.181-0.529-1.181-1.181v0zM4.581 0.25c-0.652 0-1.181 0.529-1.181 1.181v0 6.694c0 1.74 1.41 3.15 3.15 3.15v0h18.9c1.74 0 3.15-1.41 3.15-3.15v0-6.694c0-0.652-0.529-1.181-1.181-1.181s-1.181 0.529-1.181 1.181v0 6.694c0 0.435-0.353 0.787-0.788 0.787v0h-18.9c-0.435 0-0.787-0.353-0.787-0.787v0-6.694c0-0.652-0.529-1.181-1.181-1.181v0zM27.419 31.75c0.652 0 1.181-0.529 1.181-1.181v0-6.694c0-1.74-1.41-3.15-3.15-3.15v0h-18.9c-1.74 0-3.15 1.41-3.15 3.15v0 6.694c0 0.652 0.529 1.181 1.181 1.181s1.181-0.529 1.181-1.181v0-6.694c0-0.435 0.353-0.788 0.787-0.788v0h18.9c0.435 0 0.788 0.353 0.788 0.788v0 6.694c0 0.652 0.529 1.181 1.181 1.181z"></path></symbol>`);
 
         const topBarElement = this.addTopBar({
             icon: "iconFlow",
@@ -177,6 +177,11 @@ export default class DocsFlowPlugin extends Plugin {
 
         this.savedRules = await this.loadData(SAVE_RULE_NAME);
         this.savedRules = this.savedRules || {};
+
+        //@ts-ignore
+        this.eventBus.on('IdList', this.eventCustomIds.bind(this));
+        //@ts-ignore
+        this.eventBus.on('SQL', this.eventSQL.bind(this));
     }
 
     onLayoutReady() {
@@ -184,6 +189,24 @@ export default class DocsFlowPlugin extends Plugin {
     }
 
     onunload() {
+    }
+
+    eventCustomIds(event: CustomEvent<CustomEventDetail<BlockId[]>>) {
+        console.groupCollapsed("DocsFlowPlugin Eventbus");
+        console.log("CustomEvent[IdList] detail:");
+        console.log(event.detail);
+        console.groupEnd();
+        let ids = event.detail.input;
+        this.tabHub.open(RuleFactory("IdList", ids));
+    }
+
+    eventSQL(event: CustomEvent<CustomEventDetail<string>>) {
+        console.groupCollapsed("DocsFlowPlugin Eventbus");
+        console.log("CustomEvent[SQL] detail:");
+        console.log(event.detail);
+        console.groupEnd();
+        let sql = event.detail.input;
+        this.tabHub.open(RuleFactory("SQL", sql));
     }
 
     addMenu(rect?) {
