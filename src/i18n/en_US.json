@@ -18,6 +18,7 @@
         "saveDone": "Save done!"
     },
     "docsCnt": "Docs Count",
+    "displayBreadcrumb": "Breadcrumb",
     "scrollMode": "Scroll Mode",
     "nameTab": "Name it",
     "renameRule": "Rename it",

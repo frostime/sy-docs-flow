@@ -2,8 +2,8 @@
  Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
- FilePath     : /src/components/flow/docs-flow.svelte
- LastEditTime : 2023-08-11 11:28:45
+ FilePath     : /src/components/docs-flow/docs-flow.svelte
+ LastEditTime : 2023-08-12 14:57:50
  Description  : 
 -->
 <script lang="ts">
@@ -17,6 +17,7 @@
     export let ruleHash: string = "";
     export let config: any = {};
     let enableScroll: boolean = config.scroll;
+    let displayBreadcrumb: boolean = true;
 
     const dispatch = createEventDispatcher();
 
@@ -59,6 +60,23 @@
         >
             <div>{i18n.docsCnt}: {listDocuemntsId.length}</div>
             <div id="space" />
+
+            <label
+                class="b3-label__text"
+                for="enableScroll"
+                style="margin-top: 0px;"
+            >
+                {i18n.displayBreadcrumb}
+            </label>
+            <input
+                id="displayBreadcrumb"
+                class="b3-switch fn__flex-center"
+                type="checkbox"
+                bind:checked={displayBreadcrumb}
+            />
+
+            <span class="fn__space" />
+
             <label
                 class="b3-label__text"
                 for="enableScroll"
@@ -87,7 +105,7 @@
 
 <div class="docs-flow">
     {#each listDocuemntsId as did}
-        <Protyle {app} blockId={did} scroll={enableScroll} />
+        <Protyle {app} blockId={did} scroll={enableScroll} displayBreadcrumb={displayBreadcrumb} />
     {/each}
 </div>
 

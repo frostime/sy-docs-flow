@@ -18,6 +18,7 @@
         "saveDone": "保存成功!"
     },
     "docsCnt": "文档数",
+    "displayBreadcrumb": "面包屑",
     "scrollMode": "滚动模式",
     "nameTab": "命名",
     "renameRule": "重命名",
