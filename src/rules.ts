@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-11 18:39:21
+ * @LastEditTime : 2023-08-12 15:05:25
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -18,6 +18,7 @@ export abstract class MatchRule {
     input: any;
     config: {
         scroll: boolean;
+        breadcrumb: boolean;
     };
 
     constructor(type: TRuleType) {
@@ -26,7 +27,8 @@ export abstract class MatchRule {
         this.input = null;
         this.title = `${this.type}`;
         this.config = {
-            scroll: setting.protyleScroll
+            scroll: setting.protyleScroll,
+            breadcrumb: true
         };
     }
 
@@ -45,7 +47,10 @@ export abstract class MatchRule {
         this.hash = rule.hash;
         this.type = rule.type;
         this.input = rule.input;
-        this.config = rule?.config ?? this.config;
+        // this.config = rule?.config ?? this.config;
+        for (let key in rule.config) {
+            this.config[key] = rule.config[key];
+        }
     }
 
     abstract getIds(): DocumentId[] | Promise<DocumentId[]>;

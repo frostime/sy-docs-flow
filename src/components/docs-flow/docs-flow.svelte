@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-08-12 14:57:50
+ LastEditTime : 2023-08-12 15:09:20
  Description  : 
 -->
 <script lang="ts">
@@ -15,9 +15,9 @@
     export let app: any;
     export let listDocuemntsId: DocumentId[] = [];
     export let ruleHash: string = "";
-    export let config: any = {};
+    export let config: IConfig;
     let enableScroll: boolean = config.scroll;
-    let displayBreadcrumb: boolean = true;
+    let displayBreadcrumb: boolean = config.breadcrumb;
 
     const dispatch = createEventDispatcher();
 
@@ -31,13 +31,17 @@
         dispatch("saveThis", { ruleHash });
     }
 
+    function onConfigChanged() {
+        dispatch("configChanged", {
+            ruleHash,
+            config: { scroll: enableScroll, breadcrumb: displayBreadcrumb },
+        });
+    }
+
     const reload = () => {
         const oldListDocuemntsId = listDocuemntsId;
         listDocuemntsId = [];
-        dispatch("configChanged", {
-            ruleHash,
-            config: { scroll: enableScroll },
-        });
+        onConfigChanged();
         setTimeout(() => {
             listDocuemntsId = oldListDocuemntsId;
         }, 500);
@@ -73,6 +77,7 @@
                 class="b3-switch fn__flex-center"
                 type="checkbox"
                 bind:checked={displayBreadcrumb}
+                on:change={onConfigChanged}
             />
 
             <span class="fn__space" />
