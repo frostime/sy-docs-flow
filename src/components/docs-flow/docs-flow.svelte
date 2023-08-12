@@ -2,8 +2,8 @@
  Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
- FilePath     : /src/components/flow/docs-flow.svelte
- LastEditTime : 2023-08-11 11:28:45
+ FilePath     : /src/components/docs-flow/docs-flow.svelte
+ LastEditTime : 2023-08-12 15:09:20
  Description  : 
 -->
 <script lang="ts">
@@ -15,8 +15,9 @@
     export let app: any;
     export let listDocuemntsId: DocumentId[] = [];
     export let ruleHash: string = "";
-    export let config: any = {};
+    export let config: IConfig;
     let enableScroll: boolean = config.scroll;
+    let displayBreadcrumb: boolean = config.breadcrumb;
 
     const dispatch = createEventDispatcher();
 
@@ -30,13 +31,17 @@
         dispatch("saveThis", { ruleHash });
     }
 
+    function onConfigChanged() {
+        dispatch("configChanged", {
+            ruleHash,
+            config: { scroll: enableScroll, breadcrumb: displayBreadcrumb },
+        });
+    }
+
     const reload = () => {
         const oldListDocuemntsId = listDocuemntsId;
         listDocuemntsId = [];
-        dispatch("configChanged", {
-            ruleHash,
-            config: { scroll: enableScroll },
-        });
+        onConfigChanged();
         setTimeout(() => {
             listDocuemntsId = oldListDocuemntsId;
         }, 500);
@@ -59,6 +64,24 @@
         >
             <div>{i18n.docsCnt}: {listDocuemntsId.length}</div>
             <div id="space" />
+
+            <label
+                class="b3-label__text"
+                for="enableScroll"
+                style="margin-top: 0px;"
+            >
+                {i18n.displayBreadcrumb}
+            </label>
+            <input
+                id="displayBreadcrumb"
+                class="b3-switch fn__flex-center"
+                type="checkbox"
+                bind:checked={displayBreadcrumb}
+                on:change={onConfigChanged}
+            />
+
+            <span class="fn__space" />
+
             <label
                 class="b3-label__text"
                 for="enableScroll"
@@ -87,7 +110,7 @@
 
 <div class="docs-flow">
     {#each listDocuemntsId as did}
-        <Protyle {app} blockId={did} scroll={enableScroll} />
+        <Protyle {app} blockId={did} scroll={enableScroll} displayBreadcrumb={displayBreadcrumb} />
     {/each}
 </div>
 

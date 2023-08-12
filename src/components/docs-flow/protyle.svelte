@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-08-11 18:19:21
+ LastEditTime : 2023-08-12 15:18:29
  Description  : 
 -->
 <script lang="ts">
@@ -18,6 +18,9 @@
     export let blockId: BlockId;
     export let scroll: boolean;
     export let expanded: boolean = true;
+    export let displayBreadcrumb: boolean = true;
+
+    let breadcrumbDisplayChanged = false; //标识, 防止更改了面包屑后执行 Protyle 重载
 
     let hpath: string = "";
     let divProtyle: HTMLDivElement;
@@ -41,6 +44,12 @@
         }
         styleProtyleMaxHeight = maxHeight ? `max-height: ${maxHeight}px;` : "";
     };
+
+    let styleDisplayLi: string = "";
+    $: {
+        styleDisplayLi = displayBreadcrumb ? "" : "display: none;";
+        breadcrumbDisplayChanged = true;
+    }
 
     let classArrowOpen: string = "";
     $: {
@@ -72,6 +81,7 @@
 
         console.log('Mount protyle:', notebookName, hpath, blockId);
         initialised = true;
+        breadcrumbDisplayChanged = false; //TODO 这个解决方案很不优雅，后面有空改掉
     });
     onDestroy(() => {
         // protyle?.destroy();
@@ -82,8 +92,14 @@
         if (!initialised) {
             return; //由于 onMunt 是 async 所以会出现还没有执行完毕就调用了 afterUpdate 的情况
         }
+        //初始化后第一次执行 afterUpdate 的时候, 如果为非 scroll 模式, 就需要构造 dom
         if (scroll === false && protyleBacklinkData === undefined) {
             await constructDom();
+        }
+        //TODO 在切换显示面包屑的时候也会重载 protyle，后面想办法解决这个问题
+        if (breadcrumbDisplayChanged) {
+            breadcrumbDisplayChanged = false;
+            return;
         }
 
         console.log("afterUpdated", blockId, expanded);
@@ -137,9 +153,10 @@
     }
 </script>
 
-<div class="docs-flow__doc">
+<div class="docs-flow__doc" style="min-height: {heightBreadcrumb}px">
     <li
         class="b3-list-item b3-list-item--hide-action protyle-breadcrumb__item"
+        style="{styleDisplayLi}"
         data-node-id={blockId}
         data-type="NodeDocument"
         on:keypress={() => {}}
@@ -185,10 +202,10 @@
 
 <style lang="scss">
     div.docs-flow__doc {
+        border-top: 3px solid var(--b3-theme-primary);
         background-color: var(--b3-theme-background);
     }
     li.protyle-breadcrumb__item {
-        border-top: 3px solid var(--b3-theme-primary);
         border-radius: 0;
         border-bottom: 1px solid var(--b3-theme-primary);
     }

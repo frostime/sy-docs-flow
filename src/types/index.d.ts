@@ -87,14 +87,16 @@ interface Window {
 }
 
 type TRuleType = "ChildDocument" | "SQL" | "IdList" | "DocBacklinks" | "DocBackmentions";
+interface IConfig {
+    scroll: boolean;
+    breadcrumb: boolean;
+}
 interface IRule {
     title: string;
     hash: string;
     type: TRuleType;
     input: any;
-    config?: {
-        scroll: boolean;
-    }
+    config?: IConfig;
 }
 
 interface IBreadcrumb {
