@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-13 22:15:35
+ * @LastEditTime : 2023-08-13 22:38:58
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -16,10 +16,7 @@ export abstract class MatchRule {
     hash: string;
     type: TRuleType;
     input: any;
-    config: {
-        scroll: boolean;
-        breadcrumb: boolean;
-    };
+    config: IConfig;
 
     constructor(type: TRuleType) {
         this.type = type;
@@ -28,7 +25,8 @@ export abstract class MatchRule {
         this.title = `${this.type}`;
         this.config = {
             scroll: setting.protyleScroll,
-            breadcrumb: true
+            breadcrumb: setting.protyleBreadcrumb,
+            readonly: setting.protyleReadonly
         };
     }
 

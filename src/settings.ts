@@ -3,12 +3,14 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 23:24:33
  * @FilePath     : /src/settings.ts
- * @LastEditTime : 2023-08-02 20:19:12
+ * @LastEditTime : 2023-08-13 22:47:07
  * @Description  : 
  */
 export const setting = {
     protyleScroll: true as boolean,
     protyleMaxHeight: "auto" as number | "auto",
+    protyleBreadcrumb: true as boolean,
+    protyleReadonly: false as boolean,
 
     getMaxHeight() {
         if (this.protyleMaxHeight === "auto") {

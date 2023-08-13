@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2023-08-11 18:36:47
+ * @LastEditTime : 2023-08-13 22:37:52
  * @Description  : 
  */
 
@@ -90,6 +90,7 @@ type TRuleType = "ChildDocument" | "SQL" | "IdList" | "DocBacklinks" | "DocBackm
 interface IConfig {
     scroll: boolean;
     breadcrumb: boolean;
+    readonly: boolean;
 }
 interface IRule {
     title: string;
