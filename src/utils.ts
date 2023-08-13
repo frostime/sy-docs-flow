@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2023-08-09 21:03:49
+ * @LastEditTime : 2023-08-13 22:16:04
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
@@ -13,6 +13,18 @@ import zh_CN from "./i18n/zh_CN.json";
 export let i18n: typeof zh_CN;
 export function setI18n(i18nData: any) {
     i18n = i18nData;
+}
+
+export function getActiveTab() {
+    let tab = document.querySelector("div.layout__wnd--active ul.layout-tab-bar>li.item--focus");
+    let dataId: string = tab?.getAttribute("data-id");
+    if (!dataId) {
+        return null;
+    }
+    const activeTab: HTMLDivElement = document.querySelector(
+        `.layout-tab-container.fn__flex-1>div.protyle[data-id="${dataId}"]`
+    ) as HTMLDivElement;
+    return activeTab;
 }
 
 export async function getChildDocs(documentId: DocumentId) {

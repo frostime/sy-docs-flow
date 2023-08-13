@@ -3,12 +3,12 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-12 15:05:25
+ * @LastEditTime : 2023-08-13 22:15:35
  * @Description  : 
  */
 import { showMessage } from "siyuan";
 import {getBacklink2, sql} from "@/api";
-import { getChildDocs } from "./utils";
+import { getChildDocs, getActiveTab } from "./utils";
 import { setting } from "./settings";
 
 export abstract class MatchRule {
@@ -61,9 +61,7 @@ class ChildDocument extends MatchRule {
     constructor() {
         super("ChildDocument");
         this.input = null;
-        const currentDocument = document.querySelector(
-            ".layout-tab-container.fn__flex-1>div.fn__flex-1.protyle:not(.fn__none)"
-        );
+        const currentDocument = getActiveTab();
         
         this.hash = `ChildDocument`;
 
@@ -90,9 +88,7 @@ class DocBacklinks extends MatchRule {
     constructor() {
         super("DocBacklinks");
         this.input = null;
-        const currentDocument = document.querySelector(
-            ".layout-tab-container.fn__flex-1>div.fn__flex-1.protyle:not(.fn__none)"
-        );
+        const currentDocument = getActiveTab();
         
         this.hash = `DocBacklinks`;
 
@@ -120,9 +116,7 @@ class DocBackmentions extends MatchRule {
     constructor() {
         super("DocBackmentions");
         this.input = null;
-        const currentDocument = document.querySelector(
-            ".layout-tab-container.fn__flex-1>div.fn__flex-1.protyle:not(.fn__none)"
-        );
+        const currentDocument = getActiveTab();
         
         this.hash = `DocBackmentions`;
 
