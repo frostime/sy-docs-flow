@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-08-13 22:36:40
+ LastEditTime : 2023-08-13 23:04:21
  Description  : 
 -->
 <script lang="ts">
@@ -110,7 +110,7 @@
 
 <div class="docs-flow">
     {#each listDocuemntsId as did}
-        <Protyle {app} blockId={did} config={config} />
+        <Protyle {app} blockId={did} config={config} displayBreadcrumb={config.breadcrumb} />
     {/each}
 </div>
 
