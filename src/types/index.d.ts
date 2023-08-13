@@ -100,6 +100,11 @@ interface IRule {
     config?: IConfig;
 }
 
+interface IRuleResults {
+    ids: BlockId[];
+    eof: boolean;
+}
+
 interface IBreadcrumb {
     id: string,
     name: string,

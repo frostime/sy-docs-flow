@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-13 22:38:58
+ * @LastEditTime : 2023-08-13 22:51:55
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -51,7 +51,7 @@ export abstract class MatchRule {
         }
     }
 
-    abstract getIds(): DocumentId[] | Promise<DocumentId[]>;
+    abstract nextIds(): DocumentId[] | Promise<DocumentId[]>;
     precheck() { return true; } // 针对输入格式的检查
 }
 
@@ -73,7 +73,7 @@ class ChildDocument extends MatchRule {
         this.hash = `ChildDocument@${dataId}`;
     }
 
-    async getIds() {
+    async nextIds() {
         if (!this.input) {
             return [];
         }
@@ -100,7 +100,7 @@ class DocBacklinks extends MatchRule {
         this.hash = `DocBacklinks@${dataId}`;
     }
 
-    async getIds() {
+    async nextIds() {
         if (!this.input) {
             return [];
         }
@@ -128,7 +128,7 @@ class DocBackmentions extends MatchRule {
         this.hash = `DocBackmentions@${dataId}`;
     }
 
-    async getIds() {
+    async nextIds() {
         if (!this.input) {
             return [];
         }
@@ -156,7 +156,7 @@ class SQL extends MatchRule {
         return true;
     }
 
-    async getIds() {
+    async nextIds() {
         let result = await sql(this.input);
         let ids = result.map((item) => item?.id).filter((item) => typeof item === "string");
         return ids ?? [];
@@ -183,7 +183,7 @@ class IdList extends MatchRule {
         return true;
     }
 
-    async getIds() {
+    async nextIds() {
         return this.input;
     }
 }
