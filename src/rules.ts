@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-13 22:51:55
+ * @LastEditTime : 2023-08-13 22:56:59
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -51,7 +51,11 @@ export abstract class MatchRule {
         }
     }
 
-    abstract nextIds(): DocumentId[] | Promise<DocumentId[]>;
+    emptyResult(): IRuleFetchData {
+        return {ids: [], eof: true};
+    }
+
+    abstract nextIds(): IRuleFetchData | Promise<IRuleFetchData>;
     precheck() { return true; } // 针对输入格式的检查
 }
 
@@ -75,10 +79,11 @@ class ChildDocument extends MatchRule {
 
     async nextIds() {
         if (!this.input) {
-            return [];
+            return this.emptyResult();
         }
         let child = await getChildDocs(this.input);
-        return child ? [this.input, ...child] : null;
+        let ans = child ? [this.input, ...child] : null;
+        return { ids: ans ?? [], eof: true};
     }
 }
 
@@ -102,11 +107,11 @@ class DocBacklinks extends MatchRule {
 
     async nextIds() {
         if (!this.input) {
-            return [];
+            return this.emptyResult();
         }
         let backlinks = await getBacklink2(this.input);
         let backlinkIds = backlinks.backlinks.map((item) => item.id);
-        return backlinkIds ?? [];
+        return { ids: backlinkIds ?? [], eof: true};
     }
 }
 
@@ -130,11 +135,11 @@ class DocBackmentions extends MatchRule {
 
     async nextIds() {
         if (!this.input) {
-            return [];
+            return this.emptyResult();
         }
         let backlinks = await getBacklink2(this.input);
         let backlinkIds = backlinks.backmentions.map((item) => item.id);
-        return backlinkIds ?? [];
+        return { ids: backlinkIds ?? [], eof: true};
     }
 }
 
@@ -159,7 +164,8 @@ class SQL extends MatchRule {
     async nextIds() {
         let result = await sql(this.input);
         let ids = result.map((item) => item?.id).filter((item) => typeof item === "string");
-        return ids ?? [];
+        // return ids ?? [];
+        return { ids: ids ?? [], eof: true};
     }
 }
 

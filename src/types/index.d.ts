@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2023-08-13 22:37:52
+ * @LastEditTime : 2023-08-13 22:55:11
  * @Description  : 
  */
 
@@ -100,7 +100,7 @@ interface IRule {
     config?: IConfig;
 }
 
-interface IRuleResults {
+interface IRuleFetchData {
     ids: BlockId[];
     eof: boolean;
 }
