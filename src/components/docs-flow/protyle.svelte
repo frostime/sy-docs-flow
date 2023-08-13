@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-08-12 15:18:29
+ LastEditTime : 2023-08-13 23:04:01
  Description  : 
 -->
 <script lang="ts">
@@ -16,9 +16,10 @@
 
     export let app: any;
     export let blockId: BlockId;
-    export let scroll: boolean;
+    export let config: IConfig;
+    export let displayBreadcrumb: boolean;
     export let expanded: boolean = true;
-    export let displayBreadcrumb: boolean = true;
+    let scroll: boolean = config.scroll;
 
     let breadcrumbDisplayChanged = false; //标识, 防止更改了面包屑后执行 Protyle 重载
 
@@ -117,7 +118,7 @@
         console.log("Load protyle...", blockId);
         updateProtyleMaxHeight();
         protyle = new Protyle(app, divProtyle, {
-            mode: "wysiwyg",
+            mode: config.readonly? "preview" : "wysiwyg",
             blockId: blockId,
             //@ts-ignore
             backlinkData: protyleBacklinkData,

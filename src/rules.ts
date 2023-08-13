@@ -3,12 +3,12 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-12 15:05:25
+ * @LastEditTime : 2023-08-13 22:56:59
  * @Description  : 
  */
 import { showMessage } from "siyuan";
 import {getBacklink2, sql} from "@/api";
-import { getChildDocs } from "./utils";
+import { getChildDocs, getActiveTab } from "./utils";
 import { setting } from "./settings";
 
 export abstract class MatchRule {
@@ -16,10 +16,7 @@ export abstract class MatchRule {
     hash: string;
     type: TRuleType;
     input: any;
-    config: {
-        scroll: boolean;
-        breadcrumb: boolean;
-    };
+    config: IConfig;
 
     constructor(type: TRuleType) {
         this.type = type;
@@ -28,7 +25,8 @@ export abstract class MatchRule {
         this.title = `${this.type}`;
         this.config = {
             scroll: setting.protyleScroll,
-            breadcrumb: true
+            breadcrumb: setting.protyleBreadcrumb,
+            readonly: setting.protyleReadonly
         };
     }
 
@@ -53,7 +51,11 @@ export abstract class MatchRule {
         }
     }
 
-    abstract getIds(): DocumentId[] | Promise<DocumentId[]>;
+    emptyResult(): IRuleFetchData {
+        return {ids: [], eof: true};
+    }
+
+    abstract nextIds(): IRuleFetchData | Promise<IRuleFetchData>;
     precheck() { return true; } // 针对输入格式的检查
 }
 
@@ -61,9 +63,7 @@ class ChildDocument extends MatchRule {
     constructor() {
         super("ChildDocument");
         this.input = null;
-        const currentDocument = document.querySelector(
-            ".layout-tab-container.fn__flex-1>div.fn__flex-1.protyle:not(.fn__none)"
-        );
+        const currentDocument = getActiveTab();
         
         this.hash = `ChildDocument`;
 
@@ -77,12 +77,13 @@ class ChildDocument extends MatchRule {
         this.hash = `ChildDocument@${dataId}`;
     }
 
-    async getIds() {
+    async nextIds() {
         if (!this.input) {
-            return [];
+            return this.emptyResult();
         }
         let child = await getChildDocs(this.input);
-        return child ? [this.input, ...child] : null;
+        let ans = child ? [this.input, ...child] : null;
+        return { ids: ans ?? [], eof: true};
     }
 }
 
@@ -90,9 +91,7 @@ class DocBacklinks extends MatchRule {
     constructor() {
         super("DocBacklinks");
         this.input = null;
-        const currentDocument = document.querySelector(
-            ".layout-tab-container.fn__flex-1>div.fn__flex-1.protyle:not(.fn__none)"
-        );
+        const currentDocument = getActiveTab();
         
         this.hash = `DocBacklinks`;
 
@@ -106,13 +105,13 @@ class DocBacklinks extends MatchRule {
         this.hash = `DocBacklinks@${dataId}`;
     }
 
-    async getIds() {
+    async nextIds() {
         if (!this.input) {
-            return [];
+            return this.emptyResult();
         }
         let backlinks = await getBacklink2(this.input);
         let backlinkIds = backlinks.backlinks.map((item) => item.id);
-        return backlinkIds ?? [];
+        return { ids: backlinkIds ?? [], eof: true};
     }
 }
 
@@ -120,9 +119,7 @@ class DocBackmentions extends MatchRule {
     constructor() {
         super("DocBackmentions");
         this.input = null;
-        const currentDocument = document.querySelector(
-            ".layout-tab-container.fn__flex-1>div.fn__flex-1.protyle:not(.fn__none)"
-        );
+        const currentDocument = getActiveTab();
         
         this.hash = `DocBackmentions`;
 
@@ -136,13 +133,13 @@ class DocBackmentions extends MatchRule {
         this.hash = `DocBackmentions@${dataId}`;
     }
 
-    async getIds() {
+    async nextIds() {
         if (!this.input) {
-            return [];
+            return this.emptyResult();
         }
         let backlinks = await getBacklink2(this.input);
         let backlinkIds = backlinks.backmentions.map((item) => item.id);
-        return backlinkIds ?? [];
+        return { ids: backlinkIds ?? [], eof: true};
     }
 }
 
@@ -164,10 +161,11 @@ class SQL extends MatchRule {
         return true;
     }
 
-    async getIds() {
+    async nextIds() {
         let result = await sql(this.input);
         let ids = result.map((item) => item?.id).filter((item) => typeof item === "string");
-        return ids ?? [];
+        // return ids ?? [];
+        return { ids: ids ?? [], eof: true};
     }
 }
 
@@ -191,7 +189,7 @@ class IdList extends MatchRule {
         return true;
     }
 
-    async getIds() {
+    async nextIds() {
         return this.input;
     }
 }

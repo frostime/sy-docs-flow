@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-08-12 15:09:20
+ LastEditTime : 2023-08-13 23:04:21
  Description  : 
 -->
 <script lang="ts">
@@ -16,8 +16,8 @@
     export let listDocuemntsId: DocumentId[] = [];
     export let ruleHash: string = "";
     export let config: IConfig;
-    let enableScroll: boolean = config.scroll;
-    let displayBreadcrumb: boolean = config.breadcrumb;
+    // let enableScroll: boolean = config.scroll;
+    // let displayBreadcrumb: boolean = config.breadcrumb;
 
     const dispatch = createEventDispatcher();
 
@@ -34,7 +34,7 @@
     function onConfigChanged() {
         dispatch("configChanged", {
             ruleHash,
-            config: { scroll: enableScroll, breadcrumb: displayBreadcrumb },
+            config: config,
         });
     }
 
@@ -76,7 +76,7 @@
                 id="displayBreadcrumb"
                 class="b3-switch fn__flex-center"
                 type="checkbox"
-                bind:checked={displayBreadcrumb}
+                bind:checked={config.breadcrumb}
                 on:change={onConfigChanged}
             />
 
@@ -93,7 +93,7 @@
                 id="enableScroll"
                 class="b3-switch fn__flex-center"
                 type="checkbox"
-                bind:checked={enableScroll}
+                bind:checked={config.scroll}
                 on:change={reload}
             />
             <span class="fn__space" />
@@ -110,7 +110,7 @@
 
 <div class="docs-flow">
     {#each listDocuemntsId as did}
-        <Protyle {app} blockId={did} scroll={enableScroll} displayBreadcrumb={displayBreadcrumb} />
+        <Protyle {app} blockId={did} config={config} displayBreadcrumb={config.breadcrumb} />
     {/each}
 </div>
 
