@@ -193,9 +193,9 @@ export default class DocsFlowPlugin extends Plugin {
         //@ts-ignore
         this.eventBus.on('SQL', this.eventSQL.bind(this));
 
-        changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
-            ans?.Dialog?.setSize({ width: '35rem', height: '20rem' });
-        });
+        // changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
+        //     ans?.Dialog?.setSize({ width: '35rem', height: '20rem' });
+        // });
     }
 
     onLayoutReady() {

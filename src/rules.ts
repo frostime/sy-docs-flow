@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-13 22:56:59
+ * @LastEditTime : 2023-08-19 18:02:22
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -190,7 +190,8 @@ class IdList extends MatchRule {
     }
 
     async nextIds() {
-        return this.input;
+        // return this.input;
+        return { ids: this.input, eof: true};
     }
 }
 
