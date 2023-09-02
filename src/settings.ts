@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 23:24:33
  * @FilePath     : /src/settings.ts
- * @LastEditTime : 2023-08-13 22:47:07
+ * @LastEditTime : 2023-09-02 17:21:25
  * @Description  : 
  */
 export const setting = {
@@ -11,6 +11,10 @@ export const setting = {
     protyleMaxHeight: "auto" as number | "auto",
     protyleBreadcrumb: true as boolean,
     protyleReadonly: false as boolean,
+
+    dynamicLoadingEnabled: true as boolean,
+    dynamicLoadingLength: 10 as number,
+    dynamicLoadingShift: 5 as number,
 
     getMaxHeight() {
         if (this.protyleMaxHeight === "auto") {

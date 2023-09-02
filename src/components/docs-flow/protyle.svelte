@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-09-02 15:29:38
+ LastEditTime : 2023-09-02 17:16:16
  Description  : 
 -->
 <script lang="ts">
@@ -15,6 +15,7 @@
     import { setting } from "../../settings";
 
     export let app: any;
+    export let index: number;
     export let blockId: BlockId;
     export let config: IConfig;
     export let displayBreadcrumb: boolean;
@@ -65,7 +66,7 @@
         let backlink: IBacklink = {
             dom: dom,
             expand: false,
-            blockPaths: breadcrumb
+            blockPaths: breadcrumb,
         };
         protyleBacklinkData = [backlink];
         // console.log(blockDom);
@@ -80,7 +81,7 @@
         let prefix = notebookName ? `/${notebookName}` : "";
         hpath = prefix + doc.hpath;
 
-        console.log('Mount protyle:', notebookName, hpath, blockId);
+        console.log("Mount protyle:", notebookName, hpath, blockId);
         initialised = true;
         breadcrumbDisplayChanged = false; //TODO 这个解决方案很不优雅，后面有空改掉
     });
@@ -118,7 +119,7 @@
         // console.log("Load protyle...", blockId);
         updateProtyleMaxHeight();
         protyle = new Protyle(app, divProtyle, {
-            mode: config.readonly? "preview" : "wysiwyg",
+            mode: config.readonly ? "preview" : "wysiwyg",
             action: ["cb-get-context"],
             blockId: blockId,
             //@ts-ignore
@@ -137,7 +138,7 @@
             //未公开的 api，自己扒拉代码扒出来的 https://github.com/siyuan-note/siyuan/blob/v2.9.9/app/src/protyle/index.ts#L166
             //@ts-ignore
             protyle.protyle.title.setTitle(rootDoc.content);
-        } 
+        }
         divGutter = divProtyle.querySelector(".protyle-gutters");
         toggleGutterDisplay(false);
     }
@@ -158,7 +159,7 @@
 <div class="docs-flow__doc" style="min-height: {heightBreadcrumb}px">
     <li
         class="b3-list-item b3-list-item--hide-action protyle-breadcrumb__item"
-        style="{styleDisplayLi}"
+        style="gap: 5px; {styleDisplayLi}"
         data-node-id={blockId}
         data-type="NodeDocument"
         on:keypress={() => {}}
@@ -186,6 +187,12 @@
                 ><use xlink:href="#iconRight" /></svg
             >
         </span>
+        <span
+            class="b3-list-item__text"
+            style="flex: 0; min-width: 25px;"
+        >
+            {index + 1}
+        </span>
         <span class="b3-list-item__text">{hpath}</span>
         <svg class="b3-list-item__graphic popover__block" data-id={blockId}
             ><use xlink:href="#iconFile" /></svg
@@ -195,7 +202,7 @@
         <div
             class="docs-flow__protyle"
             bind:this={divProtyle}
-            style="{styleProtyleMaxHeight}"
+            style={styleProtyleMaxHeight}
             on:mouseenter={() => toggleGutterDisplay(true)}
             on:mouseleave={() => toggleGutterDisplay(false)}
         />

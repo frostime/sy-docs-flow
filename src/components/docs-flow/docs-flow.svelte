@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-09-02 17:02:06
+ LastEditTime : 2023-09-02 17:19:42
  Description  : 
 -->
 <script lang="ts">
@@ -17,9 +17,9 @@
     export let ruleHash: string = "";
     export let config: IConfig;
 
-    let loadOffset: number = 0;
-    let loadLength: number = 5;
-    let shiftLength: number = 2;
+    let loadOffset: number = 0;  //当前动态加载的文档偏移量
+    let loadLength: number = 10;  //每次动态加载的文档数量
+    let shiftLength: number = 7; //每次动态加载时的偏移量
     let loadIdList: DocumentId[] = [];
 
     $: {
@@ -94,7 +94,6 @@
         if (approxEqual(scrollTop, 0, 3) && scrollTop <= lastScrollTop) {
             console.log("到顶了");
             shift("left");
-            // ele.scrollTop = 5;
         } else if (
             approxEqual(scrollTop + clientHeight, scrollHeight, 3) &&
             scrollTop > lastScrollTop
@@ -171,9 +170,10 @@
 </div>
 
 <div class="docs-flow">
-    {#each loadIdList as did (did)}
+    {#each loadIdList as did , i (did)}
         <Protyle
             {app}
+            index={i + loadOffset}
             blockId={did}
             {config}
             displayBreadcrumb={config.breadcrumb}
