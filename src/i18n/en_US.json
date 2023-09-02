@@ -5,7 +5,8 @@
         "docBacklinks": "Document backlinks",
         "docBackmentions": "Document mentions",
         "sql": "SQL query",
-        "customID": "Custom ID"
+        "customID": "Custom ID",
+        "offspringDocument": "Offspring Document"
     },
     "button": {
         "alterSaved": "Alter these",
@@ -20,6 +21,7 @@
     "docsCnt": "Docs Count",
     "displayBreadcrumb": "Breadcrumb",
     "scrollMode": "Scroll Mode",
+    "dynamicLoading": "Dynamic Loading",
     "nameTab": "Name it",
     "renameRule": "Rename it",
     "saveRule": "Save it",

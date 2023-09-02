@@ -26,6 +26,10 @@ After enabling the plugin, click the icon in the top bar and select the desired 
 
     Click it, enter multiple block IDs in the popup window, the IDs can be separated by space, `\n`, `\t`, `,`, the blocks corresponding to these IDs will be stitched together into a document stream.
 
+6. Offspring document
+
+    Add all the offspring documents under a specific document tree.
+
 ## Inside the document stream
 
 1. Hover over the top of the document stream to bring up the toolbar.

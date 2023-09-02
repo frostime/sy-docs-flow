@@ -54,6 +54,7 @@ class TabHub {
             return;
         }
         let tabDiv = document.createElement("div");
+        tabDiv.classList.add("docs-flow-page");
         let flow = new DocsFlow({
             target: tabDiv,
             props: {
@@ -102,12 +103,20 @@ class TabHub {
         });
 
         const Tabs = this.tabs;
+        const dynamicLoadingEnabled = rule.config.dynamicLoading?.enabled;
         let tab = this.plugin.addTab({
             type: 'custom_tab',
             init() {
                 this.element.appendChild(tabDiv);
+                if (dynamicLoadingEnabled === true) {
+                    this.element.addEventListener("scroll", flow.onscroll);
+                }
             },
             beforeDestroy() {
+                // this.element.removeEventListener("scroll", flow.onscroll);
+                if (dynamicLoadingEnabled === true) {
+                    this.element.removeEventListener("scroll", flow.onscroll);
+                }
                 flow?.$destroy();
                 tabDiv?.remove();
             },
@@ -193,9 +202,9 @@ export default class DocsFlowPlugin extends Plugin {
         //@ts-ignore
         this.eventBus.on('SQL', this.eventSQL.bind(this));
 
-        // changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
-        //     ans?.Dialog?.setSize({ width: '35rem', height: '20rem' });
-        // });
+        changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
+            ans?.Dialog?.setSize({ width: '35rem', height: '20rem' });
+        });
     }
 
     onLayoutReady() {
@@ -251,6 +260,12 @@ export default class DocsFlowPlugin extends Plugin {
             label: this.i18n.rules.child,
             click: () => {
                 this.tabHub.open(RuleFactory("ChildDocument"));
+            }
+        });
+        menu.addItem({
+            label: this.i18n.rules.offspringDocument,
+            click: () => {
+                this.tabHub.open(RuleFactory("OffspringDocument"));
             }
         });
         menu.addItem({
