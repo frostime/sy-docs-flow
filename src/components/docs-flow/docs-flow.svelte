@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-08-13 23:04:21
+ LastEditTime : 2023-09-02 17:02:06
  Description  : 
 -->
 <script lang="ts">
@@ -16,8 +16,35 @@
     export let listDocuemntsId: DocumentId[] = [];
     export let ruleHash: string = "";
     export let config: IConfig;
-    // let enableScroll: boolean = config.scroll;
-    // let displayBreadcrumb: boolean = config.breadcrumb;
+
+    let loadOffset: number = 0;
+    let loadLength: number = 5;
+    let shiftLength: number = 2;
+    let loadIdList: DocumentId[] = [];
+
+    $: {
+        if (loadOffset < 0) {
+            loadOffset = 0;
+        } else if (loadOffset + loadLength > listDocuemntsId.length) {
+            loadOffset = listDocuemntsId.length - loadLength;
+        }
+        loadIdList = listDocuemntsId.slice(loadOffset, loadOffset + loadLength);
+        window.scrollTo(0, 0);
+    }
+    const shift = (direction: "left" | "right") => {
+        if (direction === "left") {
+            if (loadOffset == 0) {
+                return;
+            }
+            loadOffset -= shiftLength;
+        } else {
+            if (loadOffset + loadLength >= listDocuemntsId.length) {
+                return;
+            }
+            loadOffset += shiftLength;
+        }
+    };
+
 
     const dispatch = createEventDispatcher();
 
@@ -45,6 +72,41 @@
         setTimeout(() => {
             listDocuemntsId = oldListDocuemntsId;
         }, 500);
+    };
+
+    // 用于判断两个数字是否大致相等
+    const approxEqual = (a, b, epsilon = 1) => {
+        return Math.abs(a - b) < epsilon;
+    };
+
+    let lastScrollTop = null;
+    const dynamicLoading = (e) => {
+        let ele = e.target as HTMLDivElement;
+        let scrollTop = ele.scrollTop;
+        let scrollHeight = ele.scrollHeight;
+        let clientHeight = ele.clientHeight;
+        if (lastScrollTop === null) {
+            lastScrollTop = scrollTop;
+            return;
+        }
+
+        // epsilon 不能太小，否则会导致无法触发
+        if (approxEqual(scrollTop, 0, 3) && scrollTop <= lastScrollTop) {
+            console.log("到顶了");
+            shift("left");
+            // ele.scrollTop = 5;
+        } else if (
+            approxEqual(scrollTop + clientHeight, scrollHeight, 3) &&
+            scrollTop > lastScrollTop
+        ) {
+            console.log("到底了");
+            shift("right");
+        }
+    };
+    export const onscroll = (e) => {
+        window.requestAnimationFrame(() => {
+            dynamicLoading(e);
+        });
     };
 </script>
 
@@ -109,8 +171,13 @@
 </div>
 
 <div class="docs-flow">
-    {#each listDocuemntsId as did}
-        <Protyle {app} blockId={did} config={config} displayBreadcrumb={config.breadcrumb} />
+    {#each loadIdList as did (did)}
+        <Protyle
+            {app}
+            blockId={did}
+            {config}
+            displayBreadcrumb={config.breadcrumb}
+        />
     {/each}
 </div>
 

@@ -61,14 +61,14 @@
         let blockDom = await getBlockDOM(blockId);
         let dom = blockDom.dom;
         let breadcrumb = await getBlockBreadcrumb(blockId);
-        console.log(breadcrumb);
+        // console.log(breadcrumb);
         let backlink: IBacklink = {
             dom: dom,
             expand: false,
             blockPaths: breadcrumb
         };
         protyleBacklinkData = [backlink];
-        console.log(blockDom);
+        // console.log(blockDom);
     }
 
     onMount(async () => {
@@ -103,7 +103,7 @@
             return;
         }
 
-        console.log("afterUpdated", blockId, expanded);
+        // console.log("afterUpdated", blockId, expanded);
         if (divProtyle && expanded) {
             load();
         } else if (!divProtyle && !expanded) {
@@ -115,7 +115,7 @@
         if (!divProtyle) {
             return;
         }
-        console.log("Load protyle...", blockId);
+        // console.log("Load protyle...", blockId);
         updateProtyleMaxHeight();
         protyle = new Protyle(app, divProtyle, {
             mode: config.readonly? "preview" : "wysiwyg",
@@ -143,7 +143,7 @@
     }
 
     function unload() {
-        console.log('Unload protyle...', blockId);
+        // console.log('Unload protyle...', blockId);
         protyle?.destroy();
         divGutter = null;
     }

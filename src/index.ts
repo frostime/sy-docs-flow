@@ -54,6 +54,7 @@ class TabHub {
             return;
         }
         let tabDiv = document.createElement("div");
+        tabDiv.classList.add("docs-flow-page");
         let flow = new DocsFlow({
             target: tabDiv,
             props: {
@@ -106,8 +107,12 @@ class TabHub {
             type: 'custom_tab',
             init() {
                 this.element.appendChild(tabDiv);
+                console.log("tab", this.element);
+                this.element.addEventListener("scroll", flow.onscroll);
+                console.log("addEventListener", flow.onscroll);
             },
             beforeDestroy() {
+                this.element.removeEventListener("scroll", flow.onscroll);
                 flow?.$destroy();
                 tabDiv?.remove();
             },
