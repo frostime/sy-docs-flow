@@ -263,7 +263,7 @@ export default class DocsFlowPlugin extends Plugin {
             }
         });
         menu.addItem({
-            label: '文档树',
+            label: this.i18n.rules.offspringDocument,
             click: () => {
                 this.tabHub.open(RuleFactory("OffspringDocument"));
             }

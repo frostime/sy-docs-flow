@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-09-02 18:01:40
+ * @LastEditTime : 2023-09-02 18:15:10
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -120,7 +120,10 @@ class OffspringDocument extends MatchRule {
             return this.emptyResult();
         }
 
-        let tree = new TreeItem(`/data/${block.box}`, this.input);
+        let path = block.path;
+        let dir = path.split("/").slice(0, -1).join("/");
+        dir = dir.startsWith("/") ? dir : `/${dir}`;
+        let tree = new TreeItem(`/data/${block.box}${dir}`, this.input);
         let allItems = await tree.buildTree();
         let ids = allItems.map((item) => item.docId);
         return { ids: ids ?? [], eof: true};

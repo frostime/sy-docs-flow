@@ -5,7 +5,8 @@
         "docBacklinks": "文档反链",
         "docBackmentions": "文档提及",
         "sql": "SQL查询",
-        "customID": "自定义ID"
+        "customID": "自定义ID",
+        "offspringDocument": "文档树"
     },
     "button": {
         "alterSaved": "更改上述规则",
