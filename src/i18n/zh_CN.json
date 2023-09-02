@@ -20,6 +20,7 @@
     "docsCnt": "文档数",
     "displayBreadcrumb": "面包屑",
     "scrollMode": "滚动模式",
+    "dynamicLoading": "动态加载",
     "nameTab": "命名",
     "renameRule": "重命名",
     "saveRule": "保存",

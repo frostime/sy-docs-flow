@@ -20,6 +20,7 @@
     "docsCnt": "Docs Count",
     "displayBreadcrumb": "Breadcrumb",
     "scrollMode": "Scroll Mode",
+    "dynamicLoading": "Dynamic Loading",
     "nameTab": "Name it",
     "renameRule": "Rename it",
     "saveRule": "Save it",

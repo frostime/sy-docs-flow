@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-09-02 17:34:59
+ LastEditTime : 2023-09-02 17:39:11
  Description  : 
 -->
 <script lang="ts">
@@ -27,6 +27,7 @@
 
     const updateLoadIdList = () => {
         if (config.dynamicLoading.enabled !== true) {
+            loadIdList = listDocuemntsId;
             return;
         }
         if (loadOffset < 0) {
@@ -77,11 +78,10 @@
     }
 
     const reload = () => {
-        const oldListDocuemntsId = listDocuemntsId;
-        listDocuemntsId = [];
+        loadIdList = [];
         onConfigChanged();
         setTimeout(() => {
-            listDocuemntsId = oldListDocuemntsId;
+            updateLoadIdList();
         }, 500);
     };
 
@@ -155,6 +155,22 @@
                 on:change={onConfigChanged}
             />
 
+            <span class="fn__space" />
+
+            <label
+                class="b3-label__text"
+                for="enableScroll"
+                style="margin-top: 0px;"
+            >
+                {i18n.dynamicLoading}
+            </label>
+            <input
+                id="enableScroll"
+                class="b3-switch fn__flex-center"
+                type="checkbox"
+                bind:checked={config.dynamicLoading.enabled}
+                on:change={reload}
+            />
             <span class="fn__space" />
 
             <label
