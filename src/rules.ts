@@ -126,7 +126,8 @@ class OffspringDocument extends MatchRule {
         let tree = new TreeItem(`/data/${block.box}${dir}`, this.input);
         let allItems = await tree.buildTree();
         let ids = allItems.map((item) => item.docId);
-        return { ids: ids ?? [], eof: true};
+        ids = [this.input, ...ids];
+        return { ids: ids, eof: true};
     }
 }
 
