@@ -108,6 +108,7 @@ class OffspringDocument extends MatchRule {
         let dataId = eleTitle.getAttribute("data-node-id");
         this.input = dataId;
         this.hash = `OffspringDocument@${dataId}`;
+        this.config.dynamicLoading.enabled = true; //默认开启
     }
 
     async nextIds() {

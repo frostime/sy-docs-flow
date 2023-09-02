@@ -265,7 +265,7 @@ export default class DocsFlowPlugin extends Plugin {
         menu.addItem({
             label: '文档树',
             click: () => {
-                this.tabHub.open(RuleFactory("ChildDocument"));
+                this.tabHub.open(RuleFactory("OffspringDocument"));
             }
         });
         menu.addItem({
