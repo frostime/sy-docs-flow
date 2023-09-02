@@ -86,7 +86,7 @@ interface Window {
     };
 }
 
-type TRuleType = "ChildDocument" | "SQL" | "IdList" | "DocBacklinks" | "DocBackmentions";
+type TRuleType = "ChildDocument" | "SQL" | "IdList" | "DocBacklinks" | "DocBackmentions" | "OffspringDocument";
 interface IConfig {
     scroll: boolean;
     breadcrumb: boolean;

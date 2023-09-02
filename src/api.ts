@@ -427,7 +427,7 @@ export type ResReadDir = {
     isDir: boolean;
     name: string;
 }
-export async function readDir(path: string): Promise<ResReadDir> {
+export async function readDir(path: string): Promise<ResReadDir[]> {
     let data = {
         path: path
     }

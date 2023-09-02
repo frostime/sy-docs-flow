@@ -263,6 +263,12 @@ export default class DocsFlowPlugin extends Plugin {
             }
         });
         menu.addItem({
+            label: '文档树',
+            click: () => {
+                this.tabHub.open(RuleFactory("ChildDocument"));
+            }
+        });
+        menu.addItem({
             label: this.i18n.rules.docBacklinks,
             click: () => {
                 this.tabHub.open(RuleFactory("DocBacklinks"));

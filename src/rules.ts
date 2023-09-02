@@ -3,12 +3,12 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-09-02 17:24:24
+ * @LastEditTime : 2023-09-02 18:01:40
  * @Description  : 
  */
 import { showMessage } from "siyuan";
-import {getBacklink2, sql} from "@/api";
-import { getChildDocs, getActiveTab } from "./utils";
+import {getBacklink2, sql, getBlockByID} from "@/api";
+import { getChildDocs, getActiveTab, TreeItem } from "./utils";
 import { setting } from "./settings";
 
 export abstract class MatchRule {
@@ -89,6 +89,40 @@ class ChildDocument extends MatchRule {
         let child = await getChildDocs(this.input);
         let ans = child ? [this.input, ...child] : null;
         return { ids: ans ?? [], eof: true};
+    }
+}
+
+class OffspringDocument extends MatchRule {
+    constructor() {
+        super("OffspringDocument");
+        this.input = null;
+        const currentDocument = getActiveTab();
+        
+        this.hash = `OffspringDocument`;
+
+        if (!currentDocument) {
+            return;
+        }
+
+        const eleTitle = currentDocument.querySelector(".protyle-title");
+        let dataId = eleTitle.getAttribute("data-node-id");
+        this.input = dataId;
+        this.hash = `OffspringDocument@${dataId}`;
+    }
+
+    async nextIds() {
+        if (!this.input) {
+            return this.emptyResult();
+        }
+        let block = await getBlockByID(this.input);
+        if (!block) {
+            return this.emptyResult();
+        }
+
+        let tree = new TreeItem(`/data/${block.box}`, this.input);
+        let allItems = await tree.buildTree();
+        let ids = allItems.map((item) => item.docId);
+        return { ids: ids ?? [], eof: true};
     }
 }
 
@@ -204,6 +238,8 @@ export const RuleFactory = (type: TRuleType, input?: any) => {
     switch (type) {
         case "ChildDocument":
             return new ChildDocument();
+        case "OffspringDocument":
+            return new OffspringDocument();
         case "DocBacklinks":
             return new DocBacklinks();
         case "DocBackmentions":
