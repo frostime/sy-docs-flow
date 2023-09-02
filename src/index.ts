@@ -103,16 +103,20 @@ class TabHub {
         });
 
         const Tabs = this.tabs;
+        const dynamicLoadingEnabled = rule.config.dynamicLoading?.enabled;
         let tab = this.plugin.addTab({
             type: 'custom_tab',
             init() {
                 this.element.appendChild(tabDiv);
-                console.log("tab", this.element);
-                this.element.addEventListener("scroll", flow.onscroll);
-                console.log("addEventListener", flow.onscroll);
+                if (dynamicLoadingEnabled === true) {
+                    this.element.addEventListener("scroll", flow.onscroll);
+                }
             },
             beforeDestroy() {
-                this.element.removeEventListener("scroll", flow.onscroll);
+                // this.element.removeEventListener("scroll", flow.onscroll);
+                if (dynamicLoadingEnabled === true) {
+                    this.element.removeEventListener("scroll", flow.onscroll);
+                }
                 flow?.$destroy();
                 tabDiv?.remove();
             },

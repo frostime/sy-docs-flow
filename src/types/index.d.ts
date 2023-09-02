@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2023-08-13 22:55:11
+ * @LastEditTime : 2023-09-02 17:23:46
  * @Description  : 
  */
 
@@ -91,6 +91,11 @@ interface IConfig {
     scroll: boolean;
     breadcrumb: boolean;
     readonly: boolean;
+    dynamicLoading: {
+        enabled: boolean;
+        capacity: number;
+        shift: number;
+    };
 }
 interface IRule {
     title: string;

@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-08-19 18:02:22
+ * @LastEditTime : 2023-09-02 17:24:24
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -26,7 +26,12 @@ export abstract class MatchRule {
         this.config = {
             scroll: setting.protyleScroll,
             breadcrumb: setting.protyleBreadcrumb,
-            readonly: setting.protyleReadonly
+            readonly: setting.protyleReadonly,
+            dynamicLoading: {
+                enabled: setting.dynamicLoadingEnabled,
+                capacity: setting.dynamicLoadingCapacity,
+                shift: setting.dynamicLoadingShift
+            }
         };
     }
 

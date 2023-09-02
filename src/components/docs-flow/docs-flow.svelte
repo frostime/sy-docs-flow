@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-09-02 17:19:42
+ LastEditTime : 2023-09-02 17:34:59
  Description  : 
 -->
 <script lang="ts">
@@ -17,21 +17,32 @@
     export let ruleHash: string = "";
     export let config: IConfig;
 
-    let loadOffset: number = 0;  //当前动态加载的文档偏移量
-    let loadLength: number = 10;  //每次动态加载的文档数量
-    let shiftLength: number = 7; //每次动态加载时的偏移量
-    let loadIdList: DocumentId[] = [];
+    let loadOffset: number = 0; //当前动态加载的文档偏移量
+    let loadLength: number = config.dynamicLoading.capacity; //每次动态加载的文档数量
+    let shiftLength: number = config.dynamicLoading.shift; //每次动态加载时的偏移量
+    let loadIdList: DocumentId[] = config.dynamicLoading.enabled
+        ? listDocuemntsId.slice(loadOffset, loadOffset + loadLength)
+        : listDocuemntsId;
+    console.log("loadIdList", loadIdList);
 
-    $: {
+    const updateLoadIdList = () => {
+        if (config.dynamicLoading.enabled !== true) {
+            return;
+        }
         if (loadOffset < 0) {
             loadOffset = 0;
         } else if (loadOffset + loadLength > listDocuemntsId.length) {
             loadOffset = listDocuemntsId.length - loadLength;
         }
         loadIdList = listDocuemntsId.slice(loadOffset, loadOffset + loadLength);
-        window.scrollTo(0, 0);
-    }
+        // window.scrollTo(0, 0);
+    };
+
     const shift = (direction: "left" | "right") => {
+        if (config.dynamicLoading.enabled !== true) {
+            return;
+        }
+
         if (direction === "left") {
             if (loadOffset == 0) {
                 return;
@@ -43,8 +54,8 @@
             }
             loadOffset += shiftLength;
         }
+        updateLoadIdList();
     };
-
 
     const dispatch = createEventDispatcher();
 
@@ -104,6 +115,9 @@
     };
     export const onscroll = (e) => {
         window.requestAnimationFrame(() => {
+            if (config.dynamicLoading.enabled !== true) {
+                return;
+            }
             dynamicLoading(e);
         });
     };
@@ -170,7 +184,7 @@
 </div>
 
 <div class="docs-flow">
-    {#each loadIdList as did , i (did)}
+    {#each loadIdList as did, i (did)}
         <Protyle
             {app}
             index={i + loadOffset}
