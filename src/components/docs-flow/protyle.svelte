@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-08-13 23:04:01
+ LastEditTime : 2023-09-02 15:29:38
  Description  : 
 -->
 <script lang="ts">
@@ -119,6 +119,7 @@
         updateProtyleMaxHeight();
         protyle = new Protyle(app, divProtyle, {
             mode: config.readonly? "preview" : "wysiwyg",
+            action: ["cb-get-context"],
             blockId: blockId,
             //@ts-ignore
             backlinkData: protyleBacklinkData,
