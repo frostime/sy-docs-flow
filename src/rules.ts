@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-09-02 18:15:10
+ * @LastEditTime : 2023-09-06 13:33:00
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -62,6 +62,26 @@ export abstract class MatchRule {
 
     abstract nextIds(): IRuleFetchData | Promise<IRuleFetchData>;
     precheck() { return true; } // 针对输入格式的检查
+
+    mergeConfig(config: any) {
+        console.log('Merge config:', config);
+        //将 source 的配置合并到 target
+        const merge = (target: object, source?: object) => {
+            if (source === undefined) {
+                return;
+            }
+            for (let key in target) {
+                if (key in source) {
+                    if (typeof target[key] === "object") {
+                        merge(target[key], source[key]);
+                    } else {
+                        target[key] = source[key];
+                    }
+                }
+            }
+        }
+        merge(this.config, config);
+    }
 }
 
 class ChildDocument extends MatchRule {

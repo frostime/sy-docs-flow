@@ -60,9 +60,42 @@ This plugin exposes specific events for external code to call. Here's how to cal
    type TRuleType = "SQL" | "IdList";
    interface CustomEventDetail {
        input: any;
-       config?: any;
+       config?: object;
    }
    ```
 
    - When `rule` is `"IdList"`, `input` should be an array of `BlockId`
    - When `rule` is `"SQL"`, `input` should be a string.
+
+    `config`'s key could be parts of type `IConfig`.
+
+    ```ts
+    interface IConfig {
+        scroll: boolean;
+        breadcrumb: boolean;
+        readonly: boolean;
+        dynamicLoading: {
+            enabled: boolean;
+            capacity: number;
+            shift: number;
+        };
+    }
+    ```
+
+    Example:
+    ```js
+    let eb = window.siyuan.ws.app.plugins.find(p => p.name === 'sy-docs-flow')?.eventBus;
+    if (eb === undefined ) {
+        return;
+    }
+    let detail = {
+        input: "SELECT * FROM blocks ORDER BY random() LIMIT 3",
+        config: {
+            readonly: true,
+            breadcrumb: false,
+            dynamicLoading: { enabled: true }
+        }
+    };
+
+    eb.emit("SQL", detail);
+    ```

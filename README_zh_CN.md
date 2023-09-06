@@ -62,9 +62,44 @@
     type TRuleType = "SQL" | "IdList";
     interface CustomEventDetail {
         input: any;
-        config?: any;
+        config?: object;
     }
     ```
 
     - `rule` 为 `IdList`, `input` 为 `BlockId[]`
     - `rule` 为 `SQL`, `input` 为 `string`
+
+    config 参考 `IConfig` 类型
+
+    ```ts
+    interface IConfig {
+        scroll: boolean;
+        breadcrumb: boolean;
+        readonly: boolean;
+        dynamicLoading: {
+            enabled: boolean;
+            capacity: number;
+            shift: number;
+        };
+    }
+    ```
+
+    config 的实例可以只选取 IConfig 当中的一部分, 剩余的部分会使用默认的配置。
+
+    使用案例:
+    ```js
+    let eb = window.siyuan.ws.app.plugins.find(p => p.name === 'sy-docs-flow')?.eventBus;
+    if (eb === undefined ) {
+        return;
+    }
+    let detail = {
+        input: "SELECT * FROM blocks ORDER BY random() LIMIT 3",
+        config: {
+            readonly: true,
+            breadcrumb: false,
+            dynamicLoading: {enabled: true}
+        }
+    };
+
+    eb.emit("SQL", detail);
+    ```

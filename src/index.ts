@@ -242,7 +242,10 @@ export default class DocsFlowPlugin extends Plugin {
         console.log(event.detail);
         console.groupEnd();
         let ids = event.detail.input;
-        this.tabHub.open(RuleFactory("IdList", ids));
+        let config = event.detail.config;
+        let rule = RuleFactory("IdList", ids);
+        rule.mergeConfig(config);
+        this.tabHub.open(rule);
     }
 
     eventSQL(event: CustomEvent<CustomEventDetail<string>>) {
@@ -251,7 +254,10 @@ export default class DocsFlowPlugin extends Plugin {
         console.log(event.detail);
         console.groupEnd();
         let sql = event.detail.input;
-        this.tabHub.open(RuleFactory("SQL", sql));
+        let config = event.detail.config;
+        let rule = RuleFactory("SQL", sql);
+        rule.mergeConfig(config);
+        this.tabHub.open(rule);
     }
 
     addMenu(rect?) {
