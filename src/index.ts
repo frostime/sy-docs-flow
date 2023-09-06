@@ -105,7 +105,7 @@ class TabHub {
         const Tabs = this.tabs;
         const dynamicLoadingEnabled = rule.config.dynamicLoading?.enabled;
         let tab = this.plugin.addTab({
-            type: 'custom_tab',
+            type: hash,
             init() {
                 this.element.appendChild(tabDiv);
                 if (dynamicLoadingEnabled === true) {
@@ -133,20 +133,20 @@ class TabHub {
     }
 
     private openTab(hash: any) {
-        let tab = this.tabs[hash].tab;
+        // let tab = this.tabs[hash].tab;
+        console.log(`Open tab ${hash}`)
         let rule = this.tabs[hash].rule;
         openTab({
             app: this.plugin.app,
             custom: {
                 icon: "iconFlow",
                 title: rule.title,
-                data: hash, //关键, 思源靠这个判断是否是同一个tab
-                fn: tab,
+                data: hash,
+                id: this.plugin.name + hash
             },
             keepCursor: false,
             removeCurrentTab: true
         });
-        console.log(this.tabs);
     }
 }
 
@@ -203,7 +203,7 @@ export default class DocsFlowPlugin extends Plugin {
         this.eventBus.on('SQL', this.eventSQL.bind(this));
 
         changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
-            ans?.Dialog?.setSize({ width: '35rem', height: '20rem' });
+            ans?.Dialog?.setSize({ width: '35rem', height: '22rem' });
         });
     }
 
