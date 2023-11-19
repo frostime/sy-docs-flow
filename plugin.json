@@ -5,7 +5,7 @@
   "version": "0.3.1",
   "minAppVersion": "2.10.3",
   "backends": ["all"],
-  "frontends": ["all"],
+  "frontends": ["desktop", "desktop-window", "browser-desktop", "browser-mobile"],
   "displayName": {
     "en_US": "Documents Flow",
     "zh_CN": "文档流"
