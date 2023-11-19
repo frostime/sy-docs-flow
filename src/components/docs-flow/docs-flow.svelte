@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-11-19 20:05:27
+ LastEditTime : 2023-11-19 20:09:35
  Description  : 
 -->
 <script lang="ts">
@@ -115,6 +115,7 @@
         let settingComp = new DefaultSetting({
             target: ele,
             props: {
+                descriptioin: i18n.defaultSetting.descriptioinSpecific,
                 settingValue: {
                     protyleScroll: config.scroll,
                     protyleBreadcrumb: config.breadcrumb,

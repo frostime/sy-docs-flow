@@ -4,9 +4,13 @@
     import { setting } from "@/settings";
     import { i18n } from "@/utils";
 
+    const I18N = i18n.defaultSetting;
+
     export let group: string = "";
     export let display: boolean = true;
     export let settingValue = {};
+
+    export let descriptioin = I18N.descriptioin;
 
     const SettingItemsValue = {
         protyleScroll: setting.protyleScroll,
@@ -71,7 +75,6 @@
         ];
     });
 
-    const I18N = i18n.defaultSetting;
 
     const dispatch = createEventDispatcher();
 
@@ -88,7 +91,7 @@
     on:changed={onChanged}
 >
     <div slot="top" class="fn__flex b3-label">
-        💡 {I18N.descriptioin}
+        💡 {descriptioin}
     </div>
 </SettingPanel>
 

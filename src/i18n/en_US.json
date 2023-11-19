@@ -21,6 +21,7 @@
     },
     "defaultSetting": {
         "descriptioin": "Note: This setting will serve as the default configuration for each document flow.",
+        "descriptioinSpecific": "Note: The settings will only take effect in the current document flow.",
         "scrollMode": {
             "title": "Scroll Mode",
             "text": "Fixed height for a single document, scroll to load its internal content. It can save memory resources when dealing with large documents."

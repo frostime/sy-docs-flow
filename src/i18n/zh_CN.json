@@ -21,6 +21,7 @@
     },
     "defaultSetting": {
         "descriptioin": "注: 本小节设置会作为每个文档流的默认配置",
+        "descriptioinSpecific": "注: 本小节设置会仅在当前文档流生效",
         "scrollMode": {
             "title": "滚动模式",
             "text": "单个文档固定高度, 滚动加载其内部内容, 在单个文档较大时, 可以节省内存资源"
