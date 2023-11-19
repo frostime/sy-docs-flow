@@ -3,16 +3,15 @@
  Author       : frostime
  Date         : 2023-07-01 19:23:50
  FilePath     : /src/libs/setting-panel.svelte
- LastEditTime : 2023-11-19 17:50:07
+ LastEditTime : 2023-11-19 18:06:43
  Description  : 
 -->
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import SettingItem from "./setting-item.svelte";
 
-    export let dataname: string;
+    export let group: string;
     export let settingItems: ISettingItem[];
-
     export let display: boolean = true;
 
     const dispatch = createEventDispatcher();
@@ -21,14 +20,14 @@
         dispatch("click", { key: detail.key });
     }
     function onChanged( {detail}) {
-        dispatch("changed", detail);
+        dispatch("changed", {group: group, ...detail});
     }
 
     $: fn__none = display ? "" : "fn__none";
 
 </script>
 
-<div class="config__tab-container {fn__none}" data-name={dataname}>
+<div class="config__tab-container {fn__none}" data-name={group}>
     {#each settingItems as item (item.key)}
         <SettingItem
             type={item.type}

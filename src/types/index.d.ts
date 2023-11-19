@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2023-11-19 17:47:20
+ * @LastEditTime : 2023-11-19 18:19:12
  * @Description  : 
  */
 
@@ -132,7 +132,7 @@ interface CustomEventDetail<T> {
 
 
 /********** Setting **********/
-type TSettingType = "checkbox" | "input" | "button" | "select" | "slider";
+type TSettingType = "checkbox" | "input" | "button" | "select" | "slider" | "number";
 
 interface ISettingItem {
     type: TSettingType;
