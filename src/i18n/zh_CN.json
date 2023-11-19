@@ -11,7 +11,8 @@
     "button": {
         "alterSaved": "更改上述规则",
         "saved": "已保存的规则",
-        "openInDocFlow": "文档流中打开"
+        "openInDocFlow": "文档流中打开",
+        "moreConfig": "更多配置"
     },
     "msg": {
         "alterSaved": "更改已经保存的规则",

@@ -11,7 +11,8 @@
     "button": {
         "alterSaved": "Alter these",
         "saved": "Saved rules",
-        "openInDocFlow": "Open in docflow"
+        "openInDocFlow": "Open in docflow",
+        "moreConfig": "More"
     },
     "msg": {
         "alterSaved": "Alter saved rules",

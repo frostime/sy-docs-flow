@@ -3,14 +3,16 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-09-02 17:39:11
+ LastEditTime : 2023-11-19 20:05:27
  Description  : 
 -->
 <script lang="ts">
+    import { Dialog } from "siyuan";
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
     import { createEventDispatcher } from "svelte";
     import { i18n } from "../../utils";
+    import DefaultSetting from "../config/default-setting.svelte";
 
     export let app: any;
     export let listDocuemntsId: DocumentId[] = [];
@@ -74,6 +76,57 @@
         dispatch("configChanged", {
             ruleHash,
             config: config,
+        });
+    }
+
+    function onOpenConfig() {
+        console.log("onOpenConfig", config);
+        let dialog = new Dialog({
+            title: 'Config',
+            content: `<div id="SettingPanel"></div>`,
+            width: "780px",
+            height: "500px",
+            destroyCallback: () => {
+                // console.log(changedConfig);
+                if (changedConfig?.['protyleScroll'] !== undefined) {
+                    config.scroll = changedConfig['protyleScroll'];
+                }
+                if (changedConfig?.['protyleBreadcrumb'] !== undefined) {
+                    config.breadcrumb = changedConfig['protyleBreadcrumb'];
+                }
+                if (changedConfig?.['protyleReadonly'] !== undefined) {
+                    config.readonly = changedConfig['protyleReadonly'];
+                }
+                if (changedConfig?.['dynamicLoadingEnabled'] !== undefined) {
+                    config.dynamicLoading.enabled = changedConfig['dynamicLoadingEnabled'];
+                }
+                if (changedConfig?.['dynamicLoadingCapacity'] !== undefined) {
+                    config.dynamicLoading.capacity = changedConfig['dynamicLoadingCapacity'];
+                }
+                if (changedConfig?.['dynamicLoadingShift'] !== undefined) {
+                    config.dynamicLoading.shift = changedConfig['dynamicLoadingShift'];
+                }
+                onConfigChanged();
+            }
+        });
+        const ele: HTMLElement = dialog.element.querySelector("#SettingPanel");
+        ele.style.height = "100%";
+        let changedConfig = {};
+        let settingComp = new DefaultSetting({
+            target: ele,
+            props: {
+                settingValue: {
+                    protyleScroll: config.scroll,
+                    protyleBreadcrumb: config.breadcrumb,
+                    protyleReadonly: config.readonly,
+                    dynamicLoadingEnabled: config.dynamicLoading.enabled,
+                    dynamicLoadingCapacity: config.dynamicLoading.capacity,
+                    dynamicLoadingShift: config.dynamicLoading.shift
+                }
+            }
+        });
+        settingComp.$on("changed", ({detail}) => {
+            changedConfig[detail.key] = detail.value;
         });
     }
 
@@ -145,7 +198,24 @@
                 for="enableScroll"
                 style="margin-top: 0px;"
             >
-                {i18n.displayBreadcrumb}
+                {i18n.defaultSetting.scrollMode.title}
+            </label>
+            <input
+                id="enableScroll"
+                class="b3-switch fn__flex-center"
+                type="checkbox"
+                bind:checked={config.scroll}
+                on:change={reload}
+            />
+
+            <span class="fn__space" />
+
+            <label
+                class="b3-label__text"
+                for="enableScroll"
+                style="margin-top: 0px;"
+            >
+                {i18n.defaultSetting.displayBreadcrumb.title}
             </label>
             <input
                 id="displayBreadcrumb"
@@ -162,7 +232,7 @@
                 for="enableScroll"
                 style="margin-top: 0px;"
             >
-                {i18n.dynamicLoading}
+                {i18n.defaultSetting.dynamicLoading.title}
             </label>
             <input
                 id="enableScroll"
@@ -171,22 +241,12 @@
                 bind:checked={config.dynamicLoading.enabled}
                 on:change={reload}
             />
+
             <span class="fn__space" />
 
-            <label
-                class="b3-label__text"
-                for="enableScroll"
-                style="margin-top: 0px;"
-            >
-                {i18n.scrollMode}
-            </label>
-            <input
-                id="enableScroll"
-                class="b3-switch fn__flex-center"
-                type="checkbox"
-                bind:checked={config.scroll}
-                on:change={reload}
-            />
+            <button class="b3-button" on:click={onOpenConfig}>
+                {i18n.button.moreConfig}
+            </button>
             <span class="fn__space" />
             <button class="b3-button" on:click={onRenameThis}
                 >{i18n.nameTab}</button
