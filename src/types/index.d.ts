@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2023-09-02 17:23:46
+ * @LastEditTime : 2023-11-19 17:47:20
  * @Description  : 
  */
 
@@ -128,5 +128,24 @@ interface IBacklink {
 interface CustomEventDetail<T> {
     input: T;
     config?: any;
+}
+
+
+/********** Setting **********/
+type TSettingType = "checkbox" | "input" | "button" | "select" | "slider";
+
+interface ISettingItem {
+    type: TSettingType;
+    title: string;
+    text: string;
+    key: string;
+    value: any;
+    placeholder?: string;
+    options?: { [key: string]: string };
+    slider?: {
+        min: number;
+        max: number;
+        step: number;
+    };
 }
 
