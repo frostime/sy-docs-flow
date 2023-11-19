@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 23:24:33
  * @FilePath     : /src/settings.ts
- * @LastEditTime : 2023-09-02 18:03:16
+ * @LastEditTime : 2023-11-19 18:32:07
  * @Description  : 
  */
 export const setting = {
@@ -15,6 +15,12 @@ export const setting = {
     dynamicLoadingEnabled: false as boolean,
     dynamicLoadingCapacity: 15 as number,
     dynamicLoadingShift: 10 as number,
+
+    set(key: string, value: any) {
+        if (key in this) {
+            this[key] = value;
+        }
+    },
 
     getMaxHeight() {
         if (this.protyleMaxHeight === "auto") {

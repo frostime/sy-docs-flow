@@ -11,12 +11,41 @@
     "button": {
         "alterSaved": "Alter these",
         "saved": "Saved rules",
-        "openInDocFlow": "Open in docflow"
+        "openInDocFlow": "Open in docflow",
+        "moreConfig": "More"
     },
     "msg": {
         "alterSaved": "Alter saved rules",
         "alterDone": "Alter done!",
         "saveDone": "Save done!"
+    },
+    "defaultSetting": {
+        "descriptioin": "Note: This setting will serve as the default configuration for each document flow.",
+        "descriptioinSpecific": "Note: The settings will only take effect in the current document flow.",
+        "scrollMode": {
+            "title": "Scroll Mode",
+            "text": "Fixed height for a single document, scroll to load its internal content. It can save memory resources when dealing with large documents."
+        },
+        "displayBreadcrumb": {
+            "title": "Display Collapse Bar",
+            "text": "Whether to display the breadcrumb for each document target (collapsed/expanded bar)."
+        },
+        "protyleReadonly": {
+            "title": "Read-only Mode",
+            "text": "The body of the document is read-only."
+        },
+        "dynamicLoading": {
+            "title": "Dynamic Loading",
+            "text": "Dynamically load documents within the document stream as you scroll up or down. It can save memory resources when dealing with a large number of documents."
+        },
+        "dynamicLoadingCapacity": {
+            "title": "Dynamic Loading Capacity",
+            "text": "When dynamic loading is enabled, the maximum number of documents to load at a time."
+        },
+        "dynamicLoadingShift": {
+            "title": "Dynamic Loading Increment",
+            "text": "When dynamic loading is enabled, the number of documents to load each time when scrolling to the edge (up/down)."
+        }
     },
     "docsCnt": "Docs Count",
     "displayBreadcrumb": "Breadcrumb",

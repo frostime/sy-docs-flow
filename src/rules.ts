@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-09-06 13:33:00
+ * @LastEditTime : 2023-11-19 16:02:23
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -211,8 +211,8 @@ class DocBackmentions extends MatchRule {
 class SQL extends MatchRule {
     constructor(sqlCode: string) {
         super("SQL");
-        this.input = sqlCode.toLowerCase();
-        this.hash = `SQL@${sqlCode.toLowerCase().replace(/\s+/g, "$")}`;
+        this.input = sqlCode;
+        this.hash = `SQL@${sqlCode.replace(/\s+/g, "$")}`;
     }
 
     precheck(): boolean {

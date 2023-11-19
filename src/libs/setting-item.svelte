@@ -30,7 +30,7 @@
     <div class="fn__flex-1">
         {title}
         <div class="b3-label__text">
-            {text}
+            {@html text}
         </div>
     </div>
     <span class="fn__space" />
@@ -50,6 +50,14 @@
             class="b3-text-field fn__flex-center fn__size200"
             id={settingKey}
             {placeholder}
+            bind:value={settingValue}
+            on:change={changed}
+        />
+    {:else if type === "number"}
+        <input
+            class="b3-text-field fn__flex-center fn__size200"
+            id={settingKey}
+            type="number"
             bind:value={settingValue}
             on:change={changed}
         />

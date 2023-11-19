@@ -11,11 +11,12 @@ import {
 import "@/index.scss";
 
 import DocsFlow from "@/components/docs-flow/docs-flow.svelte";
-import SettingPannel from "@/libs/setting-panel.svelte";
 import SavedRules from "@/components/config/saved-rules.svelte";
+import GlobalSetting from "@/components/config/global-setting.svelte";
 
 import { confirmDialog, i18n, setI18n } from "@/utils";
 import { MatchRule, RuleFactory } from "@/rules";
+import { setting } from "@/settings";
 
 import { changelog } from "sy-plugin-changelog";
 
@@ -152,6 +153,7 @@ class TabHub {
 
 // const SETTING_NAME = "docs-flow-setting.json";
 const SAVE_RULE_NAME = "saved-rules.json";
+const DEFAULT_SETTING = "setting.default.json";
 
 function unescapeHTML(htmlString: string) {
     var doc = new DOMParser().parseFromString(htmlString, 'text/html');
@@ -192,6 +194,7 @@ export default class DocsFlowPlugin extends Plugin {
         });
         setI18n(this.i18n);
 
+        await this.loadSetting();
         this.savedRules = await this.loadData(SAVE_RULE_NAME);
         this.savedRules = this.savedRules || {};
 
@@ -391,22 +394,36 @@ export default class DocsFlowPlugin extends Plugin {
         showMessage(this.i18n.msg.saveDone);
     }
 
-    /**
-     * A custom setting pannel provided by svelte
-     */
-    openDIYSetting(): void {
+    openSetting(): void {
         let dialog = new Dialog({
-            title: "SettingPannel",
+            title: this.i18n.name,
             content: `<div id="SettingPanel"></div>`,
-            width: "600px",
-            destroyCallback: (options) => {
-                console.log("destroyCallback", options);
-                //You'd better destroy the component when the dialog is closed
+            width: "780px",
+            height: "500px",
+            destroyCallback: () => {
                 pannel.$destroy();
+                this.saveSetting();
             }
         });
-        let pannel = new SettingPannel({
-            target: dialog.element.querySelector("#SettingPanel"),
+        const ele: HTMLElement = dialog.element.querySelector("#SettingPanel");
+        ele.style.height = "100%";
+        let pannel = new GlobalSetting({
+            target: ele,
         });
     }
+
+    async loadSetting() {
+        let default_setting = await this.loadData(DEFAULT_SETTING);
+        default_setting = default_setting || {};
+        console.debug("LoadSetting", default_setting);
+        for (let key in default_setting) {
+            setting.set(key, default_setting[key]);
+        }
+    }
+
+    async saveSetting() {
+        console.debug("SaveSetting", setting);
+        this.saveData(DEFAULT_SETTING, setting);
+    }
+
 }
