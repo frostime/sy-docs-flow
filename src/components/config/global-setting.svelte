@@ -40,9 +40,9 @@
         },
         {
             type: 'checkbox',
-            title: i18n.dynamicLoading,
-            text: I18N.dynamicLoading.title,
-            key: I18N.dynamicLoading.text,
+            title: I18N.dynamicLoading.title,
+            text: I18N.dynamicLoading.text,
+            key: 'dynamicLoadingEnabled',
             value: setting.dynamicLoadingEnabled
         },
         {
