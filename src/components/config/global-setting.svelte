@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-11-19 17:53:31
  FilePath     : /src/components/config/global-setting.svelte
- LastEditTime : 2023-11-19 18:53:48
+ LastEditTime : 2023-11-19 19:10:51
  Description  : 
 -->
 <script lang="ts">
@@ -11,7 +11,7 @@
     import { setting } from "@/settings";
     import { i18n } from "@/utils";
 
-    let groups: string[] = ["Default"];
+    let groups: string[] = ["🌈 Default"];
     let focusGroup = groups[0];
 
     const I18N = i18n.defaultSetting;
@@ -98,15 +98,27 @@
             settingItems={DefaultSettingItems}
             display={focusGroup === groups[0]}
             on:changed={onChange}
-        />
+        >
+            <div slot="top" class="fn__flex b3-label">
+                💡 {I18N.descriptioin}
+            </div>
+        </SettingPanel>
     </div>
 </div>
 
-<style>
+<style lang="scss">
     .config__panel {
         height: 100%;
     }
     .config__panel > ul > li {
         padding-left: 1rem;
     }
+    .config__tab-wrap {
+        div[slot="top"] {
+            color: var(--b3-theme-primary);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+    }
+
 </style>

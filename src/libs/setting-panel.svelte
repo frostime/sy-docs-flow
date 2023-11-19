@@ -3,7 +3,7 @@
  Author       : frostime
  Date         : 2023-07-01 19:23:50
  FilePath     : /src/libs/setting-panel.svelte
- LastEditTime : 2023-11-19 18:06:43
+ LastEditTime : 2023-11-19 19:00:06
  Description  : 
 -->
 <script lang="ts">
@@ -28,6 +28,7 @@
 </script>
 
 <div class="config__tab-container {fn__none}" data-name={group}>
+    <slot name="top"/>
     {#each settingItems as item (item.key)}
         <SettingItem
             type={item.type}
@@ -42,6 +43,5 @@
             on:changed={onChanged}
         />
     {/each}
-    <!-- slot -->
-    <slot />
+    <slot name="bottom"/>
 </div>

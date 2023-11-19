@@ -396,7 +396,7 @@ export default class DocsFlowPlugin extends Plugin {
 
     openSetting(): void {
         let dialog = new Dialog({
-            title: "SettingPannel",
+            title: this.i18n.name,
             content: `<div id="SettingPanel"></div>`,
             width: "750px",
             height: "500px",
