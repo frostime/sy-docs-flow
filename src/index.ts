@@ -398,8 +398,8 @@ export default class DocsFlowPlugin extends Plugin {
         let dialog = new Dialog({
             title: "SettingPannel",
             content: `<div id="SettingPanel"></div>`,
-            width: "600px",
-            height: "400px",
+            width: "750px",
+            height: "500px",
             destroyCallback: () => {
                 pannel.$destroy();
                 this.saveSetting();

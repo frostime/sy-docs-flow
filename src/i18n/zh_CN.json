@@ -18,6 +18,32 @@
         "alterDone": "更改完毕!",
         "saveDone": "保存成功!"
     },
+    "defaultSetting": {
+        "scrollMode": {
+            "title": "滚动模式",
+            "text": "单个文档固定高度, 滚动加载其内部内容, 在单个文档较大时, 可以节省内存资源"
+        },
+        "displayBreadcrumb": {
+            "title": "展示折叠栏",
+            "text": "是否展示每个文档目标的地址/折叠/展开栏"
+        },
+        "protyleReadonly": {
+            "title": "只读模式",
+            "text": "文档正文只读"
+        },
+        "dynamicLoading": {
+            "title": "动态加载",
+            "text": "文档流内的文档随着上下滚动动态加载, 在文档数量较多时, 可以节省内存资源"
+        },
+        "dynamicLoadingCapacity": {
+            "title": "动态加载容量数",
+            "text": "开启动态加载后, 一次最多加载多少文档"
+        },
+        "dynamicLoadingShift": {
+            "title": "动态加载增量数",
+            "text": "开启动态加载后, 每次(上/下)滚动到边缘后继续加载多少文档"
+        }
+    },
     "docsCnt": "文档数",
     "displayBreadcrumb": "面包屑",
     "scrollMode": "滚动模式",

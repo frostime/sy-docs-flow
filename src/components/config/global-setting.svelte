@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-11-19 17:53:31
  FilePath     : /src/components/config/global-setting.svelte
- LastEditTime : 2023-11-19 18:25:26
+ LastEditTime : 2023-11-19 18:53:48
  Description  : 
 -->
 <script lang="ts">
@@ -14,46 +14,48 @@
     let groups: string[] = ["Default"];
     let focusGroup = groups[0];
 
+    const I18N = i18n.defaultSetting;
+
     const DefaultSettingItems: ISettingItem[] = [
         {
             type: 'checkbox',
-            title: i18n.scrollMode,
-            text: '滚动模式',
+            title: I18N.scrollMode.title,
+            text: I18N.scrollMode.text,
             key: 'protyleScroll',
             value: setting.protyleScroll
         },
         {
             type: 'checkbox',
-            title: i18n.displayBreadcrumb,
-            text: '展示面包屑',
+            title: I18N.displayBreadcrumb.title,
+            text: I18N.displayBreadcrumb.text,
             key: 'protyleBreadcrumb',
             value: setting.protyleBreadcrumb
         },
         {
             type: 'checkbox',
-            title: '只读',
-            text: '只读模式打开',
+            title: I18N.protyleReadonly.title,
+            text: I18N.protyleReadonly.text,
             key: 'protyleReadonly',
             value: setting.protyleReadonly
         },
         {
             type: 'checkbox',
             title: i18n.dynamicLoading,
-            text: '动态加载',
-            key: 'dynamicLoadingEnabled',
+            text: I18N.dynamicLoading.title,
+            key: I18N.dynamicLoading.text,
             value: setting.dynamicLoadingEnabled
         },
         {
             type: 'number',
-            title: '动态加载最大数量',
-            text: '动态加载',
+            title: I18N.dynamicLoadingCapacity.title,
+            text: I18N.dynamicLoadingCapacity.text,
             key: 'dynamicLoadingCapacity',
             value: setting.dynamicLoadingCapacity
         },
         {
             type: 'number',
-            title: '动态加载增量',
-            text: '动态加载增量',
+            title: I18N.dynamicLoadingShift.title,
+            text: I18N.dynamicLoadingShift.text,
             key: 'dynamicLoadingShift',
             value: setting.dynamicLoadingShift
         },

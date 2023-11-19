@@ -30,7 +30,7 @@
     <div class="fn__flex-1">
         {title}
         <div class="b3-label__text">
-            {text}
+            {@html text}
         </div>
     </div>
     <span class="fn__space" />
