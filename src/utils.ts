@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2023-09-02 17:50:46
+ * @LastEditTime : 2023-11-25 20:10:43
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
@@ -13,6 +13,18 @@ import zh_CN from "./i18n/zh_CN.json";
 export let i18n: typeof zh_CN;
 export function setI18n(i18nData: any) {
     i18n = i18nData;
+}
+
+
+export function throttle<T extends (...args: any[]) => any>(func: T, wait: number = 500){
+    let previous = 0;
+    return function(...args: Parameters<T>){
+        let now = Date.now(), context = this;
+        if(now - previous > wait){
+            func.apply(context, args);
+            previous = now;
+        }
+    }
 }
 
 export function getActiveTab() {

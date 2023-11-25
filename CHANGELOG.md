@@ -1,3 +1,7 @@
+## v0.4.2
+
+为滚轮动态加载增加了节流, 避免因为频繁触发而导致的奇怪行为
+
 ## v0.4.1
 
 - 优化了显示方式, 对非文档块聚焦显示 fix [#31](https://github.com/frostime/sy-docs-flow/issues/31)
