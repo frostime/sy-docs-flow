@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-11-19 16:02:23
+ * @LastEditTime : 2023-11-25 19:17:27
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -227,7 +227,7 @@ class SQL extends MatchRule {
 
     async nextIds() {
         let result = await sql(this.input);
-        let ids = result.map((item) => item?.id).filter((item) => typeof item === "string");
+        let ids = result?.map((item) => item?.id).filter((item) => typeof item === "string");
         // return ids ?? [];
         return { ids: ids ?? [], eof: true};
     }
