@@ -6,6 +6,7 @@
     - fix [#32](https://github.com/frostime/sy-docs-flow/issues/32)
     - fix [#33](https://github.com/frostime/sy-docs-flow/issues/33)
 - 修复 SQL 规则的小 bug
+
 ## v0.4.0
 
 - Fix bug: [#35](https://github.com/frostime/sy-docs-flow/issues/35)
