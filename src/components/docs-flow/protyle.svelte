@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-11-25 18:58:43
+ LastEditTime : 2023-11-25 19:48:02
  Description  : 
 -->
 <script lang="ts">
@@ -28,6 +28,7 @@
     let divProtyle: HTMLDivElement;
     let protyle: Protyle;
 
+    let thisBlock: Block;
     let rootDoc: Block;
 
     let divGutter: HTMLDivElement;
@@ -57,13 +58,13 @@
     }
 
     onMount(async () => {
-        let doc: Block = await getBlockByID(blockId);
-        let rootId: BlockId = doc.root_id;
-        doc = await getBlockByID(rootId);
-        rootDoc = doc;
-        let notebookName: string = notebooks[doc.box];
+        thisBlock = await getBlockByID(blockId);
+        console.log("Block:", thisBlock);
+        let rootId: BlockId = thisBlock.root_id;
+        rootDoc = await getBlockByID(rootId);
+        let notebookName: string = notebooks[rootDoc.box];
         let prefix = notebookName ? `/${notebookName}` : "";
-        hpath = prefix + doc.hpath;
+        hpath = prefix + rootDoc.hpath;
 
         console.log("Mount protyle:", notebookName, hpath, blockId);
         initialised = true;
@@ -94,19 +95,17 @@
     });
 
     function whichAction(): TProtyleAction[] {
-        if (config.scroll) {
-            return ["cb-get-context"];
+        if (thisBlock.type == 'd') {
+            return ['cb-get-context'];
         } else {
             return ['cb-get-all'];
         }
-        
     }
 
     function load() {
         if (!divProtyle) {
             return;
         }
-        // console.log("Load protyle...", blockId);
         updateProtyleMaxHeight();
         protyle = new Protyle(app, divProtyle, {
             mode: config.readonly ? "preview" : "wysiwyg",
