@@ -267,7 +267,7 @@
             index={i + loadOffset}
             blockId={did}
             {config}
-            displayBreadcrumb={config.breadcrumb}
+            displayCollapseBar={config.breadcrumb}
         />
     {/each}
 </div>
