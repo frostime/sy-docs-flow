@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-11-25 19:48:02
+ LastEditTime : 2023-11-25 19:49:45
  Description  : 
 -->
 <script lang="ts">
@@ -59,14 +59,14 @@
 
     onMount(async () => {
         thisBlock = await getBlockByID(blockId);
-        console.log("Block:", thisBlock);
+        thisBlock.content = null;  //不需要 content，减少占用
         let rootId: BlockId = thisBlock.root_id;
         rootDoc = await getBlockByID(rootId);
         let notebookName: string = notebooks[rootDoc.box];
         let prefix = notebookName ? `/${notebookName}` : "";
         hpath = prefix + rootDoc.hpath;
 
-        console.log("Mount protyle:", notebookName, hpath, blockId);
+        console.debug("Mount protyle:", notebookName, hpath, blockId);
         initialised = true;
         breadcrumbDisplayChanged = false; //TODO 这个解决方案很不优雅，后面有空改掉
     });
