@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-11-25 19:17:27
+ * @LastEditTime : 2023-11-26 12:15:08
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -17,6 +17,8 @@ export abstract class MatchRule {
     type: TRuleType;
     input: any;
     config: IConfig;
+
+    current: IRuleFetchData;
 
     constructor(type: TRuleType) {
         this.type = type;
@@ -33,6 +35,7 @@ export abstract class MatchRule {
                 shift: setting.dynamicLoadingShift
             }
         };
+        this.current = null;
     }
 
     dump(): IRule {
@@ -60,7 +63,8 @@ export abstract class MatchRule {
         return {ids: [], eof: true};
     }
 
-    abstract nextIds(): IRuleFetchData | Promise<IRuleFetchData>;
+    abstract next(): IRuleFetchData | Promise<IRuleFetchData>;
+
     precheck() { return true; } // 针对输入格式的检查
 
     mergeConfig(config: any) {
@@ -102,7 +106,7 @@ class ChildDocument extends MatchRule {
         this.hash = `ChildDocument@${dataId}`;
     }
 
-    async nextIds() {
+    async next() {
         if (!this.input) {
             return this.emptyResult();
         }
@@ -131,7 +135,7 @@ class OffspringDocument extends MatchRule {
         this.config.dynamicLoading.enabled = true; //默认开启
     }
 
-    async nextIds() {
+    async next() {
         if (!this.input) {
             return this.emptyResult();
         }
@@ -169,7 +173,7 @@ class DocBacklinks extends MatchRule {
         this.hash = `DocBacklinks@${dataId}`;
     }
 
-    async nextIds() {
+    async next() {
         if (!this.input) {
             return this.emptyResult();
         }
@@ -197,7 +201,7 @@ class DocBackmentions extends MatchRule {
         this.hash = `DocBackmentions@${dataId}`;
     }
 
-    async nextIds() {
+    async next() {
         if (!this.input) {
             return this.emptyResult();
         }
@@ -225,7 +229,7 @@ class SQL extends MatchRule {
         return true;
     }
 
-    async nextIds() {
+    async next() {
         let result = await sql(this.input);
         let ids = result?.map((item) => item?.id).filter((item) => typeof item === "string");
         // return ids ?? [];
@@ -253,7 +257,7 @@ class IdList extends MatchRule {
         return true;
     }
 
-    async nextIds() {
+    async next() {
         // return this.input;
         return { ids: this.input, eof: true};
     }

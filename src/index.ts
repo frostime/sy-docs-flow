@@ -48,7 +48,7 @@ class TabHub {
             return;
         }
 
-        let result = await rule.nextIds();
+        let result = await rule.next();
         let ids = result.ids;
         if (!ids || ids.length === 0) {
             showMessage("无法匹配对应的文档");
