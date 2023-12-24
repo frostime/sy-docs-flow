@@ -30,7 +30,7 @@
             "title": "展示折叠栏",
             "text": "是否展示每个文档目标的地址/折叠/展开栏"
         },
-        "displayTitle": {
+        "protyleTitle": {
             "title": "展示文档标题",
             "text": "是否展示每个文档的标题"
         },

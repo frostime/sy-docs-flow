@@ -15,6 +15,7 @@
     const SettingItemsValue = {
         protyleScroll: setting.protyleScroll,
         protyleBreadcrumb: setting.protyleBreadcrumb,
+        protyleTitle: setting.protyleTitle,
         protyleReadonly: setting.protyleReadonly,
         dynamicLoadingEnabled: setting.dynamicLoadingEnabled,
         dynamicLoadingCapacity: setting.dynamicLoadingCapacity,
@@ -43,6 +44,13 @@
                 text: I18N.displayBreadcrumb.text,
                 key: 'protyleBreadcrumb',
                 value: SettingItemsValue.protyleBreadcrumb
+            },
+            {
+                type: 'checkbox',
+                title: I18N.protyleTitle.title,
+                text: I18N.protyleTitle.text,
+                key: 'protyleTitle',
+                value: SettingItemsValue.protyleTitle
             },
             {
                 type: 'checkbox',

@@ -89,7 +89,7 @@ interface Window {
 type TRuleType = "ChildDocument" | "SQL" | "IdList" | "DocBacklinks" | "DocBackmentions" | "OffspringDocument";
 interface IConfig {
     scroll: boolean;
-    displayTitle: boolean;
+    protyleTitle: boolean;
     breadcrumb: boolean;
     readonly: boolean;
     dynamicLoading: {

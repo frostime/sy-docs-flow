@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-12-24 11:22:40
+ LastEditTime : 2023-12-24 11:40:47
  Description  : 
 -->
 <script lang="ts">
@@ -125,7 +125,7 @@
             blockId: blockId,
             render: {
                 background: false,
-                title: true,
+                title: config.protyleTitle,
                 gutter: true,
                 scroll: scroll,
                 breadcrumb: true,
