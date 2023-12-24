@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2023-11-19 18:19:12
+ * @LastEditTime : 2023-12-24 11:28:08
  * @Description  : 
  */
 
@@ -89,6 +89,7 @@ interface Window {
 type TRuleType = "ChildDocument" | "SQL" | "IdList" | "DocBacklinks" | "DocBackmentions" | "OffspringDocument";
 interface IConfig {
     scroll: boolean;
+    displayTitle: boolean;
     breadcrumb: boolean;
     readonly: boolean;
     dynamicLoading: {
