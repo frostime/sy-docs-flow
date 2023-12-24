@@ -1,3 +1,10 @@
+## v0.4.3
+
+- 允许不显示文档标题 [#51](https://github.com/frostime/sy-docs-flow/issues/51)
+- 显示列表项中的段落块时，自动显示完整的列表项 [#42](https://github.com/frostime/sy-docs-flow/issues/42)
+- SQL 规则无法正常解析正则表达式的问题 [#40](https://github.com/frostime/sy-docs-flow/issues/40)
+
+
 ## v0.4.2
 
 为滚轮动态加载增加了节流, 避免因为频繁触发而导致的奇怪行为

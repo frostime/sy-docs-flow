@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-11-25 20:09:28
+ LastEditTime : 2023-12-24 11:46:25
  Description  : 
 -->
 <script lang="ts">
@@ -96,6 +96,9 @@
                 if (changedConfig?.['protyleBreadcrumb'] !== undefined) {
                     config.breadcrumb = changedConfig['protyleBreadcrumb'];
                 }
+                if (changedConfig?.['protyleTitle'] !== undefined) {
+                    config.protyleTitle = changedConfig['protyleTitle'];
+                }
                 if (changedConfig?.['protyleReadonly'] !== undefined) {
                     config.readonly = changedConfig['protyleReadonly'];
                 }
@@ -121,6 +124,7 @@
                 settingValue: {
                     protyleScroll: config.scroll,
                     protyleBreadcrumb: config.breadcrumb,
+                    protyleTitle: config.protyleTitle,
                     protyleReadonly: config.readonly,
                     dynamicLoadingEnabled: config.dynamicLoading.enabled,
                     dynamicLoadingCapacity: config.dynamicLoading.capacity,

@@ -30,6 +30,10 @@
             "title": "展示折叠栏",
             "text": "是否展示每个文档目标的地址/折叠/展开栏"
         },
+        "protyleTitle": {
+            "title": "展示文档标题",
+            "text": "是否展示每个文档的标题"
+        },
         "protyleReadonly": {
             "title": "只读模式",
             "text": "文档正文只读"

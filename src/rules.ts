@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-11-25 19:17:27
+ * @LastEditTime : 2023-12-24 14:03:11
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -18,6 +18,8 @@ export abstract class MatchRule {
     input: any;
     config: IConfig;
 
+    current: IRuleFetchData;
+
     constructor(type: TRuleType) {
         this.type = type;
         this.hash = "";
@@ -26,6 +28,7 @@ export abstract class MatchRule {
         this.config = {
             scroll: setting.protyleScroll,
             breadcrumb: setting.protyleBreadcrumb,
+            protyleTitle: setting.protyleTitle,
             readonly: setting.protyleReadonly,
             dynamicLoading: {
                 enabled: setting.dynamicLoadingEnabled,
@@ -33,6 +36,7 @@ export abstract class MatchRule {
                 shift: setting.dynamicLoadingShift
             }
         };
+        this.current = null;
     }
 
     dump(): IRule {
@@ -60,7 +64,8 @@ export abstract class MatchRule {
         return {ids: [], eof: true};
     }
 
-    abstract nextIds(): IRuleFetchData | Promise<IRuleFetchData>;
+    abstract next(): IRuleFetchData | Promise<IRuleFetchData>;
+
     precheck() { return true; } // 针对输入格式的检查
 
     mergeConfig(config: any) {
@@ -102,7 +107,7 @@ class ChildDocument extends MatchRule {
         this.hash = `ChildDocument@${dataId}`;
     }
 
-    async nextIds() {
+    async next() {
         if (!this.input) {
             return this.emptyResult();
         }
@@ -131,7 +136,7 @@ class OffspringDocument extends MatchRule {
         this.config.dynamicLoading.enabled = true; //默认开启
     }
 
-    async nextIds() {
+    async next() {
         if (!this.input) {
             return this.emptyResult();
         }
@@ -169,7 +174,7 @@ class DocBacklinks extends MatchRule {
         this.hash = `DocBacklinks@${dataId}`;
     }
 
-    async nextIds() {
+    async next() {
         if (!this.input) {
             return this.emptyResult();
         }
@@ -197,7 +202,7 @@ class DocBackmentions extends MatchRule {
         this.hash = `DocBackmentions@${dataId}`;
     }
 
-    async nextIds() {
+    async next() {
         if (!this.input) {
             return this.emptyResult();
         }
@@ -211,7 +216,9 @@ class DocBackmentions extends MatchRule {
 class SQL extends MatchRule {
     constructor(sqlCode: string) {
         super("SQL");
-        this.input = sqlCode;
+        // 将 SQL 语句中的 \*、\[、\] 和 \S 替换为 \\*、\\[、\\] 和 \\S
+        // 这样在 JavaScript 中，它们将被解析为原本期望的正则表达式
+        this.input = sqlCode.replace(/\\(\*|\[|\]|\S)/g, '\\\\$1');
         this.hash = `SQL@${sqlCode.replace(/\s+/g, "$")}`;
     }
 
@@ -225,7 +232,7 @@ class SQL extends MatchRule {
         return true;
     }
 
-    async nextIds() {
+    async next() {
         let result = await sql(this.input);
         let ids = result?.map((item) => item?.id).filter((item) => typeof item === "string");
         // return ids ?? [];
@@ -253,7 +260,7 @@ class IdList extends MatchRule {
         return true;
     }
 
-    async nextIds() {
+    async next() {
         // return this.input;
         return { ids: this.input, eof: true};
     }

@@ -30,6 +30,10 @@
             "title": "Display Collapse Bar",
             "text": "Whether to display the breadcrumb for each document target (collapsed/expanded bar)."
         },
+        "protyleTitle": {
+            "title": "Display Title",
+            "text": "Whether to display the title of the document."
+        },
         "protyleReadonly": {
             "title": "Read-only Mode",
             "text": "The body of the document is read-only."
