@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-12-24 11:46:25
+ LastEditTime : 2023-12-24 13:35:50
  Description  : 
 -->
 <script lang="ts">
@@ -173,12 +173,33 @@
             shiftThrottle("right");
         }
     };
+
+    // ================== 滚动 ==================
+
+    let isScrolling = false;
+    let timeoutId;
+    const triggerScroll = () => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        if (isScrolling === false) {
+            isScrolling = true;
+        }
+        timeoutId = setTimeout(() => {
+            isScrolling = false;
+        }, 1000);
+    };
+
     export const onscroll = (e) => {
         window.requestAnimationFrame(() => {
-            if (config.dynamicLoading.enabled !== true) {
-                return;
+            if(config.scroll === false) {
+                //#TODO 非滚动下，需要自己处理手动隐藏 gutter
+                triggerScroll();
             }
-            dynamicLoading(e);
+
+            if (config.dynamicLoading.enabled === true) {
+                dynamicLoading(e);
+            }
         });
     };
 </script>
@@ -274,6 +295,7 @@
             blockId={did}
             {config}
             displayCollapseBar={config.breadcrumb}
+            isScrolling={isScrolling}
         />
     {/each}
 </div>

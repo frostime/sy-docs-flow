@@ -105,17 +105,18 @@ class TabHub {
 
         const Tabs = this.tabs;
         const dynamicLoadingEnabled = rule.config.dynamicLoading?.enabled;
+        const notScrollMode = !rule.config.scroll;
         let tab = this.plugin.addTab({
             type: hash,
             init() {
                 this.element.appendChild(tabDiv);
-                if (dynamicLoadingEnabled === true) {
+                if (dynamicLoadingEnabled === true || notScrollMode === true) {
                     this.element.addEventListener("scroll", flow.onscroll);
                 }
             },
             beforeDestroy() {
                 // this.element.removeEventListener("scroll", flow.onscroll);
-                if (dynamicLoadingEnabled === true) {
+                if (dynamicLoadingEnabled === true || notScrollMode === true) {
                     this.element.removeEventListener("scroll", flow.onscroll);
                 }
                 flow?.$destroy();

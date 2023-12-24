@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-12-24 11:40:47
+ LastEditTime : 2023-12-24 13:41:32
  Description  : 
 -->
 <script lang="ts">
@@ -20,9 +20,29 @@
     export let config: IConfig;
     export let displayCollapseBar: boolean;  // 当前是否显示折叠按钮
     export let expanded: boolean = true;
-    let scroll: boolean = config.scroll;
 
-    let breadcrumbDisplayChanged = false; //标识, 防止更改了面包屑后执行 Protyle 重载
+    export let isScrolling: boolean = false;
+
+    //把乱七八糟的东西都放到一个对象里面
+    const Flag = {
+        initialised: false,
+        displayGutter: false
+    }
+
+    //标识, 防止 afterUpdate 里面执行 Protyle 重载
+    const ChangeStatus = {
+        scrollingChanged: false,
+        collapseBarChanged: false
+    }
+
+    $: {
+        //只要 isScorolling 发生变动, 就调用
+        isScrolling = isScrolling;
+        ChangeStatus.scrollingChanged = true;
+        toggleGutterDisplay();
+    }
+
+    let scroll: boolean = config.scroll;
 
     let hpath: string = "";
     let divProtyle: HTMLDivElement;
@@ -32,8 +52,6 @@
     let rootDoc: Block;
 
     let divGutter: HTMLDivElement;
-
-    let initialised: boolean = false;
 
     let heightBreadcrumb: number = 40;
 
@@ -49,7 +67,7 @@
     let styleDisplayLi: string = "";
     $: {
         styleDisplayLi = displayCollapseBar ? "" : "display: none;";
-        breadcrumbDisplayChanged = true;
+        ChangeStatus.collapseBarChanged = true;
     }
 
     let classArrowOpen: string = "";
@@ -79,8 +97,10 @@
         hpath = prefix + rootDoc.hpath;
 
         console.debug("Mount protyle:", notebookName, hpath, blockId);
-        initialised = true;
-        breadcrumbDisplayChanged = false; //TODO 这个解决方案很不优雅，后面有空改掉
+        Flag.initialised = true;
+        //TODO 这个解决方案很不优雅，后面有空改掉
+        ChangeStatus.collapseBarChanged = false;
+        ChangeStatus.scrollingChanged = false;
     });
     onDestroy(() => {
         // protyle?.destroy();
@@ -88,17 +108,21 @@
     });
 
     afterUpdate(async () => {
-        if (!initialised) {
+        if (!Flag.initialised) {
             return; //由于 onMunt 是 async 所以会出现还没有执行完毕就调用了 afterUpdate 的情况
         }
 
-        //TODO 在切换显示面包屑的时候也会重载 protyle，后面想办法解决这个问题
-        if (breadcrumbDisplayChanged) {
-            breadcrumbDisplayChanged = false;
+        if (ChangeStatus.scrollingChanged === true) {
+            ChangeStatus.scrollingChanged = false;
             return;
         }
 
-        // console.log("afterUpdated", blockId, expanded);
+        //TODO 在切换显示面包屑的时候也会重载 protyle，后面想办法解决这个问题
+        if (ChangeStatus.collapseBarChanged === true) {
+            ChangeStatus.collapseBarChanged = false;
+            return;
+        }
+
         if (divProtyle && expanded) {
             load();
         } else if (!divProtyle && !expanded) {
@@ -142,8 +166,17 @@
         divGutter = null;
     }
 
-    function toggleGutterDisplay(display: boolean = true) {
+    function toggleGutterDisplay(display?: boolean) {
+        if (display !== undefined) {
+            Flag.displayGutter = display;
+        }
+
         if (divGutter) {
+            if (isScrolling) {
+                divGutter.style.display = "none";
+            }
+
+            display = !isScrolling && Flag.displayGutter;
             divGutter.style.display = display ? "block" : "none";
         }
     }
