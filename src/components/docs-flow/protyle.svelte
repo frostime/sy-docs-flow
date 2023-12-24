@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-11-25 19:49:45
+ LastEditTime : 2023-12-24 11:22:40
  Description  : 
 -->
 <script lang="ts">
@@ -59,7 +59,19 @@
 
     onMount(async () => {
         thisBlock = await getBlockByID(blockId);
+
+        //处理 li 下的段落块的特殊情况
+        if (thisBlock.type == 'p') {
+            let parentBlock: Block = await getBlockByID(thisBlock.parent_id);
+            if (parentBlock.type == 'i') {
+                thisBlock = parentBlock;
+                blockId = thisBlock.id;
+                console.debug("Li block", blockId);
+            }
+        }
+
         thisBlock.content = null;  //不需要 content，减少占用
+
         let rootId: BlockId = thisBlock.root_id;
         rootDoc = await getBlockByID(rootId);
         let notebookName: string = notebooks[rootDoc.box];
