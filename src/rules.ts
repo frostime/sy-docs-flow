@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-12-24 11:44:25
+ * @LastEditTime : 2023-12-24 14:03:11
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -216,7 +216,9 @@ class DocBackmentions extends MatchRule {
 class SQL extends MatchRule {
     constructor(sqlCode: string) {
         super("SQL");
-        this.input = sqlCode;
+        // 将 SQL 语句中的 \*、\[、\] 和 \S 替换为 \\*、\\[、\\] 和 \\S
+        // 这样在 JavaScript 中，它们将被解析为原本期望的正则表达式
+        this.input = sqlCode.replace(/\\(\*|\[|\]|\S)/g, '\\\\$1');
         this.hash = `SQL@${sqlCode.replace(/\s+/g, "$")}`;
     }
 
