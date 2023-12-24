@@ -187,7 +187,7 @@
         }
         timeoutId = setTimeout(() => {
             isScrolling = false;
-        }, 1000);
+        }, 750);
     };
 
     export const onscroll = (e) => {

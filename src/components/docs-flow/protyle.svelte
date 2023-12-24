@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-12-24 13:41:32
+ LastEditTime : 2023-12-24 14:30:29
  Description  : 
 -->
 <script lang="ts">
@@ -36,10 +36,13 @@
     }
 
     $: {
-        //只要 isScorolling 发生变动, 就调用
-        isScrolling = isScrolling;
-        ChangeStatus.scrollingChanged = true;
-        toggleGutterDisplay();
+        //protyle 非滚动模式，这个时候需要自己手动处理 gutter
+        if (config.scroll === false) {
+            //只要 isScorolling 发生变动, 就调用
+            isScrolling = isScrolling;
+            ChangeStatus.scrollingChanged = true;
+            toggleGutterDisplay();
+        }
     }
 
     let scroll: boolean = config.scroll;
