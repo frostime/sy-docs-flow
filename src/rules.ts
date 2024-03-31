@@ -3,12 +3,12 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-12-24 14:03:11
+ * @LastEditTime : 2024-03-31 20:43:29
  * @Description  : 
  */
 import { showMessage } from "siyuan";
-import {getBacklink2, sql, getBlockByID} from "@/api";
-import { getChildDocs, getActiveTab, TreeItem } from "./utils";
+import {getBacklink2, sql, getBlockByID, listDocTree} from "@/api";
+import { getChildDocs, getActiveTab } from "./utils";
 import { setting } from "./settings";
 
 export abstract class MatchRule {
@@ -141,18 +141,25 @@ class OffspringDocument extends MatchRule {
             return this.emptyResult();
         }
         let block = await getBlockByID(this.input);
-        if (!block) {
-            return this.emptyResult();
+        const path = block.path.replace(/\.sy$/, '');
+        let nodes: IDocTreeNode[] = await listDocTree(block.box, path);
+        let listDocId = [];
+        const dfs = (node: IDocTreeNode) => {
+            listDocId.push(node.id);
+            if (node.children) {
+                for (let child of node.children) {
+                    dfs(child);
+                }
+            }
         }
+        let root = {
+            id: this.input,
+            children: nodes
+        }
+        dfs(root);
+        console.log(listDocId);
 
-        let path = block.path;
-        let dir = path.split("/").slice(0, -1).join("/");
-        dir = dir.startsWith("/") ? dir : `/${dir}`;
-        let tree = new TreeItem(`/data/${block.box}${dir}`, this.input);
-        let allItems = await tree.buildTree();
-        let ids = allItems.map((item) => item.docId);
-        ids = [this.input, ...ids];
-        return { ids: ids, eof: true};
+        return { ids: listDocId, eof: true};
     }
 }
 
