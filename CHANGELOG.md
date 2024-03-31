@@ -1,3 +1,10 @@
+## v0.5.0
+
+- 修复设置面板样式错误
+- 「显示文档树」的规则改为深度优先顺序 [#53](https://github.com/frostime/sy-docs-flow/issues/53)
+- 文档块菜单添加按钮，通过文档流打开文档的反链 [#34](https://github.com/frostime/sy-docs-flow/issues/34)
+
+
 ## v0.4.3
 
 - 允许不显示文档标题 [#51](https://github.com/frostime/sy-docs-flow/issues/51)

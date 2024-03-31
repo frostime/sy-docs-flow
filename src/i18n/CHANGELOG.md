@@ -1,11 +1,12 @@
-## [v0.4.3] 文档流插件 | Docs Flow
+## [v0.5.0] 文档流插件 | Docs Flow
 
-- 允许不显示文档标题 [#51](https://github.com/frostime/sy-docs-flow/issues/51)
-- 显示列表项中的段落块时，自动显示完整的列表项 [#42](https://github.com/frostime/sy-docs-flow/issues/42)
-- SQL 规则无法正常解析正则表达式的问题 [#40](https://github.com/frostime/sy-docs-flow/issues/40)
+- 修复设置面板样式错误
+- 「显示文档树」的规则改为深度优先顺序 [#53](https://github.com/frostime/sy-docs-flow/issues/53)
+- 文档块菜单添加按钮，通过文档流打开文档的反链 [#34](https://github.com/frostime/sy-docs-flow/issues/34)
 
 ---
 
-- Specify displaying document's title or not [#51](https://github.com/frostime/sy-docs-flow/issues/51)
-- Display the whole list item for paragraph in it [#42](https://github.com/frostime/sy-docs-flow/issues/42)
-- SQL parse regex code error [#40](https://github.com/frostime/sy-docs-flow/issues/40)
+- Fix settings panel style error
+- The rule for "Display Docs Tree" has been changed to depth-first order [#53](https://github.com/frostime/sy-docs-flow/issues/53)
+- Block menu adds a button to open all backlinks of the block via Docs Flow [#34](https://github.com/frostime/sy-docs-flow/issues/34)
+- Add button in docs block menu to open sub-docs or docs tree via Docs Flow [#30](https://github.com/frostime/sy-docs-flow/issues/30)
