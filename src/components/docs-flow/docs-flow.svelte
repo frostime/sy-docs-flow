@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-12-24 11:46:25
+ LastEditTime : 2024-03-31 20:18:35
  Description  : 
 -->
 <script lang="ts">
@@ -85,7 +85,7 @@
         console.log("onOpenConfig", config);
         let dialog = new Dialog({
             title: 'Config',
-            content: `<div id="SettingPanel"></div>`,
+            content: `<div id="SettingPanel" style="background: var(--b3-theme-background);"></div>`,
             width: "780px",
             height: "500px",
             destroyCallback: () => {
