@@ -1,17 +1,18 @@
 {
-    "name": "Document flow",
+    "name": "Docflow",
     "rules": {
         "child": "Child document",
         "docBacklinks": "Document backlinks",
         "docBackmentions": "Document mentions",
         "sql": "SQL query",
         "customID": "Custom ID",
-        "offspringDocument": "Offspring Document"
+        "offspringDocument": "Offspring document"
     },
     "button": {
         "alterSaved": "Alter these",
         "saved": "Saved rules",
         "openInDocFlow": "Open in docflow",
+        "openBackInDocFlow": "Docflow-Backlinks",
         "moreConfig": "More"
     },
     "msg": {

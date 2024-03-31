@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2023-11-25 20:10:43
+ * @LastEditTime : 2024-03-31 20:48:29
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
@@ -51,64 +51,6 @@ export async function getChildDocs(documentId: DocumentId) {
     let ids = data?.files.map((item) => item.id);
     return ids ?? [];
 }
-
-
-async function readDocPath(path: string) {
-    let paths = await readDir(path);
-    // "20230723152605-n01h94z.sy"
-    let pat = /^\d+-\w+(\.sy)?$/
-    // let pat = /([0-9a-z\-]+)(\.sy)?$/;
-    return paths.filter((item) => pat.test(item.name));
-}
-
-export class TreeItem {
-    docId: DocumentId;
-    childDocsCount: number = 0;
-    offspringDocsCount: number = 0;
-    childDocs: TreeItem[];
-
-    path = '';
-
-
-    constructor(docDir: string, docId: DocumentId) {
-        this.docId = docId;
-        this.childDocs = [];
-        this.path = `${docDir}/${this.docId}`;
-    }
-
-    /**
-     * 递归地构建树结构
-     * @param currentPath 当前文档所在的路径, 路径内容不包括 .sy 后缀名
-     * @returns `Array<TreeItem>` 节点遍历的结果列表
-     */
-    async buildTree() {
-        // this.path = currentPath + '.sy';
-        let currentPath = this.path;
-        let childPath = await readDocPath(`${currentPath}`);
-        let childInfo = {};
-        for (let child of childPath) {
-            let name = child.name.replace(/\.sy$/, '');
-            childInfo[name] = child.isDir || childInfo[name] ? true : false;
-        }
-        let dirItems: TreeItem[] = [];
-        for (let id of Object.keys(childInfo)) {
-            let tree_item = new TreeItem(currentPath, id);
-            this.childDocs.push(tree_item);
-            if (childInfo[id]) {
-                dirItems.push(tree_item);
-            }
-        }
-        this.childDocsCount = this.childDocs.length;
-
-        let allItems: TreeItem[] = [];
-        allItems.push(...this.childDocs); // 遍历所有的子节点
-        let retrieve = await Promise.all(dirItems.map((item) => item.buildTree()));
-        allItems.push(...retrieve.flat()); // 遍历所有的子节点的子节点
-        this.offspringDocsCount = allItems.length;
-        return allItems;
-    }
-}
-
 
 
 const frontEnd = getFrontend();

@@ -3,12 +3,13 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2023-12-24 14:03:11
+ * @LastEditTime : 2024-03-31 21:47:04
  * @Description  : 
  */
 import { showMessage } from "siyuan";
-import {getBacklink2, sql, getBlockByID} from "@/api";
-import { getChildDocs, getActiveTab, TreeItem } from "./utils";
+import * as api from "@/api";
+import {getBacklink2, sql, getBlockByID, listDocTree} from "@/api";
+import { getChildDocs, getActiveTab } from "./utils";
 import { setting } from "./settings";
 
 export abstract class MatchRule {
@@ -90,21 +91,21 @@ export abstract class MatchRule {
 }
 
 class ChildDocument extends MatchRule {
-    constructor() {
+    constructor(docId?: DocumentId) {
         super("ChildDocument");
         this.input = null;
-        const currentDocument = getActiveTab();
-        
         this.hash = `ChildDocument`;
 
-        if (!currentDocument) {
-            return;
+        if (docId === undefined) {
+            const currentDocument = getActiveTab();
+            if (!currentDocument) {
+                return;
+            }
+            const eleTitle = currentDocument.querySelector(".protyle-title");
+            docId = eleTitle.getAttribute("data-node-id");
         }
-
-        const eleTitle = currentDocument.querySelector(".protyle-title");
-        let dataId = eleTitle.getAttribute("data-node-id");
-        this.input = dataId;
-        this.hash = `ChildDocument@${dataId}`;
+        this.input = docId;
+        this.hash = `ChildDocument@${docId}`;
     }
 
     async next() {
@@ -118,21 +119,19 @@ class ChildDocument extends MatchRule {
 }
 
 class OffspringDocument extends MatchRule {
-    constructor() {
+    constructor(docId?: DocumentId) {
         super("OffspringDocument");
         this.input = null;
-        const currentDocument = getActiveTab();
-        
-        this.hash = `OffspringDocument`;
-
-        if (!currentDocument) {
-            return;
+        if (docId === undefined) {
+            const currentDocument = getActiveTab();
+            if (!currentDocument) {
+                return;
+            }
+            const eleTitle = currentDocument.querySelector(".protyle-title");
+            docId = eleTitle.getAttribute("data-node-id");
         }
-
-        const eleTitle = currentDocument.querySelector(".protyle-title");
-        let dataId = eleTitle.getAttribute("data-node-id");
-        this.input = dataId;
-        this.hash = `OffspringDocument@${dataId}`;
+        this.input = docId;
+        this.hash = `OffspringDocument@${docId}`;
         this.config.dynamicLoading.enabled = true; //默认开启
     }
 
@@ -141,18 +140,25 @@ class OffspringDocument extends MatchRule {
             return this.emptyResult();
         }
         let block = await getBlockByID(this.input);
-        if (!block) {
-            return this.emptyResult();
+        const path = block.path.replace(/\.sy$/, '');
+        let nodes: IDocTreeNode[] = await listDocTree(block.box, path);
+        let listDocId = [];
+        const dfs = (node: IDocTreeNode) => {
+            listDocId.push(node.id);
+            if (node.children) {
+                for (let child of node.children) {
+                    dfs(child);
+                }
+            }
         }
+        let root = {
+            id: this.input,
+            children: nodes
+        }
+        dfs(root);
+        console.log(listDocId);
 
-        let path = block.path;
-        let dir = path.split("/").slice(0, -1).join("/");
-        dir = dir.startsWith("/") ? dir : `/${dir}`;
-        let tree = new TreeItem(`/data/${block.box}${dir}`, this.input);
-        let allItems = await tree.buildTree();
-        let ids = allItems.map((item) => item.docId);
-        ids = [this.input, ...ids];
-        return { ids: ids, eof: true};
+        return { ids: listDocId, eof: true};
     }
 }
 
@@ -212,6 +218,38 @@ class DocBackmentions extends MatchRule {
     }
 }
 
+class BlockBacklinks extends MatchRule {
+    constructor(id: BlockId) {
+        super("BlockBacklinks");
+        this.input = id;
+        this.hash = `BlockBacklinks@${id}`;
+    }
+
+    async next() {
+        if (!this.input) {
+            return this.emptyResult();
+        }
+        // const sql = `
+        // select * from blocks where id in (
+        //     select block_id from refs where def_block_id = '${this.input}'
+        // ) 
+        // order by updated desc
+        // limit 999;
+        // `;
+        const sql = `
+            select blocks.* 
+            from blocks 
+            join refs on blocks.id = refs.block_id 
+            where refs.def_block_id = '${this.input}' 
+            order by blocks.updated desc 
+            limit 999;
+        `;
+        const blocks = await api.sql(sql);
+        const ids = blocks?.map((item) => item.id);
+        return { ids: ids ?? [], eof: true};
+    }
+
+}
 
 class SQL extends MatchRule {
     constructor(sqlCode: string) {
@@ -253,7 +291,7 @@ class IdList extends MatchRule {
         let pat = /^\d{14}-[a-z0-9]{7}$/
         for (let id of this.input) {
             if (!pat.test(id)) {
-                showMessage(`ID格式不正确: ${id}`);
+                showMessage(`Invalid ID: ${id}`);
                 return false;
             }
         }
@@ -269,13 +307,15 @@ class IdList extends MatchRule {
 export const RuleFactory = (type: TRuleType, input?: any) => {
     switch (type) {
         case "ChildDocument":
-            return new ChildDocument();
+            return new ChildDocument(input);
         case "OffspringDocument":
-            return new OffspringDocument();
+            return new OffspringDocument(input);
         case "DocBacklinks":
             return new DocBacklinks();
         case "DocBackmentions":
             return new DocBackmentions();
+        case "BlockBacklinks":
+            return new BlockBacklinks(input);
         case "SQL":
             return new SQL(input);
         case "IdList":

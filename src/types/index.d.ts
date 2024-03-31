@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2023-12-24 11:28:08
+ * @LastEditTime : 2024-03-31 21:07:08
  * @Description  : 
  */
 
@@ -86,7 +86,14 @@ interface Window {
     };
 }
 
-type TRuleType = "ChildDocument" | "SQL" | "IdList" | "DocBacklinks" | "DocBackmentions" | "OffspringDocument";
+type TRuleType = "ChildDocument" 
+    | "SQL" 
+    | "IdList" 
+    | "DocBacklinks"  //反链面板中看到的，一个文档中所有反链
+    | "DocBackmentions" 
+    | "OffspringDocument" 
+    | "BlockBacklinks";  //一个块对应的所有反链
+
 interface IConfig {
     scroll: boolean;
     protyleTitle: boolean;

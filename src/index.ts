@@ -38,7 +38,7 @@ class TabHub {
         this.tabs = {};
     }
 
-    async open(rule: MatchRule) {
+    async open(rule: MatchRule, tabTitle?: string) {
         let hash = rule.hash;
         if (this.tabs[hash]) {
             this.openTab(hash);
@@ -51,7 +51,7 @@ class TabHub {
         let result = await rule.next();
         let ids = result.ids;
         if (!ids || ids.length === 0) {
-            showMessage("无法匹配对应的文档");
+            showMessage("No matching docs found.");
             return;
         }
         let tabDiv = document.createElement("div");
@@ -130,18 +130,19 @@ class TabHub {
             rule,
             tab
         };
-        this.openTab(hash);
+        this.openTab(hash, tabTitle);
     }
 
-    private openTab(hash: any) {
+    private openTab(hash: any, title?: string) {
         // let tab = this.tabs[hash].tab;
         console.log(`Open tab ${hash}`)
         let rule = this.tabs[hash].rule;
+        title = title || rule.title;
         openTab({
             app: this.plugin.app,
             custom: {
                 icon: "iconFlow",
-                title: rule.title,
+                title: title,
                 data: hash,
                 id: this.plugin.name + hash
             },
@@ -199,6 +200,35 @@ export default class DocsFlowPlugin extends Plugin {
         this.savedRules = this.savedRules || {};
 
         this.eventBus.on("click-blockicon", this.onGutterClicked.bind(this));
+        this.eventBus.on("click-editortitleicon", ({ detail }) => {
+            const rootID = detail.data.rootID;
+            detail.menu.addItem({
+                icon: "iconFlow",
+                label: `${i18n.name}-${i18n.rules.child}`,
+                click: () => {
+                    this.tabHub.open(RuleFactory("ChildDocument", rootID));
+                }
+            });
+            detail.menu.addItem({
+                icon: "iconFlow",
+                label: `${i18n.name}-${i18n.rules.offspringDocument}`,
+                click: () => {
+                    this.tabHub.open(RuleFactory("OffspringDocument", rootID));
+                }
+            });
+
+            if (detail.data.refCount === 0 ) {
+                return;
+            }
+            console.log("click-editortitleicon", detail);
+            detail.menu.addItem({
+                icon: "iconFlow",
+                label: i18n.button.openBackInDocFlow,
+                click: () => {
+                    this.tabHub.open(RuleFactory("BlockBacklinks", detail.data.rootID), 'Backlinks');
+                }
+            });
+        });
 
         //@ts-ignore
         this.eventBus.on('IdList', this.eventCustomIds.bind(this));
@@ -206,12 +236,8 @@ export default class DocsFlowPlugin extends Plugin {
         this.eventBus.on('SQL', this.eventSQL.bind(this));
 
         changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
-            ans?.Dialog?.setSize({ width: '35rem', height: '22rem' });
+            ans?.Dialog?.setSize({ width: '45rem', height: '25rem' });
         });
-    }
-
-    onLayoutReady() {
-        console.log(`frontend: ${getFrontend()}; backend: ${getBackend()}`);
     }
 
     onunload() {
@@ -236,7 +262,7 @@ export default class DocsFlowPlugin extends Plugin {
             click: () => {
                 this.tabHub.open(RuleFactory("SQL", sql));
             }
-        })
+        });
     }
 
     eventCustomIds(event: CustomEvent<CustomEventDetail<BlockId[]>>) {

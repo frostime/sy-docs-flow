@@ -2,7 +2,7 @@
 
 The function of this plugin is to stitch multiple documents (blocks) in the same page for easy viewing.
 
-## Create a document flow
+## Open a document flow via topbar menu
 
 After enabling the plugin, click the icon in the top bar and select the desired rule to generate a document flow.
 
@@ -29,6 +29,16 @@ After enabling the plugin, click the icon in the top bar and select the desired 
 6. Offspring document
 
     Add all the offspring documents under a specific document tree.
+
+## Open a document flow via block menu
+
+1. Clicking on a menu of an SQL embedd block, open the SQL query in the document flow.
+
+2. Clicking on a document block menu, open these in a document flow:
+
+    - The backlinks of the document
+    - The child document
+    - The offspring document
 
 ## Inside the document stream
 
