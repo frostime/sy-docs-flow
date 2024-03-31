@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2023-12-24 13:35:50
+ LastEditTime : 2024-03-31 19:52:58
  Description  : 
 -->
 <script lang="ts">
@@ -151,6 +151,10 @@
     };
 
     let lastScrollTop = null;
+
+    /**
+     * 动态加载文档
+    */
     const dynamicLoading = (e) => {
         let ele = e.target as HTMLDivElement;
         let scrollTop = ele.scrollTop;
@@ -161,8 +165,9 @@
             return;
         }
 
-        // epsilon 不能太小，否则会导致无法触发
-        if (approxEqual(scrollTop, 0, 3) && scrollTop <= lastScrollTop) {
+        // epsilon 不能太小，否则会导致无法触发;
+        //往上滚动时候 epsilon 要大一点, 不然容易出现多次触发导致乱跳
+        if (approxEqual(scrollTop, 0, 6) && scrollTop <= lastScrollTop) {
             console.log("到顶了");
             shiftThrottle("left");
         } else if (
@@ -177,7 +182,11 @@
     // ================== 滚动 ==================
 
     let isScrolling = false;
-    let timeoutId;
+    let timeoutId: NodeJS.Timeout;
+    /**
+     * 当滚动时间发生时，触发这一函数
+     * 将 isScrolling 设置为 true，让 Protyle 自动响应，隐藏 gutter
+     */
     const triggerScroll = () => {
         if (timeoutId) {
             clearTimeout(timeoutId);
@@ -192,8 +201,8 @@
 
     export const onscroll = (e) => {
         window.requestAnimationFrame(() => {
+            //#TODO 在 protyle 的非滚动模式下，需要在滚动过程中手动隐藏 gutter，否则看上去会很奇怪
             if(config.scroll === false) {
-                //#TODO 非滚动下，需要自己处理手动隐藏 gutter
                 triggerScroll();
             }
 

@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2023-12-24 14:30:29
+ LastEditTime : 2024-03-31 19:53:21
  Description  : 
 -->
 <script lang="ts">
@@ -21,7 +21,7 @@
     export let displayCollapseBar: boolean;  // 当前是否显示折叠按钮
     export let expanded: boolean = true;
 
-    export let isScrolling: boolean = false;
+    export let isScrolling: boolean = false;  //滚动状态
 
     //把乱七八糟的东西都放到一个对象里面
     const Flag = {
@@ -38,7 +38,7 @@
     $: {
         //protyle 非滚动模式，这个时候需要自己手动处理 gutter
         if (config.scroll === false) {
-            //只要 isScorolling 发生变动, 就调用
+            //只要 isScorolling 发生变动 (外部组件传入变动), 就调用
             isScrolling = isScrolling;
             ChangeStatus.scrollingChanged = true;
             toggleGutterDisplay();
