@@ -4,6 +4,24 @@ interface IResGetNotebookConf {
     name: string;
 }
 
+interface IBlockDOM {
+    id: BlockId;
+    dom: string;
+}
+
+interface IBacklink2 {
+    backlinks: {
+        id: BlockId;
+        count: number;
+        box: NotebookId;
+    }[];
+    backmentions: {
+        id: BlockId;
+        count: number;
+        box: NotebookId;
+    }[];
+}
+
 interface IReslsNotebooks {
     notebooks: Notebook[];
 }

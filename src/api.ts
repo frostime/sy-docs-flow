@@ -15,7 +15,6 @@ export async function request(url: string, data: any) {
     return res;
 }
 
-
 // **************************************** Noteboook ****************************************
 
 
@@ -70,6 +69,22 @@ export async function setNotebookConf(notebook: NotebookId, conf: NotebookConf):
 
 
 // **************************************** File Tree ****************************************
+export async function listDocTree(notebook: NotebookId, path: string): Promise<IDocTreeNode[]> {
+    let data = {
+        notebook: notebook,
+        path: path
+    }
+    let url = '/api/filetree/listDocTree';
+    let resData = await request(url, data);
+    return resData?.tree;
+}
+
+export async function listDocsByPath(notebook: NotebookId, path: string) {
+    let url = '/api/filetree/listDocsByPath'
+    let payload = { notebook: notebook, path: path };
+    return request(url, payload);
+}
+
 export async function createDocWithMd(notebook: NotebookId, path: string, markdown: string): Promise<DocumentId> {
     let data = {
         notebook: notebook,
@@ -269,6 +284,35 @@ export async function transferBlockRef(fromID: BlockId, toID: BlockId, refIDs: B
     return request(url, data);
 }
 
+// /api/block/getBlockDOM
+export async function getBlockDOM(id: BlockId): Promise<IBlockDOM> {
+    let data = {
+        id: id
+    };
+    let url = '/api/block/getBlockDOM';
+    return request(url, data);
+}
+
+
+// /api/block/getBlockBreadcrumb
+export async function getBlockBreadcrumb(id: BlockId) {
+    let payload = { id: id, excludeTypes: [] };
+    let url = '/api/block/getBlockBreadcrumb';
+    return request(url, payload);
+}
+
+export async function getBacklink2(id: BlockId): Promise<IBacklink2> {
+    let data = {
+        id: id,
+        k: "",
+        mSort: "3",
+        mk: "",
+        sort: "3"
+    }
+    let url = '/api/ref/getBacklink2';
+    return request(url, data);
+}
+
 // **************************************** Attributes ****************************************
 export async function setBlockAttrs(id: BlockId, attrs: { [key: string]: string }) {
     let data = {
@@ -454,15 +498,4 @@ export async function version(): Promise<string> {
 
 export async function currentTime(): Promise<number> {
     return request('/api/system/currentTime', {});
-}
-
-// **************************************** filetree ****************************************
-export async function listDocTree(notebook: NotebookId, path: string): Promise<IDocTreeNode[]> {
-    let data = {
-        notebook: notebook,
-        path: path
-    }
-    let url = '/api/filetree/listDocTree';
-    let resData = await request(url, data);
-    return resData?.tree;
 }
