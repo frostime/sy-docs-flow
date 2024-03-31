@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-03-31 21:15:35
+ * @LastEditTime : 2024-03-31 21:40:29
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -231,12 +231,20 @@ class BlockBacklinks extends MatchRule {
         if (!this.input) {
             return this.emptyResult();
         }
+        // const sql = `
+        // select * from blocks where id in (
+        //     select block_id from refs where def_block_id = '${this.input}'
+        // ) 
+        // order by updated desc
+        // limit 999;
+        // `;
         const sql = `
-        select * from blocks where id in (
-            select block_id from refs where def_block_id = '${this.input}'
-        ) 
-        order by updated desc
-        limit 999;
+            select blocks.* 
+            from blocks 
+            join refs on blocks.id = refs.block_id 
+            where refs.def_block_id = '${this.input}' 
+            order by blocks.updated desc 
+            limit 999;
         `;
         const blocks = await api.sql(sql);
         const ids = blocks?.map((item) => item.id);
@@ -285,7 +293,7 @@ class IdList extends MatchRule {
         let pat = /^\d{14}-[a-z0-9]{7}$/
         for (let id of this.input) {
             if (!pat.test(id)) {
-                showMessage(`ID格式不正确: ${id}`);
+                showMessage(`Invalid ID: ${id}`);
                 return false;
             }
         }

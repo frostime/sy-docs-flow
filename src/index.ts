@@ -204,11 +204,13 @@ export default class DocsFlowPlugin extends Plugin {
             if (detail.data.refCount === 0 ) {
                 return;
             }
+            console.log("click-editortitleicon", detail);
+            
             detail.menu.addItem({
                 icon: "iconFlow",
                 label: i18n.button.openBackInDocFlow,
                 click: () => {
-                    this.tabHub.open(RuleFactory("IdList", detail.data.refIDs), 'Backlinks');
+                    this.tabHub.open(RuleFactory("BlockBacklinks", detail.data.rootID), 'Backlinks');
                 }
             });
         });
@@ -219,7 +221,7 @@ export default class DocsFlowPlugin extends Plugin {
         this.eventBus.on('SQL', this.eventSQL.bind(this));
 
         changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
-            ans?.Dialog?.setSize({ width: '35rem', height: '22rem' });
+            ans?.Dialog?.setSize({ width: '45rem', height: '25rem' });
         });
     }
 

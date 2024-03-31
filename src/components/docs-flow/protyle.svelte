@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2024-03-31 20:08:15
+ LastEditTime : 2024-03-31 21:36:56
  Description  : 
 -->
 <script lang="ts">
@@ -103,7 +103,6 @@
             return; //由于 onMunt 是 async 所以会出现还没有执行完毕就调用了 afterUpdate 的情况
         }
 
-        //TODO 在切换显示面包屑的时候也会重载 protyle，后面想办法解决这个问题
         if (ChangeStatus.collapseBarChanged === true) {
             ChangeStatus.collapseBarChanged = false;
             return;
