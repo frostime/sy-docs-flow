@@ -34,7 +34,11 @@ After enabling the plugin, click the icon in the top bar and select the desired 
 
 1. Clicking on a menu of an SQL embedd block, open the SQL query in the document flow.
 
-2. Clicking on a document block menu, open the backlinks of the document in the document flow.
+2. Clicking on a document block menu, open these in a document flow:
+
+    - The backlinks of the document
+    - The child document
+    - The offspring document
 
 ## Inside the document stream
 

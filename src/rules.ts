@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-03-31 21:40:29
+ * @LastEditTime : 2024-03-31 21:47:04
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -91,21 +91,21 @@ export abstract class MatchRule {
 }
 
 class ChildDocument extends MatchRule {
-    constructor() {
+    constructor(docId?: DocumentId) {
         super("ChildDocument");
         this.input = null;
-        const currentDocument = getActiveTab();
-        
         this.hash = `ChildDocument`;
 
-        if (!currentDocument) {
-            return;
+        if (docId === undefined) {
+            const currentDocument = getActiveTab();
+            if (!currentDocument) {
+                return;
+            }
+            const eleTitle = currentDocument.querySelector(".protyle-title");
+            docId = eleTitle.getAttribute("data-node-id");
         }
-
-        const eleTitle = currentDocument.querySelector(".protyle-title");
-        let dataId = eleTitle.getAttribute("data-node-id");
-        this.input = dataId;
-        this.hash = `ChildDocument@${dataId}`;
+        this.input = docId;
+        this.hash = `ChildDocument@${docId}`;
     }
 
     async next() {
@@ -119,21 +119,19 @@ class ChildDocument extends MatchRule {
 }
 
 class OffspringDocument extends MatchRule {
-    constructor() {
+    constructor(docId?: DocumentId) {
         super("OffspringDocument");
         this.input = null;
-        const currentDocument = getActiveTab();
-        
-        this.hash = `OffspringDocument`;
-
-        if (!currentDocument) {
-            return;
+        if (docId === undefined) {
+            const currentDocument = getActiveTab();
+            if (!currentDocument) {
+                return;
+            }
+            const eleTitle = currentDocument.querySelector(".protyle-title");
+            docId = eleTitle.getAttribute("data-node-id");
         }
-
-        const eleTitle = currentDocument.querySelector(".protyle-title");
-        let dataId = eleTitle.getAttribute("data-node-id");
-        this.input = dataId;
-        this.hash = `OffspringDocument@${dataId}`;
+        this.input = docId;
+        this.hash = `OffspringDocument@${docId}`;
         this.config.dynamicLoading.enabled = true; //默认开启
     }
 
@@ -309,9 +307,9 @@ class IdList extends MatchRule {
 export const RuleFactory = (type: TRuleType, input?: any) => {
     switch (type) {
         case "ChildDocument":
-            return new ChildDocument();
+            return new ChildDocument(input);
         case "OffspringDocument":
-            return new OffspringDocument();
+            return new OffspringDocument(input);
         case "DocBacklinks":
             return new DocBacklinks();
         case "DocBackmentions":

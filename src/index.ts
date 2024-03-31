@@ -201,11 +201,26 @@ export default class DocsFlowPlugin extends Plugin {
 
         this.eventBus.on("click-blockicon", this.onGutterClicked.bind(this));
         this.eventBus.on("click-editortitleicon", ({ detail }) => {
+            const rootID = detail.data.rootID;
+            detail.menu.addItem({
+                icon: "iconFlow",
+                label: `${i18n.name}-${i18n.rules.child}`,
+                click: () => {
+                    this.tabHub.open(RuleFactory("ChildDocument", rootID));
+                }
+            });
+            detail.menu.addItem({
+                icon: "iconFlow",
+                label: `${i18n.name}-${i18n.rules.offspringDocument}`,
+                click: () => {
+                    this.tabHub.open(RuleFactory("OffspringDocument", rootID));
+                }
+            });
+
             if (detail.data.refCount === 0 ) {
                 return;
             }
             console.log("click-editortitleicon", detail);
-            
             detail.menu.addItem({
                 icon: "iconFlow",
                 label: i18n.button.openBackInDocFlow,
