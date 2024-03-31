@@ -3,10 +3,11 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-03-31 20:43:29
+ * @LastEditTime : 2024-03-31 21:15:35
  * @Description  : 
  */
 import { showMessage } from "siyuan";
+import * as api from "@/api";
 import {getBacklink2, sql, getBlockByID, listDocTree} from "@/api";
 import { getChildDocs, getActiveTab } from "./utils";
 import { setting } from "./settings";
@@ -219,6 +220,30 @@ class DocBackmentions extends MatchRule {
     }
 }
 
+class BlockBacklinks extends MatchRule {
+    constructor(id: BlockId) {
+        super("BlockBacklinks");
+        this.input = id;
+        this.hash = `BlockBacklinks@${id}`;
+    }
+
+    async next() {
+        if (!this.input) {
+            return this.emptyResult();
+        }
+        const sql = `
+        select * from blocks where id in (
+            select block_id from refs where def_block_id = '${this.input}'
+        ) 
+        order by updated desc
+        limit 999;
+        `;
+        const blocks = await api.sql(sql);
+        const ids = blocks?.map((item) => item.id);
+        return { ids: ids ?? [], eof: true};
+    }
+
+}
 
 class SQL extends MatchRule {
     constructor(sqlCode: string) {
@@ -283,6 +308,8 @@ export const RuleFactory = (type: TRuleType, input?: any) => {
             return new DocBacklinks();
         case "DocBackmentions":
             return new DocBackmentions();
+        case "BlockBacklinks":
+            return new BlockBacklinks(input);
         case "SQL":
             return new SQL(input);
         case "IdList":

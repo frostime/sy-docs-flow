@@ -12,6 +12,7 @@
         "alterSaved": "Alter these",
         "saved": "Saved rules",
         "openInDocFlow": "Open in docflow",
+        "openBackInDocFlow": "Open backlinks in docflow",
         "moreConfig": "More"
     },
     "msg": {
