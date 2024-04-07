@@ -4,7 +4,7 @@ import {
     Dialog,
     openTab,
     getFrontend,
-    getBackend,
+    // getBackend,
     IModel,
     Menu
 } from "siyuan";
@@ -18,7 +18,7 @@ import { confirmDialog, i18n, setI18n } from "@/utils";
 import { MatchRule, RuleFactory } from "@/rules";
 import { setting } from "@/settings";
 
-import { changelog } from "sy-plugin-changelog";
+// import { changelog } from "sy-plugin-changelog";
 
 const frontEnd = getFrontend();
 const isMobile = frontEnd === "mobile" || frontEnd === "browser-mobile";
@@ -235,9 +235,9 @@ export default class DocsFlowPlugin extends Plugin {
         //@ts-ignore
         this.eventBus.on('SQL', this.eventSQL.bind(this));
 
-        changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
-            ans?.Dialog?.setSize({ width: '45rem', height: '25rem' });
-        });
+        // changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
+        //     ans?.Dialog?.setSize({ width: '45rem', height: '25rem' });
+        // });
     }
 
     onunload() {
@@ -318,9 +318,20 @@ export default class DocsFlowPlugin extends Plugin {
         menu.addItem({
             label: this.i18n.rules.sql,
             click: () => {
-                confirmDialog('SQL', `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {
-                    let text: HTMLTextAreaElement = ele.querySelector("textarea");
-                    let sql = text.value;
+                const textarea = document.createElement("textarea");
+                textarea.className = "b3-text-field fn__block";
+                textarea.style.height = "10em";
+                textarea.style.fontSize = "1.1em";
+                textarea.style.lineHeight = "1.25em";
+                textarea.style.fontFamily = 'var(--b3-font-family-code)';
+                textarea.addEventListener('keydown', (e: KeyboardEvent) => {
+                    if (e.key === 'Enter' && !e.ctrlKey) {
+                        e.stopPropagation();
+                    }
+                });
+
+                confirmDialog('SQL', textarea, () => {
+                    let sql = textarea.value;
                     let pat = /select\s+([\s\S]+?)\s+from\s+([\s\S]+?)\s*$/i;
                     if (!pat.test(sql)) {
                         showMessage("SQL语句不正确");
@@ -328,15 +339,27 @@ export default class DocsFlowPlugin extends Plugin {
                     }
                     // this.openFlow(RuleFactory("SQL", sql));
                     this.tabHub.open(RuleFactory("SQL", sql));
-                });
+                }, undefined, '650px');
             }
         });
         menu.addItem({
             label: this.i18n.rules.customID,
             click: () => {
-                confirmDialog(this.i18n.rules.customID, `<textarea class="b3-text-field fn__block"></textarea>`, (ele) => {
-                    let text: HTMLTextAreaElement = ele.querySelector("textarea");
-                    let ids = text.value;
+                const textarea = document.createElement("textarea");
+                textarea.className = "b3-text-field fn__block";
+                textarea.style.height = "4em";
+                textarea.style.fontSize = "1.1em";
+                textarea.style.lineHeight = "1.25em";
+                textarea.style.fontFamily = 'var(--b3-font-family-code)';
+                textarea.addEventListener('keydown', (e: KeyboardEvent) => {
+                    if (e.key === 'Enter' && !e.ctrlKey) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                });
+
+                confirmDialog(this.i18n.rules.customID, textarea, () => {
+                    let ids = textarea.value;
                     let idList = ids.split(/[\s,，]/).filter((id) => id);
                     this.tabHub.open(RuleFactory("IdList", idList));
                 });

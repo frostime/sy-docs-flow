@@ -1,3 +1,8 @@
+## v0.5.1
+
+- fix: 优化文本框输入 [#55](https://github.com/frostime/sy-docs-flow/issues/55)
+
+
 ## v0.5.0
 
 - 修复设置面板样式错误

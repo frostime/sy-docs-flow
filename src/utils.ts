@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2024-03-31 20:48:29
+ * @LastEditTime : 2024-04-07 20:13:26
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
@@ -56,19 +56,27 @@ export async function getChildDocs(documentId: DocumentId) {
 const frontEnd = getFrontend();
 const isMobile = () => (frontEnd === "mobile" || frontEnd === "browser-mobile");
 
-export const confirmDialog = (title: string, text: string, confirm?: (ele?: HTMLElement) => void, cancel?: (ele?: HTMLElement) => void) => {
+export const confirmDialog = (title: string, content: string | HTMLElement, confirm?: (ele?: HTMLElement) => void, cancel?: (ele?: HTMLElement) => void, width?: string, height?: string) => {
     const dialog = new Dialog({
         title,
         content: `<div class="b3-dialog__content">
-    <div class="ft__breakword">${text}</div>
+    <div class="ft__breakword">
+    </div>
 </div>
 <div class="b3-dialog__action">
     <button class="b3-button b3-button--cancel">${window.siyuan.languages.cancel}</button><div class="fn__space"></div>
     <button class="b3-button b3-button--text" id="confirmDialogConfirmBtn">${window.siyuan.languages.confirm}</button>
 </div>`,
-        width: isMobile() ? "92vw" : "520px",
+        width: width || (isMobile() ? "92vw" : "520px"),
+        height: height
     });
     const target: HTMLElement = dialog.element.querySelector(".b3-dialog__content>div.ft__breakword");
+    if (typeof content === "string") {
+        target.innerHTML = content;
+    } else {
+        target.appendChild(content);
+    }
+
     const btnsElement = dialog.element.querySelectorAll(".b3-button");
     btnsElement[0].addEventListener("click", () => {
         if (cancel) {
