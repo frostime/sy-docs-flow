@@ -1,3 +1,7 @@
+## v0.5.2
+
+- ✨ feat: saved-rules 对话框添加拖拽重排序功能
+
 ## v0.5.1
 
 - fix: 优化文本框输入 [#55](https://github.com/frostime/sy-docs-flow/issues/55)

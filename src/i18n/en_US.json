@@ -59,5 +59,6 @@
     "nameTab": "Name it",
     "renameRule": "Rename it",
     "saveRule": "Save it",
-    "empty": "Nothing..."
+    "empty": "Nothing...",
+    "configSavedRule": "Click to edit name🖋️ | Drag to re-order🔃"
 }

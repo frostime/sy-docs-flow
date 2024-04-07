@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-08-09 18:08:55
  FilePath     : /src/components/config/saved-rules.svelte
- LastEditTime : 2023-08-11 11:29:43
+ LastEditTime : 2024-04-07 22:04:48
  Description  : 
 -->
 <script lang="ts">
@@ -40,13 +40,60 @@
     const confirm = () => {
         dispatch("confirm", savedRules);
     };
+
+    /********** Dragging **********/
+    let draggedItem = null;
+
+    function onDragStart(event: DragEvent, hash: string) {
+        draggedItem = hash;
+        event.dataTransfer.effectAllowed = 'move';
+        // Optional: add a drag image or some effect
+    }
+
+    function onDrop(event: DragEvent, targetHash: string) {
+        event.preventDefault();
+        if (draggedItem && draggedItem !== targetHash) {
+            let newSavedRules = {};
+            let keys = Object.keys(savedRules);
+            let draggedIndex = keys.indexOf(draggedItem);
+            let targetIndex = keys.indexOf(targetHash);
+
+            keys.splice(draggedIndex, 1);
+            keys.splice(targetIndex, 0, draggedItem);
+
+            keys.forEach(key => {
+                newSavedRules[key] = savedRules[key];
+            });
+            savedRules = newSavedRules;
+        }
+        draggedItem = null;
+    }
+
+    function onDragOver(event: DragEvent) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }
+
+    function onDragEnd() {
+        draggedItem = null;
+    }
+
+
 </script>
 
 <div class="b3-dialog__content">
     <div class="ft__breakword">
+        <div class="b3-menu__item" style="text-align: end;">{i18n.configSavedRule}</div>
+        <div class="b3-menu__separator"/>
         <div class="save-rule-list">
             {#each Object.entries(savedRules) as [hash, rule]}
-                <div class="b3-menu__item">
+                <div class="b3-menu__item"
+                    draggable="true"
+                    on:dragstart={(e) => onDragStart(e, hash)}
+                    on:drop={(e) => onDrop(e, hash)}
+                    on:dragover={(e) => onDragOver(e)}
+                    on:dragend={() => onDragEnd()}
+                >
                     <div
                         class="b3-menu__label"
                         contenteditable="true"

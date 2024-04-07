@@ -59,5 +59,6 @@
     "nameTab": "命名",
     "renameRule": "重命名",
     "saveRule": "保存",
-    "empty": "无..."
+    "empty": "无...",
+    "configSavedRule": "点击重命名🖋️ | 拖动调整顺序🔃"
 }

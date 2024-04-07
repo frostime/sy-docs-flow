@@ -388,7 +388,7 @@ export default class DocsFlowPlugin extends Plugin {
                 click: () => {
                     let dialog = new Dialog({
                         title: this.i18n.msg.alterSaved,
-                        width: "20rem",
+                        width: "30rem",
                         content: `<div id="AlterSavedRules" style="height: 100%; width: 100%;"></div>`,
                     });
                     dialog.element.style.maxHeight = "70%";
