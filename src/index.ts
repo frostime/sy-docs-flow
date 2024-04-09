@@ -18,7 +18,7 @@ import { confirmDialog, i18n, setI18n } from "@/utils";
 import { MatchRule, RuleFactory } from "@/rules";
 import { setting } from "@/settings";
 
-// import { changelog } from "sy-plugin-changelog";
+import { changelog } from "sy-plugin-changelog";
 
 const frontEnd = getFrontend();
 const isMobile = frontEnd === "mobile" || frontEnd === "browser-mobile";
@@ -235,9 +235,9 @@ export default class DocsFlowPlugin extends Plugin {
         //@ts-ignore
         this.eventBus.on('SQL', this.eventSQL.bind(this));
 
-        // changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
-        //     ans?.Dialog?.setSize({ width: '45rem', height: '25rem' });
-        // });
+        changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
+            ans?.Dialog?.setSize({ width: '30rem', height: '25rem' });
+        });
     }
 
     onunload() {

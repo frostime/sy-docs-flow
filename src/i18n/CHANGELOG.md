@@ -1,3 +1,9 @@
-## [v0.5.1] 文档流插件 | Docs Flow
+## [v0.5.2] 文档流插件 | Docs Flow
 
-- 🐛 fix: 优化文本框输入 [#55](https://github.com/frostime/sy-docs-flow/issues/55)
+- 📝 更改 Readme 文档错别字
+- ✨ 已保存规则的配置面板中，支持通过拖放来调整先后顺序
+
+---
+
+- 📝 Fix the spelling error in readme
+- ✨ In the configuration panel of the saved rules, support adjusting the order by dragging and dropping
