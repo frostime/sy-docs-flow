@@ -49,6 +49,7 @@ After enabling the plugin, click the icon in the top bar and select the desired 
         - On: dynamically loads each document in a scrolled window.
     - Naming Tab: Name the current document stream.
     - Save Rule: save the rules of the current document flow
+    - Click button to config detail settings
 
 2. Click the breadcrumb of each document to open the corresponding document.
 
