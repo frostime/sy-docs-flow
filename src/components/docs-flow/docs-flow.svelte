@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-03-31 20:18:35
+ LastEditTime : 2024-04-16 12:19:19
  Description  : 
 -->
 <script lang="ts">
@@ -145,6 +145,10 @@
         }, 500);
     };
 
+    const onCopyLink = () => {
+        
+    }
+
     // 用于判断两个数字是否大致相等
     const approxEqual = (a, b, epsilon = 1) => {
         return Math.abs(a - b) < epsilon;
@@ -259,9 +263,13 @@
                 >{i18n.nameTab}</button
             >
             <span class="fn__space" />
-            <button class="b3-button" on:click={onSaveThis}
-                >{i18n.saveRule}</button
-            >
+            <button class="b3-button" on:click={onSaveThis}>
+                {i18n.saveRule}
+            </button>
+            <span class="fn__space" />
+            <button class="b3-button" on:click={onCopyLink}>
+                {i18n.copyLink}
+            </button>
         </section>
     {/if}
 </div>
@@ -295,7 +303,7 @@
 
         > section {
             padding: 0.5rem;
-            width: 40rem;
+            width: 50rem;
 
             background-color: var(--b3-theme-surface);
             opacity: 1;

@@ -60,5 +60,6 @@
     "renameRule": "重命名",
     "saveRule": "保存",
     "empty": "无...",
+    "copyLink": "复制超链接",
     "configSavedRule": "点击重命名🖋️ | 拖动调整顺序🔃"
 }
