@@ -39,6 +39,8 @@ class TabHub {
     }
 
     async open(rule: MatchRule, tabTitle?: string) {
+        if (!rule) return;
+
         let hash = rule.hash;
         if (this.tabs[hash]) {
             this.openTab(hash);
@@ -228,6 +230,23 @@ export default class DocsFlowPlugin extends Plugin {
                     this.tabHub.open(RuleFactory("BlockBacklinks", detail.data.rootID), 'Backlinks');
                 }
             });
+        });
+
+        this.eventBus.on("open-siyuan-url-plugin", ({ detail }) => {
+            // siyuan://plugins/sy-docs-flow/(method)?param=xxx
+            // e.g. siyuan://plugins/sy-docs-flow/open-rule?rule=xxx&input=xxx
+            const urlObj = new URL(detail.url);
+            const method = urlObj.pathname.split('/').pop();
+            if (method === 'open-rule') {
+                const ruleName = urlObj.searchParams.get('rule') as TRuleType;
+                const input = urlObj.searchParams.get('input');
+                let rule = RuleFactory(ruleName, input);
+                if (!rule) {
+                    showMessage("Not a valid docs-flow rule!", 3000, 'error');
+                    return;
+                }
+                this.tabHub.open(rule);
+            }
         });
 
         //@ts-ignore
