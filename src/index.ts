@@ -39,6 +39,8 @@ class TabHub {
     }
 
     async open(rule: MatchRule, tabTitle?: string) {
+        if (!rule) return;
+
         let hash = rule.hash;
         if (this.tabs[hash]) {
             this.openTab(hash);
@@ -62,7 +64,8 @@ class TabHub {
                 app: this.plugin.app,
                 listDocuemntsId: ids,
                 ruleHash: hash,
-                config: rule.config
+                config: rule.config,
+                rule: rule
             }
         });
 
@@ -230,13 +233,31 @@ export default class DocsFlowPlugin extends Plugin {
             });
         });
 
+        this.eventBus.on("open-siyuan-url-plugin", ({ detail }) => {
+            // siyuan://plugins/sy-docs-flow/(method)?param=xxx
+            // e.g. siyuan://plugins/sy-docs-flow/open-rule?ruleType=xxx&ruleInput=xxx
+            const urlObj = new URL(detail.url);
+            const method = urlObj.pathname.split('/').pop();
+            if (method === 'open-rule') {
+                const ruleName = urlObj.searchParams.get('ruleType') as TRuleType;
+                const input = urlObj.searchParams.get('ruleInput');
+                let rule = RuleFactory(ruleName, input);
+                if (!rule) {
+                    showMessage("Not a valid docs-flow rule!", 3000, 'error');
+                    return;
+                }
+                this.tabHub.open(rule);
+            }
+        });
+
         //@ts-ignore
         this.eventBus.on('IdList', this.eventCustomIds.bind(this));
         //@ts-ignore
         this.eventBus.on('SQL', this.eventSQL.bind(this));
 
         changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
-            ans?.Dialog?.setSize({ width: '30rem', height: '25rem' });
+            ans?.Dialog?.setSize({ width: '40rem', height: '27rem' });
+            ans?.Dialog?.setFont('18px');
         });
     }
 

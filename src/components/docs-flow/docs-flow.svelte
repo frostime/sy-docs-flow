@@ -3,11 +3,11 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-03-31 20:18:35
+ LastEditTime : 2024-04-16 12:28:48
  Description  : 
 -->
 <script lang="ts">
-    import { Dialog } from "siyuan";
+    import { Dialog, showMessage } from "siyuan";
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
     import { createEventDispatcher } from "svelte";
@@ -18,6 +18,7 @@
     export let listDocuemntsId: DocumentId[] = [];
     export let ruleHash: string = "";
     export let config: IConfig;
+    export let rule: IRule;
 
     let loadOffset: number = 0; //当前动态加载的文档偏移量
     let loadLength: number = config.dynamicLoading.capacity; //每次动态加载的文档数量
@@ -145,6 +146,19 @@
         }, 500);
     };
 
+    const onCopyLink = () => {
+        const prefix = 'siyuan://plugins/sy-docs-flow/open-rule';
+        let urlObj = new URLSearchParams();
+        urlObj.set('ruleType', rule.type);
+        urlObj.set('ruleInput', rule.input);
+        let url = `${prefix}?${urlObj.toString()}`;
+        let markdown = `[${rule.title}](${url})`
+        navigator.clipboard.writeText(markdown).then(() => {
+            showMessage('Copy links to clipboard!')
+            console.debug('Copy links to clipboard!', markdown);
+        });
+    }
+
     // 用于判断两个数字是否大致相等
     const approxEqual = (a, b, epsilon = 1) => {
         return Math.abs(a - b) < epsilon;
@@ -207,6 +221,7 @@
             >
                 {i18n.defaultSetting.scrollMode.title}
             </label>
+            <span class="fn__space" />
             <input
                 id="enableScroll"
                 class="b3-switch fn__flex-center"
@@ -224,6 +239,7 @@
             >
                 {i18n.defaultSetting.displayBreadcrumb.title}
             </label>
+            <span class="fn__space" />
             <input
                 id="displayBreadcrumb"
                 class="b3-switch fn__flex-center"
@@ -232,7 +248,7 @@
                 on:change={onConfigChanged}
             />
 
-            <span class="fn__space" />
+            <!-- <span class="fn__space" />
 
             <label
                 class="b3-label__text"
@@ -247,7 +263,7 @@
                 type="checkbox"
                 bind:checked={config.dynamicLoading.enabled}
                 on:change={reload}
-            />
+            /> -->
 
             <span class="fn__space" />
 
@@ -259,9 +275,13 @@
                 >{i18n.nameTab}</button
             >
             <span class="fn__space" />
-            <button class="b3-button" on:click={onSaveThis}
-                >{i18n.saveRule}</button
-            >
+            <button class="b3-button" on:click={onSaveThis}>
+                {i18n.saveRule}
+            </button>
+            <span class="fn__space" />
+            <button class="b3-button" on:click={onCopyLink}>
+                {i18n.copyLink}
+            </button>
         </section>
     {/if}
 </div>
@@ -295,7 +315,7 @@
 
         > section {
             padding: 0.5rem;
-            width: 40rem;
+            width: 50rem;
 
             background-color: var(--b3-theme-surface);
             opacity: 1;
