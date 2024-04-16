@@ -1,3 +1,9 @@
+## v0.6.0
+
+- ✨ 通过 `siyuan://` 超链接直接打开某个文档流tab页 [#21](https://github.com/frostime/sy-docs-flow/issues/21)
+   1. 在文档流界面中，增加按钮「复制链接」，点击后复制当前文档流的链接 (markdown 格式)
+   2. 点击超链接，可以直接打开对应文档流 tab 页
+
 ## v0.5.2
 
 - ✨ feat: saved-rules 对话框添加拖拽重排序功能
