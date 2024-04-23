@@ -1,3 +1,8 @@
+## v0.6.1
+
+- ⚡ 优化拷贝文档流 `siyuan://` 超链接的一些不足细节
+  - 拷贝的链接没有保存 title 和 config 的问题
+
 ## v0.6.0
 
 - ✨ 通过 `siyuan://` 超链接直接打开某个文档流tab页 [#21](https://github.com/frostime/sy-docs-flow/issues/21)
