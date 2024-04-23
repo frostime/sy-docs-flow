@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-04-16 12:28:48
+ LastEditTime : 2024-04-23 11:40:22
  Description  : 
 -->
 <script lang="ts">
@@ -151,6 +151,11 @@
         let urlObj = new URLSearchParams();
         urlObj.set('ruleType', rule.type);
         urlObj.set('ruleInput', rule.input);
+        urlObj.set('ruleTitle', rule.title);
+        if (rule.config) {
+            urlObj.set('ruleConfig', JSON.stringify(rule.config));
+        }
+
         let url = `${prefix}?${urlObj.toString()}`;
         let markdown = `[${rule.title}](${url})`
         navigator.clipboard.writeText(markdown).then(() => {
