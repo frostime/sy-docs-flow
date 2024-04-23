@@ -8,7 +8,7 @@
  */
 import { showMessage } from "siyuan";
 import * as api from "@/api";
-import {getBacklink2, sql, getBlockByID, listDocTree} from "@/api";
+import { getBacklink2, sql, getBlockByID, listDocTree } from "@/api";
 import { getChildDocs, getActiveTab } from "./utils";
 import { setting } from "./settings";
 
@@ -62,7 +62,7 @@ export abstract class MatchRule {
     }
 
     emptyResult(): IRuleFetchData {
-        return {ids: [], eof: true};
+        return { ids: [], eof: true };
     }
 
     abstract next(): IRuleFetchData | Promise<IRuleFetchData>;
@@ -114,7 +114,7 @@ class ChildDocument extends MatchRule {
         }
         let child = await getChildDocs(this.input);
         let ans = child ? [this.input, ...child] : null;
-        return { ids: ans ?? [], eof: true};
+        return { ids: ans ?? [], eof: true };
     }
 }
 
@@ -158,7 +158,7 @@ class OffspringDocument extends MatchRule {
         dfs(root);
         console.log(listDocId);
 
-        return { ids: listDocId, eof: true};
+        return { ids: listDocId, eof: true };
     }
 }
 
@@ -167,7 +167,7 @@ class DocBacklinks extends MatchRule {
         super("DocBacklinks");
         this.input = null;
         const currentDocument = getActiveTab();
-        
+
         this.hash = `DocBacklinks`;
 
         if (!currentDocument) {
@@ -186,7 +186,7 @@ class DocBacklinks extends MatchRule {
         }
         let backlinks = await getBacklink2(this.input);
         let backlinkIds = backlinks.backlinks.map((item) => item.id);
-        return { ids: backlinkIds ?? [], eof: true};
+        return { ids: backlinkIds ?? [], eof: true };
     }
 }
 
@@ -195,7 +195,7 @@ class DocBackmentions extends MatchRule {
         super("DocBackmentions");
         this.input = null;
         const currentDocument = getActiveTab();
-        
+
         this.hash = `DocBackmentions`;
 
         if (!currentDocument) {
@@ -214,7 +214,7 @@ class DocBackmentions extends MatchRule {
         }
         let backlinks = await getBacklink2(this.input);
         let backlinkIds = backlinks.backmentions.map((item) => item.id);
-        return { ids: backlinkIds ?? [], eof: true};
+        return { ids: backlinkIds ?? [], eof: true };
     }
 }
 
@@ -246,7 +246,7 @@ class BlockBacklinks extends MatchRule {
         `;
         const blocks = await api.sql(sql);
         const ids = blocks?.map((item) => item.id);
-        return { ids: ids ?? [], eof: true};
+        return { ids: ids ?? [], eof: true };
     }
 
 }
@@ -274,7 +274,7 @@ class SQL extends MatchRule {
         let result = await sql(this.input);
         let ids = result?.map((item) => item?.id).filter((item) => typeof item === "string");
         // return ids ?? [];
-        return { ids: ids ?? [], eof: true};
+        return { ids: ids ?? [], eof: true };
     }
 }
 
@@ -300,7 +300,7 @@ class IdList extends MatchRule {
 
     async next() {
         // return this.input;
-        return { ids: this.input, eof: true};
+        return { ids: this.input, eof: true };
     }
 }
 

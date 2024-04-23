@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2024-03-31 21:36:56
+ LastEditTime : 2024-04-23 11:52:59
  Description  : 
 -->
 <script lang="ts">
@@ -18,21 +18,21 @@
     export let index: number;
     export let blockId: BlockId;
     export let config: IConfig;
-    export let displayCollapseBar: boolean;  // 当前是否显示折叠按钮
+    export let displayCollapseBar: boolean; // 当前是否显示折叠按钮
     export let expanded: boolean = true;
 
     //状态标识符
     const Flag = {
         initialised: false,
         // displayGutter: false
-    }
+    };
 
     //标识, 在执行一些不需要让 Protyle 重载的 DOM 操作时用到
     //防止 afterUpdate 里面执行 Protyle 重载
     const ChangeStatus = {
         collapseBarChanged: false,
         // scrollingChanged: false,
-    }
+    };
 
     let scroll: boolean = config.scroll;
 
@@ -71,16 +71,16 @@
         thisBlock = await getBlockByID(blockId);
 
         //处理 li 下的段落块的特殊情况
-        if (thisBlock.type == 'p') {
+        if (thisBlock.type == "p") {
             let parentBlock: Block = await getBlockByID(thisBlock.parent_id);
-            if (parentBlock.type == 'i') {
+            if (parentBlock.type == "i") {
                 thisBlock = parentBlock;
                 blockId = thisBlock.id;
                 console.debug("Li block", blockId);
             }
         }
 
-        thisBlock.content = null;  //不需要 content，减少占用
+        thisBlock.content = null; //不需要 content，减少占用
 
         let rootId: BlockId = thisBlock.root_id;
         rootDoc = await getBlockByID(rootId);
@@ -116,10 +116,10 @@
     });
 
     function whichAction(): TProtyleAction[] {
-        if (thisBlock.type == 'd') {
-            return ['cb-get-context'];
+        if (thisBlock.type == "d") {
+            return ["cb-get-context"];
         } else {
-            return ['cb-get-all'];
+            return ["cb-get-all"];
         }
     }
 
@@ -189,10 +189,7 @@
                 ><use xlink:href="#iconRight" /></svg
             >
         </span>
-        <span
-            class="b3-list-item__text"
-            style="flex: 0; min-width: 25px;"
-        >
+        <span class="b3-list-item__text" style="flex: 0; min-width: 25px;">
             {index + 1}
         </span>
         <span class="b3-list-item__text">{hpath}</span>

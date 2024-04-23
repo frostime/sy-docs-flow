@@ -220,7 +220,7 @@ export default class DocsFlowPlugin extends Plugin {
                 }
             });
 
-            if (detail.data.refCount === 0 ) {
+            if (detail.data.refCount === 0) {
                 return;
             }
             console.log("click-editortitleicon", detail);
@@ -245,6 +245,14 @@ export default class DocsFlowPlugin extends Plugin {
                 if (!rule) {
                     showMessage("Not a valid docs-flow rule!", 3000, 'error');
                     return;
+                }
+                const title = urlObj.searchParams.get('ruleTitle');
+                if (title) {
+                    rule.title = title;
+                }
+                const config = JSON.parse(urlObj.searchParams.get('ruleConfig'));
+                if (config) {
+                    rule.mergeConfig(config);
                 }
                 this.tabHub.open(rule);
             }
