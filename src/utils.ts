@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2024-04-07 20:13:26
+ * @LastEditTime : 2024-04-23 11:54:14
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
@@ -16,11 +16,11 @@ export function setI18n(i18nData: any) {
 }
 
 
-export function throttle<T extends (...args: any[]) => any>(func: T, wait: number = 500){
+export function throttle<T extends (...args: any[]) => any>(func: T, wait: number = 500) {
     let previous = 0;
-    return function(...args: Parameters<T>){
+    return function (...args: Parameters<T>) {
         let now = Date.now(), context = this;
-        if(now - previous > wait){
+        if (now - previous > wait) {
             func.apply(context, args);
             previous = now;
         }
@@ -93,7 +93,7 @@ export const confirmDialog = (title: string, content: string | HTMLElement, conf
 };
 
 
-export const notebooks: {[key: string]: string} = {};
+export const notebooks: { [key: string]: string } = {};
 for (let notebook of window.siyuan.notebooks) {
     console.log(notebook);
     notebooks[notebook.id] = notebook.name;

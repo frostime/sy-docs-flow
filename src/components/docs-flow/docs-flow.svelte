@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-04-23 11:40:22
+ LastEditTime : 2024-04-23 11:52:45
  Description  : 
 -->
 <script lang="ts">
@@ -85,35 +85,38 @@
     function onOpenConfig() {
         console.log("onOpenConfig", config);
         let dialog = new Dialog({
-            title: 'Config',
+            title: "Config",
             content: `<div id="SettingPanel" style="background: var(--b3-theme-background);"></div>`,
             width: "780px",
             height: "500px",
             destroyCallback: () => {
                 // console.log(changedConfig);
-                if (changedConfig?.['protyleScroll'] !== undefined) {
-                    config.scroll = changedConfig['protyleScroll'];
+                if (changedConfig?.["protyleScroll"] !== undefined) {
+                    config.scroll = changedConfig["protyleScroll"];
                 }
-                if (changedConfig?.['protyleBreadcrumb'] !== undefined) {
-                    config.breadcrumb = changedConfig['protyleBreadcrumb'];
+                if (changedConfig?.["protyleBreadcrumb"] !== undefined) {
+                    config.breadcrumb = changedConfig["protyleBreadcrumb"];
                 }
-                if (changedConfig?.['protyleTitle'] !== undefined) {
-                    config.protyleTitle = changedConfig['protyleTitle'];
+                if (changedConfig?.["protyleTitle"] !== undefined) {
+                    config.protyleTitle = changedConfig["protyleTitle"];
                 }
-                if (changedConfig?.['protyleReadonly'] !== undefined) {
-                    config.readonly = changedConfig['protyleReadonly'];
+                if (changedConfig?.["protyleReadonly"] !== undefined) {
+                    config.readonly = changedConfig["protyleReadonly"];
                 }
-                if (changedConfig?.['dynamicLoadingEnabled'] !== undefined) {
-                    config.dynamicLoading.enabled = changedConfig['dynamicLoadingEnabled'];
+                if (changedConfig?.["dynamicLoadingEnabled"] !== undefined) {
+                    config.dynamicLoading.enabled =
+                        changedConfig["dynamicLoadingEnabled"];
                 }
-                if (changedConfig?.['dynamicLoadingCapacity'] !== undefined) {
-                    config.dynamicLoading.capacity = changedConfig['dynamicLoadingCapacity'];
+                if (changedConfig?.["dynamicLoadingCapacity"] !== undefined) {
+                    config.dynamicLoading.capacity =
+                        changedConfig["dynamicLoadingCapacity"];
                 }
-                if (changedConfig?.['dynamicLoadingShift'] !== undefined) {
-                    config.dynamicLoading.shift = changedConfig['dynamicLoadingShift'];
+                if (changedConfig?.["dynamicLoadingShift"] !== undefined) {
+                    config.dynamicLoading.shift =
+                        changedConfig["dynamicLoadingShift"];
                 }
                 onConfigChanged();
-            }
+            },
         });
         const ele: HTMLElement = dialog.element.querySelector("#SettingPanel");
         ele.style.height = "100%";
@@ -129,11 +132,11 @@
                     protyleReadonly: config.readonly,
                     dynamicLoadingEnabled: config.dynamicLoading.enabled,
                     dynamicLoadingCapacity: config.dynamicLoading.capacity,
-                    dynamicLoadingShift: config.dynamicLoading.shift
-                }
-            }
+                    dynamicLoadingShift: config.dynamicLoading.shift,
+                },
+            },
         });
-        settingComp.$on("changed", ({detail}) => {
+        settingComp.$on("changed", ({ detail }) => {
             changedConfig[detail.key] = detail.value;
         });
     }
@@ -147,22 +150,22 @@
     };
 
     const onCopyLink = () => {
-        const prefix = 'siyuan://plugins/sy-docs-flow/open-rule';
+        const prefix = "siyuan://plugins/sy-docs-flow/open-rule";
         let urlObj = new URLSearchParams();
-        urlObj.set('ruleType', rule.type);
-        urlObj.set('ruleInput', rule.input);
-        urlObj.set('ruleTitle', rule.title);
+        urlObj.set("ruleType", rule.type);
+        urlObj.set("ruleInput", rule.input);
+        urlObj.set("ruleTitle", rule.title);
         if (rule.config) {
-            urlObj.set('ruleConfig', JSON.stringify(rule.config));
+            urlObj.set("ruleConfig", JSON.stringify(rule.config));
         }
 
         let url = `${prefix}?${urlObj.toString()}`;
-        let markdown = `[${rule.title}](${url})`
+        let markdown = `[${rule.title}](${url})`;
         navigator.clipboard.writeText(markdown).then(() => {
-            showMessage('Copy links to clipboard!')
-            console.debug('Copy links to clipboard!', markdown);
+            showMessage("Copy links to clipboard!");
+            console.debug("Copy links to clipboard!", markdown);
         });
-    }
+    };
 
     // 用于判断两个数字是否大致相等
     const approxEqual = (a, b, epsilon = 1) => {
@@ -176,7 +179,7 @@
         let scrollHeight = ele.scrollHeight;
         let clientHeight = ele.clientHeight;
         if (lastScrollTop === null) {
-            lastScrollTop = scrollTop;  //记录上一次滚动条的位置, 从而判断滚动方向
+            lastScrollTop = scrollTop; //记录上一次滚动条的位置, 从而判断滚动方向
             return;
         }
 
@@ -325,7 +328,8 @@
             background-color: var(--b3-theme-surface);
             opacity: 1;
             border-radius: 0.5rem;
-            box-shadow: 0 0.5em 1em -0.125em var(--b3-theme-primary-light),
+            box-shadow:
+                0 0.5em 1em -0.125em var(--b3-theme-primary-light),
                 0 0 0 1px var(--b3-theme-primary-light);
 
             display: flex;

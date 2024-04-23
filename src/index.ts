@@ -220,7 +220,7 @@ export default class DocsFlowPlugin extends Plugin {
                 }
             });
 
-            if (detail.data.refCount === 0 ) {
+            if (detail.data.refCount === 0) {
                 return;
             }
             console.log("click-editortitleicon", detail);

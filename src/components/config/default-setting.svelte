@@ -32,64 +32,62 @@
         }
         DefaultSettingItems = [
             {
-                type: 'checkbox',
+                type: "checkbox",
                 title: I18N.scrollMode.title,
                 text: I18N.scrollMode.text,
-                key: 'protyleScroll',
-                value: SettingItemsValue.protyleScroll
+                key: "protyleScroll",
+                value: SettingItemsValue.protyleScroll,
             },
             {
-                type: 'checkbox',
+                type: "checkbox",
                 title: I18N.displayBreadcrumb.title,
                 text: I18N.displayBreadcrumb.text,
-                key: 'protyleBreadcrumb',
-                value: SettingItemsValue.protyleBreadcrumb
+                key: "protyleBreadcrumb",
+                value: SettingItemsValue.protyleBreadcrumb,
             },
             {
-                type: 'checkbox',
+                type: "checkbox",
                 title: I18N.protyleTitle.title,
                 text: I18N.protyleTitle.text,
-                key: 'protyleTitle',
-                value: SettingItemsValue.protyleTitle
+                key: "protyleTitle",
+                value: SettingItemsValue.protyleTitle,
             },
             {
-                type: 'checkbox',
+                type: "checkbox",
                 title: I18N.protyleReadonly.title,
                 text: I18N.protyleReadonly.text,
-                key: 'protyleReadonly',
-                value: SettingItemsValue.protyleReadonly
+                key: "protyleReadonly",
+                value: SettingItemsValue.protyleReadonly,
             },
             {
-                type: 'checkbox',
+                type: "checkbox",
                 title: I18N.dynamicLoading.title,
                 text: I18N.dynamicLoading.text,
-                key: 'dynamicLoadingEnabled',
-                value: SettingItemsValue.dynamicLoadingEnabled
+                key: "dynamicLoadingEnabled",
+                value: SettingItemsValue.dynamicLoadingEnabled,
             },
             {
-                type: 'number',
+                type: "number",
                 title: I18N.dynamicLoadingCapacity.title,
                 text: I18N.dynamicLoadingCapacity.text,
-                key: 'dynamicLoadingCapacity',
-                value: SettingItemsValue.dynamicLoadingCapacity
+                key: "dynamicLoadingCapacity",
+                value: SettingItemsValue.dynamicLoadingCapacity,
             },
             {
-                type: 'number',
+                type: "number",
                 title: I18N.dynamicLoadingShift.title,
                 text: I18N.dynamicLoadingShift.text,
-                key: 'dynamicLoadingShift',
-                value: SettingItemsValue.dynamicLoadingShift
+                key: "dynamicLoadingShift",
+                value: SettingItemsValue.dynamicLoadingShift,
             },
         ];
     });
 
-
     const dispatch = createEventDispatcher();
 
-    function onChanged( {detail}) {
+    function onChanged({ detail }) {
         dispatch("changed", detail);
     }
-
 </script>
 
 <SettingPanel
@@ -103,7 +101,6 @@
     </div>
 </SettingPanel>
 
-
 <style lang="scss">
     div[slot="top"] {
         color: var(--b3-theme-primary);
@@ -111,5 +108,3 @@
         font-size: 1.2em;
     }
 </style>
-
-
