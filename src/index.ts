@@ -50,19 +50,20 @@ class TabHub {
             return;
         }
 
-        let result = await rule.next();
-        let ids = result.ids;
-        if (!ids || ids.length === 0) {
-            showMessage("No matching docs found.");
-            return;
-        }
+        // let result = await rule.next();
+        // let ids = result.ids;
+        // if (!ids || ids.length === 0) {
+        //     showMessage("No matching docs found.");
+        //     return;
+        // }
+
         let tabDiv = document.createElement("div");
         tabDiv.classList.add("docs-flow-page");
         let flow = new DocsFlow({
             target: tabDiv,
             props: {
                 app: this.plugin.app,
-                listDocuemntsId: ids,
+                // listDocuemntsId: ids,
                 rule: rule
             }
         });

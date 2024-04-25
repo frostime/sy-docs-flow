@@ -3,20 +3,22 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-04-25 21:56:41
+ LastEditTime : 2024-04-25 22:24:30
  Description  : 
 -->
 <script lang="ts">
     import { Dialog, showMessage } from "siyuan";
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import { i18n, throttle } from "../../utils";
     import DefaultSetting from "../config/default-setting.svelte";
 
+    import { type MatchRule } from '@/rules';
+
     export let app: any;
+    export let rule: MatchRule;
     export let listDocuemntsId: DocumentId[] = [];
-    export let rule: IRule;
 
     const ruleHash: string = rule.hash;
     const config: IConfig = rule.config;
@@ -24,10 +26,17 @@
     let loadOffset: number = 0; //当前动态加载的文档偏移量
     let loadLength: number = config.dynamicLoading.capacity; //每次动态加载的文档数量
     let shiftLength: number = config.dynamicLoading.shift; //每次动态加载时的偏移量
-    let loadIdList: DocumentId[] = config.dynamicLoading.enabled
-        ? listDocuemntsId.slice(loadOffset, loadOffset + loadLength)
-        : listDocuemntsId;
-    console.log("loadIdList", loadIdList);
+    let loadIdList: DocumentId[] = [];
+
+    onMount(async () => {
+        let result = await rule.next();
+        let ids = result.ids;
+        listDocuemntsId = ids;
+        if (!ids || ids.length === 0) {
+            showMessage("No matching docs found.");
+        }
+        updateLoadIdList();
+    });
 
     const updateLoadIdList = () => {
         if (config.dynamicLoading.enabled !== true) {
@@ -196,9 +205,13 @@
             shiftThrottle("right");
         }
     };
+
     export const onscroll = (e) => {
         window.requestAnimationFrame(() => {
             if (config.dynamicLoading.enabled !== true) {
+                return;
+            }
+            if (loadIdList.length === 0) {
                 return;
             }
             dynamicLoading(e);
