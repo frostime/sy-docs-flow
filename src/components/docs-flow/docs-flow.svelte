@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-04-23 11:52:45
+ LastEditTime : 2024-04-25 21:56:41
  Description  : 
 -->
 <script lang="ts">
@@ -16,9 +16,10 @@
 
     export let app: any;
     export let listDocuemntsId: DocumentId[] = [];
-    export let ruleHash: string = "";
-    export let config: IConfig;
     export let rule: IRule;
+
+    const ruleHash: string = rule.hash;
+    const config: IConfig = rule.config;
 
     let loadOffset: number = 0; //当前动态加载的文档偏移量
     let loadLength: number = config.dynamicLoading.capacity; //每次动态加载的文档数量

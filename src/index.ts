@@ -63,8 +63,6 @@ class TabHub {
             props: {
                 app: this.plugin.app,
                 listDocuemntsId: ids,
-                ruleHash: hash,
-                config: rule.config,
                 rule: rule
             }
         });
