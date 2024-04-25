@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-03-31 21:47:04
+ * @LastEditTime : 2024-04-25 22:12:03
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -20,6 +20,8 @@ export abstract class MatchRule {
     config: IConfig;
 
     current: IRuleFetchData;
+
+    private date: BlockId[] = [];
 
     constructor(type: TRuleType) {
         this.type = type;
@@ -67,7 +69,7 @@ export abstract class MatchRule {
 
     abstract next(): IRuleFetchData | Promise<IRuleFetchData>;
 
-    precheck() { return true; } // 针对输入格式的检查
+    validateInput() { return true; } // 针对输入格式的检查
 
     mergeConfig(config: any) {
         console.log('Merge config:', config);
@@ -260,7 +262,7 @@ class SQL extends MatchRule {
         this.hash = `SQL@${sqlCode.replace(/\s+/g, "$")}`;
     }
 
-    precheck(): boolean {
+    validateInput(): boolean {
         //是否是 SQL 语法
         let pat = /select\s+([\s\S]+?)\s+from\s+([\s\S]+?)\s*$/i;
         if (!pat.test(this.input)) {
@@ -286,7 +288,7 @@ class IdList extends MatchRule {
         this.hash = `IdList@${ids.sort().join("$")}`;
     }
 
-    precheck(): boolean {
+    validateInput(): boolean {
         //20230612122134-urgfgsx
         let pat = /^\d{14}-[a-z0-9]{7}$/
         for (let id of this.input) {

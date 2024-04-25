@@ -46,7 +46,7 @@ class TabHub {
             this.openTab(hash);
             return;
         }
-        if (!rule.precheck()) {
+        if (!rule.validateInput()) {
             return;
         }
 
