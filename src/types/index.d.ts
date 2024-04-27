@@ -113,10 +113,10 @@ interface IRule {
     config: IConfig;
 }
 
-interface IRuleFetchData {
-    ids: BlockId[];
-    eof: boolean;
-}
+// interface IRuleFetchData {
+//     ids: BlockId[];
+//     eof: boolean;
+// }
 
 interface IBreadcrumb {
     id: string,

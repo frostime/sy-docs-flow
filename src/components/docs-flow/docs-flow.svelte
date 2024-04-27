@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-04-27 21:01:31
+ LastEditTime : 2024-04-27 21:09:12
  Description  : 
 -->
 <script lang="ts">
@@ -29,8 +29,7 @@
     let loadIdList: DocumentId[] = [];
 
     onMount(async () => {
-        let result = await rule.next();
-        let ids = result.ids;
+        let ids = await rule.next();
         listDocumentIds = ids;
         if (!ids || ids.length === 0) {
             showMessage("No matching docs found.");

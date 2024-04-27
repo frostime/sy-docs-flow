@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-04-25 22:12:03
+ * @LastEditTime : 2024-04-27 21:10:08
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -19,9 +19,9 @@ export abstract class MatchRule {
     input: any;
     config: IConfig;
 
-    current: IRuleFetchData;
+    // current: IRuleFetchData;
 
-    private date: BlockId[] = [];
+    protected eof: boolean = false;
 
     constructor(type: TRuleType) {
         this.type = type;
@@ -39,7 +39,7 @@ export abstract class MatchRule {
                 shift: setting.dynamicLoadingShift
             }
         };
-        this.current = null;
+        // this.current = null;
     }
 
     dump(): IRule {
@@ -63,11 +63,15 @@ export abstract class MatchRule {
         }
     }
 
-    emptyResult(): IRuleFetchData {
-        return { ids: [], eof: true };
-    }
+    // emptyResult(): IRuleFetchData {
+    //     return { ids: [], eof: true };
+    // }
 
-    abstract next(): IRuleFetchData | Promise<IRuleFetchData>;
+    abstract next(): BlockId[] | Promise<BlockId[]>;
+
+    iseof() {
+        return this.eof;
+    }
 
     validateInput() { return true; } // 针对输入格式的检查
 
@@ -111,12 +115,13 @@ class ChildDocument extends MatchRule {
     }
 
     async next() {
+        this.eof = true;
         if (!this.input) {
-            return this.emptyResult();
+            return [];
         }
         let child = await getChildDocs(this.input);
-        let ans = child ? [this.input, ...child] : null;
-        return { ids: ans ?? [], eof: true };
+        let ans = child ? [this.input, ...child] : [];
+        return ans ?? [];
     }
 }
 
@@ -138,8 +143,9 @@ class OffspringDocument extends MatchRule {
     }
 
     async next() {
+        this.eof = true;
         if (!this.input) {
-            return this.emptyResult();
+            return [];
         }
         let block = await getBlockByID(this.input);
         const path = block.path.replace(/\.sy$/, '');
@@ -158,9 +164,9 @@ class OffspringDocument extends MatchRule {
             children: nodes
         }
         dfs(root);
-        console.log(listDocId);
+        // console.log(listDocId);
 
-        return { ids: listDocId, eof: true };
+        return listDocId ?? [];
     }
 }
 
@@ -183,12 +189,13 @@ class DocBacklinks extends MatchRule {
     }
 
     async next() {
+        this.eof = true;
         if (!this.input) {
-            return this.emptyResult();
+            return [];
         }
         let backlinks = await getBacklink2(this.input);
         let backlinkIds = backlinks.backlinks.map((item) => item.id);
-        return { ids: backlinkIds ?? [], eof: true };
+        return backlinkIds ?? [];
     }
 }
 
@@ -211,12 +218,13 @@ class DocBackmentions extends MatchRule {
     }
 
     async next() {
+        this.eof = true;
         if (!this.input) {
-            return this.emptyResult();
+            return [];
         }
         let backlinks = await getBacklink2(this.input);
         let backlinkIds = backlinks.backmentions.map((item) => item.id);
-        return { ids: backlinkIds ?? [], eof: true };
+        return backlinkIds ?? [];
     }
 }
 
@@ -228,16 +236,10 @@ class BlockBacklinks extends MatchRule {
     }
 
     async next() {
+        this.eof = true;
         if (!this.input) {
-            return this.emptyResult();
+            return [];
         }
-        // const sql = `
-        // select * from blocks where id in (
-        //     select block_id from refs where def_block_id = '${this.input}'
-        // ) 
-        // order by updated desc
-        // limit 999;
-        // `;
         const sql = `
             select blocks.* 
             from blocks 
@@ -248,7 +250,7 @@ class BlockBacklinks extends MatchRule {
         `;
         const blocks = await api.sql(sql);
         const ids = blocks?.map((item) => item.id);
-        return { ids: ids ?? [], eof: true };
+        return ids ?? [];
     }
 
 }
@@ -273,10 +275,13 @@ class SQL extends MatchRule {
     }
 
     async next() {
+        this.eof = true;
+        if (!this.input) {
+            return [];
+        }
         let result = await sql(this.input);
         let ids = result?.map((item) => item?.id).filter((item) => typeof item === "string");
-        // return ids ?? [];
-        return { ids: ids ?? [], eof: true };
+        return ids ?? [];
     }
 }
 
@@ -301,8 +306,8 @@ class IdList extends MatchRule {
     }
 
     async next() {
-        // return this.input;
-        return { ids: this.input, eof: true };
+        this.eof = true;
+        return this.input ?? [];
     }
 }
 
