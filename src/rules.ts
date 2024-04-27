@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-04-27 21:10:08
+ * @LastEditTime : 2024-04-28 01:35:03
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -67,10 +67,14 @@ export abstract class MatchRule {
     //     return { ids: [], eof: true };
     // }
 
-    abstract next(): BlockId[] | Promise<BlockId[]>;
+    abstract fetch(): BlockId[] | Promise<BlockId[]>;
 
     iseof() {
         return this.eof;
+    }
+
+    reset() {
+        this.eof = false;
     }
 
     validateInput() { return true; } // 针对输入格式的检查
@@ -114,7 +118,7 @@ class ChildDocument extends MatchRule {
         this.hash = `ChildDocument@${docId}`;
     }
 
-    async next() {
+    async fetch() {
         this.eof = true;
         if (!this.input) {
             return [];
@@ -142,7 +146,7 @@ class OffspringDocument extends MatchRule {
         this.config.dynamicLoading.enabled = true; //默认开启
     }
 
-    async next() {
+    async fetch() {
         this.eof = true;
         if (!this.input) {
             return [];
@@ -188,7 +192,7 @@ class DocBacklinks extends MatchRule {
         this.hash = `DocBacklinks@${dataId}`;
     }
 
-    async next() {
+    async fetch() {
         this.eof = true;
         if (!this.input) {
             return [];
@@ -217,7 +221,7 @@ class DocBackmentions extends MatchRule {
         this.hash = `DocBackmentions@${dataId}`;
     }
 
-    async next() {
+    async fetch() {
         this.eof = true;
         if (!this.input) {
             return [];
@@ -235,7 +239,7 @@ class BlockBacklinks extends MatchRule {
         this.hash = `BlockBacklinks@${id}`;
     }
 
-    async next() {
+    async fetch() {
         this.eof = true;
         if (!this.input) {
             return [];
@@ -274,7 +278,7 @@ class SQL extends MatchRule {
         return true;
     }
 
-    async next() {
+    async fetch() {
         this.eof = true;
         if (!this.input) {
             return [];
@@ -305,7 +309,7 @@ class IdList extends MatchRule {
         return true;
     }
 
-    async next() {
+    async fetch() {
         this.eof = true;
         return this.input ?? [];
     }

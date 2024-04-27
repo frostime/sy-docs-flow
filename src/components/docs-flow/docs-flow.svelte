@@ -29,7 +29,7 @@
     let loadIdList: DocumentId[] = [];
 
     onMount(async () => {
-        let ids = await rule.next();
+        let ids = await rule.fetch();
         listDocumentIds = ids;
         if (!ids || ids.length === 0) {
             showMessage("No matching docs found.");
