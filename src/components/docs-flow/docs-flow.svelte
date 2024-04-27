@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-04-25 22:24:30
+ LastEditTime : 2024-04-27 21:01:31
  Description  : 
 -->
 <script lang="ts">
@@ -18,7 +18,7 @@
 
     export let app: any;
     export let rule: MatchRule;
-    export let listDocuemntsId: DocumentId[] = [];
+    export let listDocumentIds: DocumentId[] = [];
 
     const ruleHash: string = rule.hash;
     const config: IConfig = rule.config;
@@ -31,44 +31,46 @@
     onMount(async () => {
         let result = await rule.next();
         let ids = result.ids;
-        listDocuemntsId = ids;
+        listDocumentIds = ids;
         if (!ids || ids.length === 0) {
             showMessage("No matching docs found.");
+            return;
         }
         updateLoadIdList();
     });
 
     const updateLoadIdList = () => {
         if (config.dynamicLoading.enabled !== true) {
-            loadIdList = listDocuemntsId;
+            loadIdList = listDocumentIds;
             return;
         }
         if (loadOffset < 0) {
             loadOffset = 0;
-        } else if (loadOffset + loadLength > listDocuemntsId.length) {
-            loadOffset = listDocuemntsId.length - loadLength;
+        } else if (loadOffset + loadLength > listDocumentIds.length) {
+            loadOffset = Math.max(listDocumentIds.length - loadLength, 0);
         }
-        loadIdList = listDocuemntsId.slice(loadOffset, loadOffset + loadLength);
+        loadIdList = listDocumentIds.slice(loadOffset, loadOffset + loadLength);
         // window.scrollTo(0, 0);
     };
 
     const shift = (direction: "left" | "right") => {
-        if (config.dynamicLoading.enabled !== true) {
+        if (config.dynamicLoading.enabled !== true || listDocumentIds.length === 0) {
             return;
         }
 
-        if (direction === "left") {
-            if (loadOffset == 0) {
-                return;
-            }
-            loadOffset -= shiftLength;
-        } else {
-            if (loadOffset + loadLength >= listDocuemntsId.length) {
-                return;
-            }
-            loadOffset += shiftLength;
+        const originalOffset = loadOffset;
+        let newOffset = loadOffset;
+        if (direction === "left" && originalOffset > 0) {
+            newOffset = Math.max(originalOffset - shiftLength, 0);
+        } else if (direction === "right" && originalOffset + loadLength < listDocumentIds.length) {
+            newOffset = Math.min(originalOffset + shiftLength, listDocumentIds.length - loadLength);
+            newOffset = Math.max(newOffset, 0); //防止极端情况下 offset 为负数
         }
-        updateLoadIdList();
+
+        if (newOffset !== originalOffset) {
+            loadOffset = newOffset;
+            updateLoadIdList();
+        }
     };
 
     const shiftThrottle = throttle(shift, 1000); //防止滚动过快导致的频繁加载
@@ -233,7 +235,7 @@
             in:fly={{ y: -20, duration: 200 }}
             out:fly={{ y: -20, duration: 200 }}
         >
-            <div>{i18n.docsCnt}: {listDocuemntsId.length}</div>
+            <div>{i18n.docsCnt}: {listDocumentIds.length}</div>
             <div id="space" />
 
             <label
