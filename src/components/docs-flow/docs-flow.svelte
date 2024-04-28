@@ -3,62 +3,77 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-04-23 11:52:45
+ LastEditTime : 2024-04-28 14:19:16
  Description  : 
 -->
 <script lang="ts">
     import { Dialog, showMessage } from "siyuan";
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import { i18n, throttle } from "../../utils";
     import DefaultSetting from "../config/default-setting.svelte";
 
+    import { type MatchRule } from '@/rules';
+
     export let app: any;
-    export let listDocuemntsId: DocumentId[] = [];
-    export let ruleHash: string = "";
-    export let config: IConfig;
-    export let rule: IRule;
+    export let rule: MatchRule;
+    export let listDocumentIds: DocumentId[] = [];
+
+    const ruleHash: string = rule.hash;
+    const config: IConfig = rule.config;
 
     let loadOffset: number = 0; //当前动态加载的文档偏移量
     let loadLength: number = config.dynamicLoading.capacity; //每次动态加载的文档数量
     let shiftLength: number = config.dynamicLoading.shift; //每次动态加载时的偏移量
-    let loadIdList: DocumentId[] = config.dynamicLoading.enabled
-        ? listDocuemntsId.slice(loadOffset, loadOffset + loadLength)
-        : listDocuemntsId;
-    console.log("loadIdList", loadIdList);
+    let loadIdList: DocumentId[] = [];
+
+    const reInit = async () => {
+        let ids = await rule.fetch();
+        listDocumentIds = ids;
+        if (!ids || ids.length === 0) {
+            showMessage("No matching docs found.");
+            return;
+        }
+        updateLoadIdList();
+    }
+
+    onMount(async () => {
+        reInit();
+    });
 
     const updateLoadIdList = () => {
         if (config.dynamicLoading.enabled !== true) {
-            loadIdList = listDocuemntsId;
+            loadIdList = listDocumentIds;
             return;
         }
         if (loadOffset < 0) {
             loadOffset = 0;
-        } else if (loadOffset + loadLength > listDocuemntsId.length) {
-            loadOffset = listDocuemntsId.length - loadLength;
+        } else if (loadOffset + loadLength > listDocumentIds.length) {
+            loadOffset = Math.max(listDocumentIds.length - loadLength, 0);
         }
-        loadIdList = listDocuemntsId.slice(loadOffset, loadOffset + loadLength);
+        loadIdList = listDocumentIds.slice(loadOffset, loadOffset + loadLength);
         // window.scrollTo(0, 0);
     };
 
     const shift = (direction: "left" | "right") => {
-        if (config.dynamicLoading.enabled !== true) {
+        if (config.dynamicLoading.enabled !== true || listDocumentIds.length === 0) {
             return;
         }
 
-        if (direction === "left") {
-            if (loadOffset == 0) {
-                return;
-            }
-            loadOffset -= shiftLength;
-        } else {
-            if (loadOffset + loadLength >= listDocuemntsId.length) {
-                return;
-            }
-            loadOffset += shiftLength;
+        const originalOffset = loadOffset;
+        let newOffset = loadOffset;
+        if (direction === "left" && originalOffset > 0) {
+            newOffset = Math.max(originalOffset - shiftLength, 0);
+        } else if (direction === "right" && originalOffset + loadLength < listDocumentIds.length) {
+            newOffset = Math.min(originalOffset + shiftLength, listDocumentIds.length - loadLength);
+            newOffset = Math.max(newOffset, 0); //防止极端情况下 offset 为负数
         }
-        updateLoadIdList();
+
+        if (newOffset !== originalOffset) {
+            loadOffset = newOffset;
+            updateLoadIdList();
+        }
     };
 
     const shiftThrottle = throttle(shift, 1000); //防止滚动过快导致的频繁加载
@@ -141,7 +156,7 @@
         });
     }
 
-    const reload = () => {
+    const refresh = () => {
         loadIdList = [];
         onConfigChanged();
         setTimeout(() => {
@@ -195,14 +210,30 @@
             shiftThrottle("right");
         }
     };
+
     export const onscroll = (e) => {
         window.requestAnimationFrame(() => {
             if (config.dynamicLoading.enabled !== true) {
                 return;
             }
+            if (loadIdList.length === 0) {
+                return;
+            }
             dynamicLoading(e);
         });
     };
+
+    /****** Button reload ******/
+    let svgRefresh: SVGElement;
+    const onClickReload = () => {
+        svgRefresh.classList.add("fn__rotate");
+        setTimeout(() => {
+            svgRefresh.classList.remove("fn__rotate");
+        }, 1000);
+        reInit();
+        showMessage("Reload completed.");
+    };
+
 </script>
 
 <div
@@ -219,7 +250,16 @@
             in:fly={{ y: -20, duration: 200 }}
             out:fly={{ y: -20, duration: 200 }}
         >
-            <div>{i18n.docsCnt}: {listDocuemntsId.length}</div>
+            <div>{i18n.docsCnt}: {listDocumentIds.length}</div>
+            <span class="fn__space" />
+            <svg
+                bind:this={svgRefresh}
+                class="svg-button"
+                on:click={onClickReload} on:keypress={() => {}}
+            >
+                <use xlink:href="#iconRefresh"></use>
+            </svg>
+
             <div id="space" />
 
             <label
@@ -235,7 +275,7 @@
                 class="b3-switch fn__flex-center"
                 type="checkbox"
                 bind:checked={config.scroll}
-                on:change={reload}
+                on:change={refresh}
             />
 
             <span class="fn__space" />
@@ -279,14 +319,17 @@
                 {i18n.button.moreConfig}
             </button>
             <span class="fn__space" />
+
             <button class="b3-button" on:click={onRenameThis}
                 >{i18n.nameTab}</button
             >
             <span class="fn__space" />
+
             <button class="b3-button" on:click={onSaveThis}>
                 {i18n.saveRule}
             </button>
             <span class="fn__space" />
+
             <button class="b3-button" on:click={onCopyLink}>
                 {i18n.copyLink}
             </button>
@@ -323,7 +366,7 @@
 
         > section {
             padding: 0.5rem;
-            width: 50rem;
+            width: 40rem;
 
             background-color: var(--b3-theme-surface);
             opacity: 1;
@@ -340,4 +383,13 @@
             }
         }
     }
+
+    svg.svg-button {
+        width: 1em; height: 1em;
+        &:hover {
+            cursor: pointer;
+            color: var(--b3-theme-primary);
+        }
+    }
+
 </style>

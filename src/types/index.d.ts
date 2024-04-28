@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2024-03-31 21:07:08
+ * @LastEditTime : 2024-04-25 21:57:11
  * @Description  : 
  */
 
@@ -110,13 +110,13 @@ interface IRule {
     hash: string;
     type: TRuleType;
     input: any;
-    config?: IConfig;
+    config: IConfig;
 }
 
-interface IRuleFetchData {
-    ids: BlockId[];
-    eof: boolean;
-}
+// interface IRuleFetchData {
+//     ids: BlockId[];
+//     eof: boolean;
+// }
 
 interface IBreadcrumb {
     id: string,
