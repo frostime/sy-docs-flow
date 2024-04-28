@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-04-28 01:35:03
+ * @LastEditTime : 2024-04-28 09:47:23
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -18,8 +18,6 @@ export abstract class MatchRule {
     type: TRuleType;
     input: any;
     config: IConfig;
-
-    // current: IRuleFetchData;
 
     protected eof: boolean = false;
 
@@ -39,7 +37,6 @@ export abstract class MatchRule {
                 shift: setting.dynamicLoadingShift
             }
         };
-        // this.current = null;
     }
 
     dump(): IRule {

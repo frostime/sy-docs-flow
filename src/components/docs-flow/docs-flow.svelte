@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-04-27 21:09:12
+ LastEditTime : 2024-04-28 14:13:43
  Description  : 
 -->
 <script lang="ts">
@@ -28,7 +28,7 @@
     let shiftLength: number = config.dynamicLoading.shift; //每次动态加载时的偏移量
     let loadIdList: DocumentId[] = [];
 
-    onMount(async () => {
+    const reInit = async () => {
         let ids = await rule.fetch();
         listDocumentIds = ids;
         if (!ids || ids.length === 0) {
@@ -36,6 +36,10 @@
             return;
         }
         updateLoadIdList();
+    }
+
+    onMount(async () => {
+        reInit();
     });
 
     const updateLoadIdList = () => {
@@ -152,7 +156,7 @@
         });
     }
 
-    const reload = () => {
+    const refresh = () => {
         loadIdList = [];
         onConfigChanged();
         setTimeout(() => {
@@ -218,6 +222,17 @@
             dynamicLoading(e);
         });
     };
+
+    /****** Button reload ******/
+    let svgRefresh: SVGElement;
+    const onClickReload = () => {
+        svgRefresh.classList.add("fn__rotate");
+        setTimeout(() => {
+            svgRefresh.classList.remove("fn__rotate");
+        }, 1000);
+        reInit();
+    };
+
 </script>
 
 <div
@@ -235,6 +250,15 @@
             out:fly={{ y: -20, duration: 200 }}
         >
             <div>{i18n.docsCnt}: {listDocumentIds.length}</div>
+            <span class="fn__space" />
+            <svg
+                bind:this={svgRefresh}
+                class="svg-button"
+                on:click={onClickReload} on:keypress={() => {}}
+            >
+                <use xlink:href="#iconRefresh"></use>
+            </svg>
+
             <div id="space" />
 
             <label
@@ -250,7 +274,7 @@
                 class="b3-switch fn__flex-center"
                 type="checkbox"
                 bind:checked={config.scroll}
-                on:change={reload}
+                on:change={refresh}
             />
 
             <span class="fn__space" />
@@ -294,14 +318,17 @@
                 {i18n.button.moreConfig}
             </button>
             <span class="fn__space" />
+
             <button class="b3-button" on:click={onRenameThis}
                 >{i18n.nameTab}</button
             >
             <span class="fn__space" />
+
             <button class="b3-button" on:click={onSaveThis}>
                 {i18n.saveRule}
             </button>
             <span class="fn__space" />
+
             <button class="b3-button" on:click={onCopyLink}>
                 {i18n.copyLink}
             </button>
@@ -338,7 +365,7 @@
 
         > section {
             padding: 0.5rem;
-            width: 50rem;
+            width: 40rem;
 
             background-color: var(--b3-theme-surface);
             opacity: 1;
@@ -355,4 +382,13 @@
             }
         }
     }
+
+    svg.svg-button {
+        width: 1em; height: 1em;
+        &:hover {
+            cursor: pointer;
+            color: var(--b3-theme-primary);
+        }
+    }
+
 </style>
