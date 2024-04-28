@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-04-28 14:13:43
+ LastEditTime : 2024-04-28 14:19:16
  Description  : 
 -->
 <script lang="ts">
@@ -231,6 +231,7 @@
             svgRefresh.classList.remove("fn__rotate");
         }, 1000);
         reInit();
+        showMessage("Reload completed.");
     };
 
 </script>
