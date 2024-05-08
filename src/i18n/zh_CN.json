@@ -9,6 +9,8 @@
         "offspringDocument": "文档树"
     },
     "button": {
+        "reload": "刷新",
+        "reverse": "逆序展示",
         "alterSaved": "更改上述规则",
         "saved": "已保存的规则",
         "openInDocFlow": "文档流中打开",
@@ -28,7 +30,7 @@
             "text": "单个文档固定高度, 滚动加载其内部内容, 在单个文档较大时, 可以节省内存资源"
         },
         "displayBreadcrumb": {
-            "title": "展示折叠栏",
+            "title": "折叠栏",
             "text": "是否展示每个文档目标的地址/折叠/展开栏"
         },
         "protyleTitle": {

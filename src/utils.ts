@@ -3,11 +3,11 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2024-04-23 11:54:14
+ * @LastEditTime : 2024-04-29 14:16:17
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
-import { getBlockByID, listDocsByPath, readDir } from "./api";
+import { getBlockByID, listDocsByPath } from "./api";
 import zh_CN from "./i18n/zh_CN.json";
 
 export let i18n: typeof zh_CN;
@@ -95,6 +95,6 @@ export const confirmDialog = (title: string, content: string | HTMLElement, conf
 
 export const notebooks: { [key: string]: string } = {};
 for (let notebook of window.siyuan.notebooks) {
-    console.log(notebook);
+    // console.log(notebook);
     notebooks[notebook.id] = notebook.name;
 }

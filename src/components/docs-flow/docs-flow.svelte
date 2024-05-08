@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-04-28 14:19:16
+ LastEditTime : 2024-05-08 13:32:03
  Description  : 
 -->
 <script lang="ts">
@@ -156,13 +156,14 @@
         });
     }
 
-    const refresh = () => {
-        loadIdList = [];
-        onConfigChanged();
-        setTimeout(() => {
-            updateLoadIdList();
-        }, 500);
-    };
+    //For refresh button
+    // const refresh = () => {
+    //     loadIdList = [];
+    //     onConfigChanged();
+    //     setTimeout(() => {
+    //         updateLoadIdList();
+    //     }, 500);
+    // };
 
     const onCopyLink = () => {
         const prefix = "siyuan://plugins/sy-docs-flow/open-rule";
@@ -227,8 +228,10 @@
     let svgRefresh: SVGElement;
     const onClickReload = () => {
         svgRefresh.classList.add("fn__rotate");
+        svgRefresh.style.setProperty("background-color", "unset");
         setTimeout(() => {
             svgRefresh.classList.remove("fn__rotate");
+            svgRefresh.style.removeProperty("background-color");
         }, 1000);
         reInit();
         showMessage("Reload completed.");
@@ -250,19 +253,34 @@
             in:fly={{ y: -20, duration: 200 }}
             out:fly={{ y: -20, duration: 200 }}
         >
-            <div>{i18n.docsCnt}: {listDocumentIds.length}</div>
+            <div class="toolbar__item toolbar__item--active">
+                {i18n.docsCnt}: {listDocumentIds.length}
+            </div>
             <span class="fn__space" />
             <svg
                 bind:this={svgRefresh}
-                class="svg-button"
+                class="svg-button ariaLabel"
+                aria-label={i18n.button.reload}
                 on:click={onClickReload} on:keypress={() => {}}
             >
                 <use xlink:href="#iconRefresh"></use>
             </svg>
+            <span class="fn__space" />
+            <svg
+                class="svg-button ariaLabel"
+                aria-label={i18n.button.reverse}
+                on:click={() => {
+                    listDocumentIds = listDocumentIds.reverse();
+                    updateLoadIdList();
+                }}
+                on:keypress={() => {}}
+            >
+                <use xlink:href="#iconScrollVert"></use>
+            </svg>
 
             <div id="space" />
 
-            <label
+            <!-- <label
                 class="b3-label__text"
                 for="enableScroll"
                 style="margin-top: 0px;"
@@ -276,7 +294,7 @@
                 type="checkbox"
                 bind:checked={config.scroll}
                 on:change={refresh}
-            />
+            /> -->
 
             <span class="fn__space" />
 
@@ -365,7 +383,7 @@
         align-items: start;
 
         > section {
-            padding: 0.5rem;
+            padding: 4px 5px;
             width: 40rem;
 
             background-color: var(--b3-theme-surface);
@@ -386,9 +404,11 @@
 
     svg.svg-button {
         width: 1em; height: 1em;
+        padding: 2px;
         &:hover {
             cursor: pointer;
             color: var(--b3-theme-primary);
+            background-color: var(--b3-toolbar-hover);
         }
     }
 

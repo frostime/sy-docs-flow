@@ -9,6 +9,8 @@
         "offspringDocument": "Offspring document"
     },
     "button": {
+        "reload": "Reload",
+        "reverse": "Reverse",
         "alterSaved": "Alter these",
         "saved": "Saved rules",
         "openInDocFlow": "Open in docflow",
@@ -28,7 +30,7 @@
             "text": "Fixed height for a single document, scroll to load its internal content. It can save memory resources when dealing with large documents."
         },
         "displayBreadcrumb": {
-            "title": "Display Collapse Bar",
+            "title": "Collapse Bar",
             "text": "Whether to display the breadcrumb for each document target (collapsed/expanded bar)."
         },
         "protyleTitle": {
@@ -52,7 +54,7 @@
             "text": "When dynamic loading is enabled, the number of documents to load each time when scrolling to the edge (up/down)."
         }
     },
-    "docsCnt": "Docs Count",
+    "docsCnt": "Docs",
     "displayBreadcrumb": "Breadcrumb",
     "scrollMode": "Scroll Mode",
     "dynamicLoading": "Dynamic Loading",
