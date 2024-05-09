@@ -381,7 +381,6 @@ export default class DocsFlowPlugin extends Plugin {
                 textarea.style.fontFamily = 'var(--b3-font-family-code)';
                 textarea.addEventListener('keydown', (e: KeyboardEvent) => {
                     if (e.key === 'Enter' && !e.ctrlKey) {
-                        e.preventDefault();
                         e.stopPropagation();
                     }
                 });

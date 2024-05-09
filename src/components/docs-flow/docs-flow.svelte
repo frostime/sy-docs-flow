@@ -3,15 +3,15 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-05-09 20:48:43
+ LastEditTime : 2024-05-09 21:10:50
  Description  : 
 -->
 <script lang="ts">
-    import { Dialog, confirm, showMessage } from "siyuan";
+    import { Dialog, showMessage } from "siyuan";
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
     import { createEventDispatcher, onMount } from "svelte";
-    import { i18n, throttle } from "../../utils";
+    import { i18n, throttle, confirmDialog } from "../../utils";
     import DefaultSetting from "../config/default-setting.svelte";
 
     import { type MatchRule } from '@/rules';
@@ -241,11 +241,24 @@
         let inputText = rule.input2Text();
         let oldinput = rule.input;
         let oldhash = rule.hash;
-        confirm(rule.title,
-            `<textarea class="b3-text-field fn__block"
-                style="resize: vertical; height: 5em; white-space: nowrap;">${inputText}</textarea>`,
-            (dialog: Dialog) => {
-                let value = dialog.element.querySelector("textarea").value;
+        let hint = i18n.editRuleVal[rule.type];
+        let textarea = document.createElement("textarea");
+        textarea.value = inputText;
+        textarea.className = "b3-text-field fn__block";
+        textarea.placeholder = hint;
+        Object.assign(textarea.style, {
+            resize: "vertical",
+            height: "5em",
+            whiteSpace: "nowrap",
+            fontFamily: "var(--b3-font-family-code)"
+        });
+        textarea.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.ctrlKey) {
+                e.stopPropagation();
+            }
+        });
+        confirmDialog(rule.title, textarea, (element: HTMLElement) => {
+                let value = element.querySelector("textarea").value.trim();
                 if (value === oldinput) {
                     return;
                 }
