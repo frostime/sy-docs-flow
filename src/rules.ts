@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-05-09 19:59:47
+ * @LastEditTime : 2024-05-09 20:45:24
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -86,7 +86,7 @@ export abstract class MatchRule {
 
     abstract updateInput(input: any);
 
-    validateInput() { return true; } // 针对输入格式的检查
+    validateInput() { return true; } // 检查输入的 this.input 的格式是否符合要求
 
     mergeConfig(config: any) {
         console.log('Merge config:', config);
@@ -106,6 +106,16 @@ export abstract class MatchRule {
             }
         }
         merge(this.config, config);
+    }
+}
+
+const matchIDFormat = (id: string) => {
+    let match = id.match(/^\d{14}-[a-z0-9]{7}$/);
+    if (match) {
+        return true;
+    } else {
+        showMessage("Invalid ID Format", 5000, 'error');
+        return false;
     }
 }
 
@@ -129,6 +139,10 @@ class ChildDocument extends MatchRule {
     updateInput(docId: DocumentId) {
         this.input = docId;
         this.hash = `ChildDocument@${docId}`;
+    }
+
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
     }
 
     async fetch() {
@@ -161,6 +175,10 @@ class OffspringDocument extends MatchRule {
     updateInput(docId: DocumentId) {
         this.input = docId;
         this.hash = `OffspringDocument@${docId}`;
+    }
+
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
     }
 
     async fetch() {
@@ -213,6 +231,10 @@ class DocBacklinks extends MatchRule {
         this.hash = `DocBacklinks@${dataId}`;
     }
 
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
+    }
+
     async fetch() {
         this.eof = true;
         if (!this.input) {
@@ -246,6 +268,10 @@ class DocBackmentions extends MatchRule {
         this.hash = `DocBackmentions@${dataId}`;
     }
 
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
+    }
+
     async fetch() {
         this.eof = true;
         if (!this.input) {
@@ -266,6 +292,10 @@ class BlockBacklinks extends MatchRule {
     updateInput(id: BlockId) {
         this.input = id;
         this.hash = `BlockBacklinks@${id}`;
+    }
+
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
     }
 
     async fetch() {
@@ -305,7 +335,7 @@ class SQL extends MatchRule {
         //是否是 SQL 语法
         let pat = /select\s+([\s\S]+?)\s+from\s+([\s\S]+?)\s*$/i;
         if (!pat.test(this.input)) {
-            showMessage("SQL语句不正确");
+            showMessage("Invalid SQL Syntax", 5000, "error");
             return false;
         }
         return true;
@@ -341,10 +371,8 @@ class IdList extends MatchRule {
 
     validateInput(): boolean {
         //20230612122134-urgfgsx
-        let pat = /^\d{14}-[a-z0-9]{7}$/
         for (let id of this.input) {
-            if (!pat.test(id)) {
-                showMessage(`Invalid ID: ${id}`);
+            if (!matchIDFormat(id)) {
                 return false;
             }
         }

@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-05-09 19:59:24
+ LastEditTime : 2024-05-09 20:48:43
  Description  : 
 -->
 <script lang="ts">
@@ -239,12 +239,23 @@
 
     const editRuleValue = () => {
         let inputText = rule.input2Text();
-        confirm("Edit Rule Value",
+        let oldinput = rule.input;
+        let oldhash = rule.hash;
+        confirm(rule.title,
             `<textarea class="b3-text-field fn__block"
                 style="resize: vertical; height: 5em; white-space: nowrap;">${inputText}</textarea>`,
             (dialog: Dialog) => {
                 let value = dialog.element.querySelector("textarea").value;
-                console.log("Edit Rule Value", value);
+                if (value === oldinput) {
+                    return;
+                }
+                rule.updateInput(value);
+                if (!rule.validateInput()) {
+                    rule.input = oldinput;
+                    rule.hash = oldhash;
+                    return;
+                }
+                reInit();
             }
         );
     };
