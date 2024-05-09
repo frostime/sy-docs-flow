@@ -11,6 +11,7 @@
     "button": {
         "reload": "刷新",
         "reverse": "逆序展示",
+        "edit": "编辑字段",
         "alterSaved": "更改上述规则",
         "saved": "已保存的规则",
         "openInDocFlow": "文档流中打开",
@@ -53,6 +54,15 @@
             "title": "动态加载增量数",
             "text": "开启动态加载后, 每次(上/下)滚动到边缘后继续加载多少文档"
         }
+    },
+    "editRuleVal": {
+        "ChildDocument": "请填写一个文档块 ID",
+        "SQL": "请填写一个对块的 SQL 查询语句",
+        "IdList": "请填写若干块 ID, 以换行符分隔",
+        "DocBacklinks": "请填写一个块 ID",
+        "DocBackmentions": "请填写一个块 ID",
+        "OffspringDocument": "请填写一个块 ID",
+        "BlockBacklinks": "请填写一个块 ID"
     },
     "docsCnt": "文档数",
     "displayBreadcrumb": "面包屑",

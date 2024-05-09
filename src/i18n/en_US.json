@@ -11,6 +11,7 @@
     "button": {
         "reload": "Reload",
         "reverse": "Reverse",
+        "edit": "Edit value",
         "alterSaved": "Alter these",
         "saved": "Saved rules",
         "openInDocFlow": "Open in docflow",
@@ -53,6 +54,15 @@
             "title": "Dynamic Loading Increment",
             "text": "When dynamic loading is enabled, the number of documents to load each time when scrolling to the edge (up/down)."
         }
+    },
+    "editRuleVal": {
+        "ChildDocument": "Please enter a document block ID",
+        "SQL": "Please enter an SQL query statement for the block",
+        "IdList": "Please enter several block IDs, separated by newline characters",
+        "DocBacklinks": "Please enter a block ID",
+        "DocBackmentions": "Please enter a block ID",
+        "OffspringDocument": "Please enter a block ID",
+        "BlockBacklinks": "Please enter a block ID"
     },
     "docsCnt": "Docs",
     "displayBreadcrumb": "Breadcrumb",

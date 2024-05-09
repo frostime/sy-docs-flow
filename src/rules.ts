@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-04-28 09:47:23
+ * @LastEditTime : 2024-05-09 20:45:24
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -74,7 +74,19 @@ export abstract class MatchRule {
         this.eof = false;
     }
 
-    validateInput() { return true; } // 针对输入格式的检查
+    input2Text() {
+        if (this.input === null) {
+            return "";
+        }
+        if (Array.isArray(this.input)) {
+            return this.input.join("\n");
+        }
+        return `${this.input}`;
+    }
+
+    abstract updateInput(input: any);
+
+    validateInput() { return true; } // 检查输入的 this.input 的格式是否符合要求
 
     mergeConfig(config: any) {
         console.log('Merge config:', config);
@@ -97,6 +109,16 @@ export abstract class MatchRule {
     }
 }
 
+const matchIDFormat = (id: string) => {
+    let match = id.match(/^\d{14}-[a-z0-9]{7}$/);
+    if (match) {
+        return true;
+    } else {
+        showMessage("Invalid ID Format", 5000, 'error');
+        return false;
+    }
+}
+
 class ChildDocument extends MatchRule {
     constructor(docId?: DocumentId) {
         super("ChildDocument");
@@ -111,8 +133,16 @@ class ChildDocument extends MatchRule {
             const eleTitle = currentDocument.querySelector(".protyle-title");
             docId = eleTitle.getAttribute("data-node-id");
         }
+        this.updateInput(docId);
+    }
+
+    updateInput(docId: DocumentId) {
         this.input = docId;
         this.hash = `ChildDocument@${docId}`;
+    }
+
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
     }
 
     async fetch() {
@@ -138,9 +168,17 @@ class OffspringDocument extends MatchRule {
             const eleTitle = currentDocument.querySelector(".protyle-title");
             docId = eleTitle.getAttribute("data-node-id");
         }
+        this.config.dynamicLoading.enabled = true; //默认开启
+        this.updateInput(docId);
+    }
+
+    updateInput(docId: DocumentId) {
         this.input = docId;
         this.hash = `OffspringDocument@${docId}`;
-        this.config.dynamicLoading.enabled = true; //默认开启
+    }
+
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
     }
 
     async fetch() {
@@ -185,8 +223,16 @@ class DocBacklinks extends MatchRule {
 
         const eleTitle = currentDocument.querySelector(".protyle-title");
         let dataId = eleTitle.getAttribute("data-node-id");
+        this.updateInput(dataId);
+    }
+
+    updateInput(dataId: DocumentId) {
         this.input = dataId;
         this.hash = `DocBacklinks@${dataId}`;
+    }
+
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
     }
 
     async fetch() {
@@ -214,8 +260,16 @@ class DocBackmentions extends MatchRule {
 
         const eleTitle = currentDocument.querySelector(".protyle-title");
         let dataId = eleTitle.getAttribute("data-node-id");
+        this.updateInput(dataId);
+    }
+
+    updateInput(dataId: DocumentId) {
         this.input = dataId;
         this.hash = `DocBackmentions@${dataId}`;
+    }
+
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
     }
 
     async fetch() {
@@ -232,8 +286,16 @@ class DocBackmentions extends MatchRule {
 class BlockBacklinks extends MatchRule {
     constructor(id: BlockId) {
         super("BlockBacklinks");
+        this.updateInput(id);
+    }
+
+    updateInput(id: BlockId) {
         this.input = id;
         this.hash = `BlockBacklinks@${id}`;
+    }
+
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
     }
 
     async fetch() {
@@ -259,6 +321,10 @@ class BlockBacklinks extends MatchRule {
 class SQL extends MatchRule {
     constructor(sqlCode: string) {
         super("SQL");
+        this.updateInput(sqlCode);
+    }
+
+    updateInput(sqlCode: any) {
         // 将 SQL 语句中的 \*、\[、\] 和 \S 替换为 \\*、\\[、\\] 和 \\S
         // 这样在 JavaScript 中，它们将被解析为原本期望的正则表达式
         this.input = sqlCode.replace(/\\(\*|\[|\]|\S)/g, '\\\\$1');
@@ -269,7 +335,7 @@ class SQL extends MatchRule {
         //是否是 SQL 语法
         let pat = /select\s+([\s\S]+?)\s+from\s+([\s\S]+?)\s*$/i;
         if (!pat.test(this.input)) {
-            showMessage("SQL语句不正确");
+            showMessage("Invalid SQL Syntax", 5000, "error");
             return false;
         }
         return true;
@@ -290,16 +356,23 @@ class SQL extends MatchRule {
 class IdList extends MatchRule {
     constructor(ids: BlockId[]) {
         super("IdList");
-        this.input = ids;
-        this.hash = `IdList@${ids.sort().join("$")}`;
+        this.updateInput(ids);
+    }
+
+    updateInput(input: string | BlockId[]) {
+        if (typeof input === "string") {
+            let idList = input.split(/[\s,，]/).filter((id) => id);
+            this.input = idList;
+        } else if (Array.isArray(input)) {
+            this.input = input;
+        }
+        this.hash = `IdList@${this.input.sort().join("$")}`;
     }
 
     validateInput(): boolean {
         //20230612122134-urgfgsx
-        let pat = /^\d{14}-[a-z0-9]{7}$/
         for (let id of this.input) {
-            if (!pat.test(id)) {
-                showMessage(`Invalid ID: ${id}`);
+            if (!matchIDFormat(id)) {
                 return false;
             }
         }
