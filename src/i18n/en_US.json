@@ -11,6 +11,7 @@
     "button": {
         "reload": "Reload",
         "reverse": "Reverse",
+        "edit": "Edit value",
         "alterSaved": "Alter these",
         "saved": "Saved rules",
         "openInDocFlow": "Open in docflow",

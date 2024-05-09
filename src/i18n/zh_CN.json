@@ -11,6 +11,7 @@
     "button": {
         "reload": "刷新",
         "reverse": "逆序展示",
+        "edit": "编辑字段",
         "alterSaved": "更改上述规则",
         "saved": "已保存的规则",
         "openInDocFlow": "文档流中打开",

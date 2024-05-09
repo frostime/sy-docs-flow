@@ -45,6 +45,9 @@ After enabling the plugin, click the icon in the top bar and select the desired 
 
 1. Hover over the top of the document stream to bring up the toolbar.
 
+    - Reload: Reload the current Doc-flow
+    - Reverse: Sort the current Doc-flow in reverse order
+    - Edit: Manually change the values within the current Doc-flow rules (such as SQL statements, parent document ID, etc.)
     - More Config: See "Doc-flow Configuration"
     - Naming Tab: Name the current document stream.
     - Save Rule: save the rules of the current document flow
