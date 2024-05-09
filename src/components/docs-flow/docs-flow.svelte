@@ -3,11 +3,11 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-05-08 13:32:03
+ LastEditTime : 2024-05-09 19:59:24
  Description  : 
 -->
 <script lang="ts">
-    import { Dialog, showMessage } from "siyuan";
+    import { Dialog, confirm, showMessage } from "siyuan";
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
     import { createEventDispatcher, onMount } from "svelte";
@@ -237,6 +237,18 @@
         showMessage("Reload completed.");
     };
 
+    const editRuleValue = () => {
+        let inputText = rule.input2Text();
+        confirm("Edit Rule Value",
+            `<textarea class="b3-text-field fn__block"
+                style="resize: vertical; height: 5em; white-space: nowrap;">${inputText}</textarea>`,
+            (dialog: Dialog) => {
+                let value = dialog.element.querySelector("textarea").value;
+                console.log("Edit Rule Value", value);
+            }
+        );
+    };
+
 </script>
 
 <div
@@ -276,6 +288,15 @@
                 on:keypress={() => {}}
             >
                 <use xlink:href="#iconScrollVert"></use>
+            </svg>
+            <span class="fn__space" />
+            <svg
+                class="svg-button ariaLabel"
+                aria-label="编辑"
+                on:click={editRuleValue}
+                on:keypress={() => {}}
+            >
+                <use xlink:href="#iconEdit"></use>
             </svg>
 
             <div id="space" />
