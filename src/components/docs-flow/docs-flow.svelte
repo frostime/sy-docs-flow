@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-05-09 21:10:50
+ LastEditTime : 2024-05-10 14:12:47
  Description  : 
 -->
 <script lang="ts">
@@ -246,9 +246,11 @@
         textarea.value = inputText;
         textarea.className = "b3-text-field fn__block";
         textarea.placeholder = hint;
+        let lineCnt = inputText.split("\n").length;
+        lineCnt = Math.min(Math.max(lineCnt, 2), 10) + 1;
         Object.assign(textarea.style, {
             resize: "vertical",
-            height: "5em",
+            height: `${lineCnt * 20}px`,
             whiteSpace: "nowrap",
             fontFamily: "var(--b3-font-family-code)"
         });
