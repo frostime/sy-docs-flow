@@ -4,6 +4,7 @@
         "child": "Child document",
         "docBacklinks": "Document backlinks",
         "docBackmentions": "Document mentions",
+        "blockBacklinks": "Block backlinks",
         "sql": "SQL query",
         "customID": "Custom ID",
         "offspringDocument": "Offspring document",
