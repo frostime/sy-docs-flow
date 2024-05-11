@@ -6,7 +6,8 @@
         "docBackmentions": "Document mentions",
         "sql": "SQL query",
         "customID": "Custom ID",
-        "offspringDocument": "Offspring document"
+        "offspringDocument": "Offspring document",
+        "dailynote": "Daily Notes"
     },
     "button": {
         "reload": "Reload",
@@ -62,8 +63,10 @@
         "DocBacklinks": "Please enter a block ID",
         "DocBackmentions": "Please enter a block ID",
         "OffspringDocument": "Please enter a block ID",
-        "BlockBacklinks": "Please enter a block ID"
+        "BlockBacklinks": "Please enter a block ID",
+        "DailyNote": "Please enter a notebook ID"
     },
+    "selectNotebook": "Select a notebook",
     "docsCnt": "Docs",
     "displayBreadcrumb": "Breadcrumb",
     "scrollMode": "Scroll Mode",
