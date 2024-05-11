@@ -140,6 +140,7 @@ class TabHub {
         console.log(`Open tab ${hash}`)
         let rule = this.tabs[hash].rule;
         title = title || rule.title;
+        rule.title = title;
         openTab({
             app: this.plugin.app,
             custom: {
@@ -390,6 +391,25 @@ export default class DocsFlowPlugin extends Plugin {
                     let idList = ids.split(/[\s,，]/).filter((id) => id);
                     this.tabHub.open(RuleFactory("IdList", idList));
                 });
+            }
+        });
+        menu.addItem({
+            label: 'Daily Notes',
+            click: () => {
+                let notebooks = window.siyuan.notebooks.filter(n => !n.closed);
+                let options = notebooks.map(n => `<option value="${n.id}">${n.name}</option>`);
+                let html = `
+                <select class="b3-select fn__flex-center" style="width: 100%;">
+                    ${options.join('\n')}
+                </select>
+                `;
+                confirmDialog('请选择要打开的日记', html, (ele: HTMLElement) => {
+                    let select: HTMLSelectElement = ele.querySelector('select');
+                    let val = select.value;
+                    let name = select.options[select.selectedIndex].text;
+                    this.tabHub.open(RuleFactory("DailyNote", val), name);
+                    // console.log("DailyNote", notebookId);
+                }, null, '350px');
             }
         });
 
