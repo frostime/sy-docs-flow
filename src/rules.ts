@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-05-09 20:45:24
+ * @LastEditTime : 2024-05-11 19:39:12
  * @Description  : 
  */
 import { showMessage } from "siyuan";
@@ -385,6 +385,36 @@ class IdList extends MatchRule {
     }
 }
 
+class DailyNote extends MatchRule {
+    constructor(ids: NotebookId) {
+        super("DailyNote");
+        this.updateInput(ids);
+    }
+
+    updateInput(input: NotebookId) {
+        this.input = input;
+        this.hash = `DailyNote@${this.input}`;
+    }
+
+    validateInput(): boolean {
+        return matchIDFormat(this.input) !== null;
+    }
+
+    async fetch() {
+        this.eof = true;
+        const sql = `
+        select distinct B.* from blocks as B join attributes as A
+        on B.id = A.block_id
+        where A.name like 'custom-dailynote-%' and B.box = '${this.input}'
+        order by A.value desc limit 999;
+        `;
+        const blocks = await api.sql(sql);
+        const ids = blocks?.map((item) => item.id);
+        return ids ?? [];
+    }
+}
+
+
 export const RuleFactory = (type: TRuleType, input?: any) => {
     switch (type) {
         case "ChildDocument":
@@ -401,6 +431,8 @@ export const RuleFactory = (type: TRuleType, input?: any) => {
             return new SQL(input);
         case "IdList":
             return new IdList(input);
+        case "DailyNote":
+            return new DailyNote(input);
         default:
             return null;
     }
