@@ -4,9 +4,11 @@
         "child": "子文档",
         "docBacklinks": "文档反链",
         "docBackmentions": "文档提及",
+        "blockBacklinks": "块反链",
         "sql": "SQL查询",
         "customID": "自定义ID",
-        "offspringDocument": "文档树"
+        "offspringDocument": "文档树",
+        "dailynote": "日记"
     },
     "button": {
         "reload": "刷新",
@@ -62,8 +64,10 @@
         "DocBacklinks": "请填写一个块 ID",
         "DocBackmentions": "请填写一个块 ID",
         "OffspringDocument": "请填写一个块 ID",
-        "BlockBacklinks": "请填写一个块 ID"
+        "BlockBacklinks": "请填写一个块 ID",
+        "DailyNote": "请填写笔记本ID"
     },
+    "selectNotebook": "请选择笔记本",
     "docsCnt": "文档数",
     "displayBreadcrumb": "面包屑",
     "scrollMode": "滚动模式",

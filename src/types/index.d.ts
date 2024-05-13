@@ -92,7 +92,8 @@ type TRuleType = "ChildDocument"
     | "DocBacklinks"  //反链面板中看到的，一个文档中所有反链
     | "DocBackmentions" 
     | "OffspringDocument" 
-    | "BlockBacklinks";  //一个块对应的所有反链
+    | "BlockBacklinks"  //一个块对应的所有反链
+    | "DailyNote"
 
 interface IConfig {
     scroll: boolean;

@@ -74,7 +74,7 @@
         <!-- Dropdown select -->
         <select
             class="b3-select fn__flex-center fn__size200"
-            id="iconPosition"
+            id={settingKey}
             bind:value={settingValue}
             on:change={changed}
         >
@@ -87,7 +87,7 @@
         <div class="b3-tooltips b3-tooltips__n" aria-label={settingValue}>
             <input
                 class="b3-slider fn__size200"
-                id="fontSize"
+                id={settingKey}
                 min={slider.min}
                 max={slider.max}
                 step={slider.step}
