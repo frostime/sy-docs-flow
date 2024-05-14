@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-05-10 14:12:47
+ LastEditTime : 2024-05-14 15:43:09
  Description  : 
 -->
 <script lang="ts">
@@ -212,8 +212,22 @@
         }
     };
 
+    let scrollTimeout = null;
     export const onscroll = (e) => {
         window.requestAnimationFrame(() => {
+            //滚动时隐藏gutter
+            if (hideGutterClass === "") {
+                hideGutterClass = "hide-gutter";
+            }
+            if (scrollTimeout !== null) {
+                clearTimeout(scrollTimeout);
+            }
+            scrollTimeout = setTimeout(() => {
+                hideGutterClass = "";
+                scrollTimeout = null;
+            }, 500);
+
+            //动态加载
             if (config.dynamicLoading.enabled !== true) {
                 return;
             }
@@ -274,6 +288,9 @@
             }
         );
     };
+
+    //全局 css，用于隐藏gutter
+    let hideGutterClass: '' | 'hide-gutter' = '';
 
 </script>
 
@@ -402,7 +419,7 @@
     {/if}
 </div>
 
-<div class="docs-flow">
+<div class="docs-flow {hideGutterClass}">
     {#each loadIdList as did, i (did)}
         <Protyle
             {app}

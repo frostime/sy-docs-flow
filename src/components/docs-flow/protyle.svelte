@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2024-04-23 11:52:59
+ LastEditTime : 2024-05-14 15:32:56
  Description  : 
 -->
 <script lang="ts">
@@ -42,8 +42,6 @@
 
     let thisBlock: Block;
     let rootDoc: Block;
-
-    let divGutter: HTMLDivElement;
 
     let heightBreadcrumb: number = 40;
 
@@ -141,21 +139,13 @@
                 breadcrumbDocName: false,
             },
         });
-        divGutter = divProtyle.querySelector(".protyle-gutters");
-        toggleGutterDisplay(false);
     }
 
     function unload() {
         // console.log('Unload protyle...', blockId);
         protyle?.destroy();
-        divGutter = null;
     }
 
-    function toggleGutterDisplay(display: boolean = true) {
-        if (divGutter) {
-            divGutter.style.display = display ? "block" : "none";
-        }
-    }
 </script>
 
 <div class="docs-flow__doc" style="min-height: {heightBreadcrumb}px">
@@ -202,8 +192,6 @@
             class="docs-flow__protyle"
             bind:this={divProtyle}
             style={styleProtyleMaxHeight}
-            on:mouseenter={() => toggleGutterDisplay(true)}
-            on:mouseleave={() => toggleGutterDisplay(false)}
         />
     {/if}
 </div>

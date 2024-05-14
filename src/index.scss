@@ -3,3 +3,15 @@ div.docs-flow__protyle {
         display: none;
     }
 }
+
+//只显示鼠标悬停的 protyle 的 gutter 按钮
+div.docs-flow__protyle:not(:hover) {
+    .protyle-gutters {
+        display: none;
+    }
+}
+
+//Scroll 滚动是全局隐藏 gutter
+div.docs-flow.hide-gutter .protyle-gutters {
+    display: none !important;
+}
