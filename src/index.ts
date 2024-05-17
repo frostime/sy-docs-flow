@@ -396,8 +396,13 @@ export default class DocsFlowPlugin extends Plugin {
         menu.addItem({
             label: this.i18n.rules.dailynote,
             click: () => {
+                let lastOpen = sessionStorage.getItem(`${this.name}::LastOpenedDN`);
+                lastOpen = lastOpen ?? '';
                 let notebooks = window.siyuan.notebooks.filter(n => !n.closed);
-                let options = notebooks.map(n => `<option value="${n.id}">${n.name}</option>`);
+                let options = notebooks.map((n: Notebook) => {
+                    return `<option value="${n.id}" ${lastOpen === n.id ? 'selected' : ''}>${n.name}</option>`;
+                });
+                
                 let html = `
                 <select class="b3-select fn__flex-center" style="width: 100%;">
                     ${options.join('\n')}
@@ -408,6 +413,7 @@ export default class DocsFlowPlugin extends Plugin {
                     let val = select.value;
                     let name = select.options[select.selectedIndex].text;
                     this.tabHub.open(RuleFactory("DailyNote", val), name);
+                    sessionStorage.setItem(`${this.name}::LastOpenedDN`, val);
                 }, null, '350px');
             }
         });
