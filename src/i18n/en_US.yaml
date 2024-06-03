@@ -6,6 +6,7 @@ rules:
     docBackmentions: "Document mentions"
     blockBacklinks: "Block backlinks"
     sql: "SQL query"
+    js: "JS Query"
     customID: "Custom ID"
     offspringDocument: "Offspring document"
     dailynote: "Daily Notes"

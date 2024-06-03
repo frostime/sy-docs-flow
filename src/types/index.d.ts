@@ -94,6 +94,7 @@ type TRuleType = "ChildDocument"
     | "OffspringDocument" 
     | "BlockBacklinks"  //一个块对应的所有反链
     | "DailyNote"
+    | "JS";
 
 interface IConfig {
     scroll: boolean;

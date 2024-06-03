@@ -6,6 +6,7 @@ rules:
     docBackmentions: 文档提及
     blockBacklinks: 块反链
     sql: SQL查询
+    js: JS查询
     customID: 自定义ID
     offspringDocument: 文档树
     dailynote: 日记
