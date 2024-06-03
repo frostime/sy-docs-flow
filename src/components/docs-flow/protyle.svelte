@@ -68,14 +68,14 @@
     onMount(async () => {
         thisBlock = await getBlockByID(blockId);
 
-        //处理 li 下的段落块的特殊情况
-        if (thisBlock.type == "p") {
-            let parentBlock: Block = await getBlockByID(thisBlock.parent_id);
-            if (parentBlock.type == "i") {
-                thisBlock = parentBlock;
-                blockId = thisBlock.id;
-            }
-        }
+        //处理 li 下的段落块的特殊情况 @deprecated
+        // if (thisBlock.type == "p") {
+        //     let parentBlock: Block = await getBlockByID(thisBlock.parent_id);
+        //     if (parentBlock.type == "i") {
+        //         thisBlock = parentBlock;
+        //         blockId = thisBlock.id;
+        //     }
+        // }
 
         thisBlock.content = null; //不需要 content，减少占用
 

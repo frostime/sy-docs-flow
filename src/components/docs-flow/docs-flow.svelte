@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-05-14 15:43:09
+ LastEditTime : 2024-06-03 20:50:26
  Description  : 
 -->
 <script lang="ts">
@@ -11,7 +11,7 @@
     import { fly } from "svelte/transition";
     import Protyle from "./protyle.svelte";
     import { createEventDispatcher, onMount } from "svelte";
-    import { i18n, throttle, confirmDialog } from "../../utils";
+    import { i18n, throttle, confirmDialog, firstPara2Parent } from "../../utils";
     import DefaultSetting from "../config/default-setting.svelte";
 
     import { type MatchRule } from '@/rules';
@@ -30,7 +30,8 @@
 
     const reInit = async () => {
         let ids = await rule.fetch();
-        listDocumentIds = ids;
+        // listDocumentIds = ids;
+        listDocumentIds = await firstPara2Parent(ids);
         if (!ids || ids.length === 0) {
             showMessage("No matching docs found.");
             return;

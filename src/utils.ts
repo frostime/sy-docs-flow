@@ -3,16 +3,33 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2024-05-11 19:49:15
+ * @LastEditTime : 2024-06-03 20:47:24
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
-import { getBlockByID, listDocsByPath } from "./api";
+import { getBlockByID, listDocsByPath, request } from "./api";
 import zh_CN from "./i18n/zh_CN.json";
 
 export let i18n: typeof zh_CN;
 export function setI18n(i18nData: any) {
     i18n = i18nData;
+}
+
+
+export const firstPara2Parent = async (ids: BlockId[]): Promise<BlockId[]> => {
+    let data: {[key: BlockId]: any} = await request('/api/block/getBlockTreeInfos', {
+        ids: ids
+    });
+    let result: BlockId[] = [];
+    for (let id of ids) {
+        result.push(id);
+        let info = data[id];
+        if (info.type !== 'NodeParagraph') continue;
+        if (info.previousID !== '') continue;
+        if (!['NodeBlockquote', 'NodeListItem'].includes(info.parentType)) continue;
+        result[result.length - 1] = info.parentID;
+    }
+    return result;
 }
 
 
