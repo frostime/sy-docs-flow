@@ -3,12 +3,12 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2024-05-14 15:32:56
+ LastEditTime : 2024-06-03 20:28:18
  Description  : 
 -->
 <script lang="ts">
     import { onDestroy, onMount, afterUpdate } from "svelte";
-    import { Protyle, TProtyleAction, openTab } from "siyuan";
+    import { Protyle, type TProtyleAction, openTab } from "siyuan";
     import { getBlockByID } from "../../api";
     import { notebooks } from "../../utils";
 
@@ -74,7 +74,6 @@
             if (parentBlock.type == "i") {
                 thisBlock = parentBlock;
                 blockId = thisBlock.id;
-                console.debug("Li block", blockId);
             }
         }
 

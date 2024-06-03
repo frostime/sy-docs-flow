@@ -308,8 +308,29 @@ export async function getBacklink2(id: BlockId): Promise<IBacklink2> {
         mSort: "3",
         mk: "",
         sort: "3"
-    }
+    };
     let url = '/api/ref/getBacklink2';
+    return request(url, data);
+}
+
+export async function getBacklinkDoc(defID: BlockId, refTreeID: BlockId): Promise<any> {
+    let data = {
+        "defID": defID,
+        "refTreeID": refTreeID,
+        "keyword": ""
+    };
+
+    let url = '/api/ref/getBacklinkDoc';
+    return request(url, data);
+}
+
+export async function getBackmentionDoc(defID: BlockId, refTreeID: BlockId): Promise<any> {
+    let url = '/api/ref/getBackmentionDoc';
+    let data = {
+        "defID": defID,
+        "refTreeID": refTreeID,
+        "keyword": ""
+    };
     return request(url, data);
 }
 

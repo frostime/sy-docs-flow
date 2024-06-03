@@ -3,14 +3,16 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-05-11 19:39:12
+ * @LastEditTime : 2024-06-03 20:41:06
  * @Description  : 
  */
 import { showMessage } from "siyuan";
 import * as api from "@/api";
-import { getBacklink2, sql, getBlockByID, listDocTree } from "@/api";
+import { getBacklink2, sql, getBlockByID, listDocTree, getBacklinkDoc, getBackmentionDoc } from "@/api";
 import { getChildDocs, getActiveTab } from "./utils";
 import { setting } from "./settings";
+
+import PromiseLimitPool from "./libs/promise-pool";
 
 export abstract class MatchRule {
     title: string = "";
@@ -240,9 +242,25 @@ class DocBacklinks extends MatchRule {
         if (!this.input) {
             return [];
         }
-        let backlinks = await getBacklink2(this.input);
-        let backlinkIds = backlinks.backlinks.map((item) => item.id);
-        return backlinkIds ?? [];
+        let resBacklink2 = await getBacklink2(this.input);
+        let backlinkDocIds = resBacklink2.backlinks.map((item) => item.id);
+
+        const pool = new PromiseLimitPool<any>(16);
+        for (let id of backlinkDocIds) {
+            pool.add(() => getBacklinkDoc(this.input, id));
+        }
+        let backlinks = await pool.awaitAll();
+        let resultIds = [];
+        for (let backlink of backlinks) {
+            backlink.backlinks.forEach((item) => {
+                if (item?.blockPaths) {
+                    const blockPaths = item.blockPaths;
+                    //这个 API 挺好的地方在于会自动处理 li&p 问题
+                    resultIds.push(blockPaths[blockPaths.length - 1].id);
+                }
+            });
+        }
+        return resultIds ?? [];
     }
 }
 
@@ -277,9 +295,23 @@ class DocBackmentions extends MatchRule {
         if (!this.input) {
             return [];
         }
-        let backlinks = await getBacklink2(this.input);
-        let backlinkIds = backlinks.backmentions.map((item) => item.id);
-        return backlinkIds ?? [];
+        let resBacklink2 = await getBacklink2(this.input);
+        let backmentionDocIds = resBacklink2.backmentions.map((item) => item.id);
+        const pool = new PromiseLimitPool<any>(16);
+        for (let id of backmentionDocIds) {
+            pool.add(() => getBackmentionDoc(this.input, id));
+        }
+        let backmentions = await pool.awaitAll();
+        let resultIds = [];
+        for (let backmention of backmentions) {
+            backmention.backmentions.forEach((item) => {
+                if (item?.blockPaths) {
+                    const blockPaths = item.blockPaths;
+                    resultIds.push(blockPaths[blockPaths.length - 1].id);
+                }
+            });
+        }
+        return resultIds ?? [];
     }
 }
 
