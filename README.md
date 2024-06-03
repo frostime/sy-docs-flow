@@ -23,11 +23,34 @@ After enabling the plugin, click the icon in the top bar and select the desired 
     - Click it, enter sql statement in the popup window, and then stitch the query blocks into a document stream (similar to embedding blocks).
     - Notice: The number of results is limited by SiYuan's configuration, you can use `LIMIT` in the SQL statement to bypass this limit.
 
-5. Custom ID
+5. JS Query
+
+    - Allows configuration of rules to execute JavaScript code and return an array of Block IDs
+    - JavaScript code can use two `api` variables
+      - `kits`: Provides interfaces for communication with the backend
+      - `fetchPost`: SiYuan plugin API
+    ```ts
+    interface IKits {
+        // async request backend api
+        request: (url: string, data: any) => Promise<any>,
+        // async, fetch sql backend api, input sql code
+        sql: (code: string) => Promise<Block[]>,
+        // async, input condition after 'where' in sql
+        where: (where: string) => Promise<Block[]>,
+        // async, query backlink of block
+        backlink: (id: BlockId) => Promise<Block[]>,
+        // async, query block of attribute <name>
+        attr: (name: string, val?: string, valMatch: '=' | 'like' = '=') => Promise<Block[]>,
+        //Get current active document id
+        activeDoc: () => DocumentID,
+        b2id: (b: Block | Block[]) => BlockID | BlockID[]
+    }
+
+1. Custom ID
 
     Click it, enter multiple block IDs in the popup window, the IDs can be separated by space, `\n`, `\t`, `,`, the blocks corresponding to these IDs will be stitched together into a document stream.
 
-6. Offspring document
+2. Offspring document
 
     Add all the offspring documents under a specific document tree.
 

@@ -26,11 +26,35 @@
     - 点击后，在弹窗内输入 sql 语句，将查询得到的块拼接成一个文档流（和嵌入块差不多）。
     - 注意：SQL 查询的结果会受到思源中最大查询数量的限制；如果想要摆脱限制，要么更改思源内部设置，或者手动增加 `limit` 字段。
 
-5. 自定义 ID
+5. JS 查询
+
+    - 允许配置规则，执行 Javascript 代码，返回一个 Block ID 数组
+    - JS 代码中可以使用两个 api 变量
+      - `kits`: 提供了和后端沟通的接口
+      - `fetchPost`: 思源插件 API
+    ```ts
+    interface IKits {
+        // async request backend api
+        request: (url: string, data: any) => Promise<any>,
+        // async, fetch sql backend api, input sql code
+        sql: (code: string) => Promise<Block[]>,
+        // async, input condition after 'where' in sql
+        where: (where: string) => Promise<Block[]>,
+        // async, query backlink of block
+        backlink: (id: BlockId) => Promise<Block[]>,
+        // async, query block of attribute <name>
+        attr: (name: string, val?: string, valMatch: '=' | 'like' = '=') => Promise<Block[]>,
+        //Get current active document id
+        activeDoc: () => DocumentID,
+        b2id: (b: Block | Block[]) => BlockID | BlockID[]
+    }
+    ```
+
+6. 自定义 ID
 
     点击后，在弹窗内输入多个块 ID，ID 之间可以用空格、`\n`、`\t`、`,`隔开，这些 ID 对应的块将拼接成一个文档流。
 
-6. 文档树
+7. 文档树
 
     将某个文档下属文档树内所有文档加入流中, 类似子文档
 

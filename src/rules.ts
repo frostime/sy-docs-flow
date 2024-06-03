@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-06-03 22:22:26
+ * @LastEditTime : 2024-06-03 22:39:53
  * @Description  : 
  */
 import { showMessage, fetchPost } from "siyuan";
@@ -414,7 +414,7 @@ class JavaScript extends MatchRule {
         }
         return main();
         `;
-        const kits = {
+        const kits: IKits = {
             request: request, // request backend api
             sql: sql, // fetch sql backend api
             where: async (where: string) => {
