@@ -284,14 +284,18 @@ export default class DocsFlowPlugin extends Plugin {
         if (datatype !== "NodeBlockQueryEmbed") {
             return;
         }
-        let sql = blockEle.getAttribute("data-content");
-        sql = unescapeHTML(sql);
+        let blockQuery = blockEle.getAttribute("data-content");
+        blockQuery = unescapeHTML(blockQuery);
         let menu: Menu = detail.menu;
         menu.addItem({
             icon: "iconFlow",
             label: i18n.button.openInDocFlow,
             click: () => {
-                this.tabHub.open(RuleFactory("SQL", sql));
+                if (blockQuery.startsWith('//!js')) {
+                    this.tabHub.open(RuleFactory("JS", blockQuery));
+                } else {
+                    this.tabHub.open(RuleFactory("SQL", blockQuery));
+                }
             }
         });
     }

@@ -3,10 +3,10 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-06-03 22:19:00
+ * @LastEditTime : 2024-06-03 22:22:26
  * @Description  : 
  */
-import { showMessage } from "siyuan";
+import { showMessage, fetchPost } from "siyuan";
 import * as api from "@/api";
 import {
     getBacklink2, sql, getBlockByID, listDocTree, getBacklinkDoc, getBackmentionDoc, request
@@ -414,7 +414,7 @@ class JavaScript extends MatchRule {
         }
         return main();
         `;
-        const api = {
+        const kits = {
             request: request, // request backend api
             sql: sql, // fetch sql backend api
             where: async (where: string) => {
@@ -459,8 +459,8 @@ class JavaScript extends MatchRule {
         let result: BlockId[];
 
         try {
-            let func = new Function('api', code);
-            let data = await func(api);
+            let func = new Function('kits', 'fetchPost', code);
+            let data = await func(kits, fetchPost);
             console.debug('JS result:', data);
             if (data instanceof Promise) {
                 data = await data;
