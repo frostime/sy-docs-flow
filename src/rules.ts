@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-06-03 22:39:53
+ * @LastEditTime : 2024-06-05 20:41:14
  * @Description  : 
  */
 import { showMessage, fetchPost } from "siyuan";
@@ -362,7 +362,7 @@ class SQL extends MatchRule {
         // 将 SQL 语句中的 \*、\[、\] 和 \S 替换为 \\*、\\[、\\] 和 \\S
         // 这样在 JavaScript 中，它们将被解析为原本期望的正则表达式
         this.input = sqlCode.replace(/\\(\*|\[|\]|\S)/g, '\\\\$1');
-        this.hash = `SQL@${sqlCode.replace(/\s+/g, "$")}`;
+        this.hash = `SQL@${simpleHash(this.input)}`;
     }
 
     validateInput(): boolean {
@@ -493,7 +493,7 @@ class IdList extends MatchRule {
         } else if (Array.isArray(input)) {
             this.input = input;
         }
-        this.hash = `IdList@${this.input.sort().join("$")}`;
+        this.hash = `IdList@${simpleHash(this.input)}`;
     }
 
     validateInput(): boolean {
