@@ -300,6 +300,15 @@ export default class DocsFlowPlugin extends Plugin {
         });
     }
 
+    open(type: TRuleType, input: any, config?: any) {
+        let rule = RuleFactory(type, input);
+        if (rule === null) return;
+        if (config) {
+            rule.mergeConfig(config);
+        }
+        this.tabHub.open(rule);
+    }
+
     eventCustomIds(event: CustomEvent<CustomEventDetail<BlockId[]>>) {
         console.groupCollapsed("DocsFlowPlugin Eventbus");
         console.log("CustomEvent[IdList] detail:");
