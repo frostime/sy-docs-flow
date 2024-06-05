@@ -1,6 +1,6 @@
 {
   "name": "sy-docs-flow",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "type": "module",
   "description": "",
   "repository": "",
@@ -19,6 +19,7 @@
     "eslint": "^8.42.0",
     "fast-glob": "^3.2.12",
     "glob": "^7.2.3",
+    "js-yaml": "^4.1.0",
     "minimist": "^1.2.8",
     "rollup-plugin-livereload": "^2.0.5",
     "sass": "^1.62.1",

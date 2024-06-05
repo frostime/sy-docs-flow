@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2024-04-25 21:57:11
+ * @LastEditTime : 2024-06-03 22:37:42
  * @Description  : 
  */
 
@@ -94,6 +94,7 @@ type TRuleType = "ChildDocument"
     | "OffspringDocument" 
     | "BlockBacklinks"  //一个块对应的所有反链
     | "DailyNote"
+    | "JS";
 
 interface IConfig {
     scroll: boolean;
@@ -137,6 +138,23 @@ interface IBacklink {
 interface CustomEventDetail<T> {
     input: T;
     config?: any;
+}
+
+
+interface IKits {
+    // async request backend api
+    request: (url: string, data: any) => Promise<any>,
+    // async, fetch sql backend api, input sql code
+    sql: (code: string) => Promise<Block[]>,
+    // async, input condition after 'where' in sql
+    where: (where: string) => Promise<Block[]>,
+    // async, query backlink of block
+    backlink: (id: BlockId) => Promise<Block[]>,
+    // async, query block of attribute <name>
+    attr: (name: string, val?: string, valMatch: '=' | 'like' = '=') => Promise<Block[]>,
+    //Get current active document id
+    activeDoc: () => DocumentID,
+    b2id: (b: Block | Block[]) => BlockID | BlockID[]
 }
 
 

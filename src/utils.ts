@@ -3,12 +3,12 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2024-06-03 20:47:24
+ * @LastEditTime : 2024-06-03 21:56:34
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
 import { getBlockByID, listDocsByPath, request } from "./api";
-import zh_CN from "./i18n/zh_CN.json";
+import type zh_CN from "@/../dev/i18n/zh_CN.json";
 
 export let i18n: typeof zh_CN;
 export function setI18n(i18nData: any) {
@@ -30,6 +30,19 @@ export const firstPara2Parent = async (ids: BlockId[]): Promise<BlockId[]> => {
         result[result.length - 1] = info.parentID;
     }
     return result;
+}
+
+
+const crypto = require('crypto');
+/**
+ * 
+ * @param input 输入字符串
+ * @param N 输出 hash 的长度
+ */
+export function simpleHash(input: string): string {
+    let hash = crypto.createHash('md5');
+    hash.update(input);
+    return hash.digest('hex');
 }
 
 

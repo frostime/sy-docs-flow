@@ -3,13 +3,15 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-06-03 20:41:06
+ * @LastEditTime : 2024-06-03 22:39:53
  * @Description  : 
  */
-import { showMessage } from "siyuan";
+import { showMessage, fetchPost } from "siyuan";
 import * as api from "@/api";
-import { getBacklink2, sql, getBlockByID, listDocTree, getBacklinkDoc, getBackmentionDoc } from "@/api";
-import { getChildDocs, getActiveTab } from "./utils";
+import {
+    getBacklink2, sql, getBlockByID, listDocTree, getBacklinkDoc, getBackmentionDoc, request
+} from "@/api";
+import { getChildDocs, getActiveTab, simpleHash } from "./utils";
 import { setting } from "./settings";
 
 import PromiseLimitPool from "./libs/promise-pool";
@@ -385,6 +387,99 @@ class SQL extends MatchRule {
 }
 
 
+
+class JavaScript extends MatchRule {
+    constructor(code: string) {
+        super("JS");
+        this.updateInput(code);
+    }
+
+    updateInput(code: any) {
+        this.input = code;
+        this.hash = `JS@${simpleHash(code)}`;
+    }
+
+    validateInput(): boolean {
+        return true;
+    }
+
+    async fetch() {
+        this.eof = true;
+        if (!this.input) {
+            return [];
+        }
+        const code = `
+        async function main(){
+            ${this.input}
+        }
+        return main();
+        `;
+        const kits: IKits = {
+            request: request, // request backend api
+            sql: sql, // fetch sql backend api
+            where: async (where: string) => {
+                return sql(`select * from blocks where ${where}`);
+            },
+            backlink: async (id: BlockId, limit?: number) => {
+                return sql(`
+                select * from blocks where id in (
+                    select block_id from refs where def_block_id = '${id}'
+                ) order by updated desc ${limit ? `limit ${limit}` : ''};
+                `);
+            },
+            attr: async (name: string, val?: string, valMatch: '=' | 'like' = '=') => {
+                return sql(`
+                SELECT B.*
+                FROM blocks AS B
+                WHERE B.id IN (
+                    SELECT A.block_id
+                    FROM attributes AS A
+                    WHERE A.name = '${name}'
+                    ${val ? `AND A.value ${valMatch} '${val}'` : ''}
+                );
+                `);
+            },
+            activeDoc: () => {
+                const currentDocument = getActiveTab();
+                if (!currentDocument) {
+                    return;
+                }
+                const eleTitle = currentDocument.querySelector(".protyle-title");
+                let docId = eleTitle.getAttribute("data-node-id");
+                return docId;
+            },
+            b2id: (b: Block | Block[]) => {
+                if (Array.isArray(b)) {
+                    return b.map((item) => item.id);
+                } else {
+                    return b.id;
+                }
+            }
+        }
+        let result: BlockId[];
+
+        try {
+            let func = new Function('kits', 'fetchPost', code);
+            let data = await func(kits, fetchPost);
+            console.debug('JS result:', data);
+            if (data instanceof Promise) {
+                data = await data;
+            }
+            if (data?.length > 0 && data[0]?.id) {
+                result = data.map((item) => item.id);
+            } else {
+                result = data;
+            }
+        } catch (e) {
+            console.error('JS Error:', e);
+            showMessage(`JavaScript Error: ${e.message}`, 5000, 'error');
+        }
+
+        return result ?? [];
+    }
+}
+
+
 class IdList extends MatchRule {
     constructor(ids: BlockId[]) {
         super("IdList");
@@ -461,6 +556,8 @@ export const RuleFactory = (type: TRuleType, input?: any) => {
             return new BlockBacklinks(input);
         case "SQL":
             return new SQL(input);
+        case "JS":
+            return new JavaScript(input);
         case "IdList":
             return new IdList(input);
         case "DailyNote":

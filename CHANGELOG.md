@@ -1,3 +1,13 @@
+## v0.10.0
+
+- ✨ 支持执行 JS 查询[#61](https://github.com/frostime/sy-docs-flow/issues/61)
+
+## v0.9.0
+
+- 🔨 重构文档反链、提及的显示[#62](https://github.com/frostime/sy-docs-flow/issues/62)
+- 🔨 使用 blockTree 关系来重构块的显示，当查询到列表块和引述块的第一个子段落块时，会完整显示其整个父容器块
+
+
 ## v0.8.0
 
 - 使用了全局 css + class name 的方案，解决了之前滚动时 gutter 显示异常的 bug

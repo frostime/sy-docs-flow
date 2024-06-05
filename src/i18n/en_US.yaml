@@ -1,0 +1,69 @@
+---
+name: "Docflow"
+rules:
+    child: "Child document"
+    docBacklinks: "Document backlinks"
+    docBackmentions: "Document mentions"
+    blockBacklinks: "Block backlinks"
+    sql: "SQL query"
+    js: "JS Query"
+    customID: "Custom ID"
+    offspringDocument: "Offspring document"
+    dailynote: "Daily Notes"
+button:
+    reload: "Reload"
+    reverse: "Reverse"
+    edit: "Edit value"
+    alterSaved: "Alter these"
+    saved: "Saved rules"
+    openInDocFlow: "Open in docflow"
+    openBackInDocFlow: "Docflow-Backlinks"
+    moreConfig: "More"
+msg:
+    alterSaved: "Alter saved rules"
+    alterDone: "Alter done!"
+    saveDone: "Save done!"
+defaultSetting:
+    descriptioin: "Note: This setting will serve as the default configuration for each document flow."
+    descriptioinSpecific: "Note: The settings will only take effect in the current document flow."
+    scrollMode:
+        title: "Scroll Mode"
+        text: "Fixed height for a single document, scroll to load its internal content. It can save memory resources when dealing with large documents."
+    displayBreadcrumb:
+        title: "Collapse Bar"
+        text: "Whether to display the breadcrumb for each document target (collapsed/expanded bar)."
+    protyleTitle:
+        title: "Display Title"
+        text: "Whether to display the title of the document."
+    protyleReadonly:
+        title: "Read-only Mode"
+        text: "The body of the document is read-only."
+    dynamicLoading:
+        title: "Dynamic Loading"
+        text: "Dynamically load documents within the document stream as you scroll up or down. It can save memory resources when dealing with a large number of documents."
+    dynamicLoadingCapacity:
+        title: "Dynamic Loading Capacity"
+        text: "When dynamic loading is enabled, the maximum number of documents to load at a time."
+    dynamicLoadingShift:
+        title: "Dynamic Loading Increment"
+        text: "When dynamic loading is enabled, the number of documents to load each time when scrolling to the edge (up/down)."
+editRuleVal:
+    ChildDocument: "Please enter a document block ID"
+    SQL: "Please enter an SQL query statement for the block"
+    IdList: "Please enter several block IDs, separated by newline characters"
+    DocBacklinks: "Please enter a block ID"
+    DocBackmentions: "Please enter a block ID"
+    OffspringDocument: "Please enter a block ID"
+    BlockBacklinks: "Please enter a block ID"
+    DailyNote: "Please enter a notebook ID"
+selectNotebook: "Select a notebook"
+docsCnt: "Docs"
+displayBreadcrumb: "Breadcrumb"
+scrollMode: "Scroll Mode"
+dynamicLoading: "Dynamic Loading"
+nameTab: "Name it"
+renameRule: "Rename it"
+saveRule: "Save it"
+empty: "Nothing..."
+copyLink: "Copy Link"
+configSavedRule: "Click to edit name🖋️ | Drag to re-order🔃"

@@ -170,6 +170,8 @@ export default class DocsFlowPlugin extends Plugin {
 
     savedRules: { [key: string]: IRule } = {};
 
+    declare i18n: typeof i18n;
+
     async onload() {
         this.tabHub = new TabHub(this);
         // 图标的制作参见帮助文档
@@ -282,14 +284,18 @@ export default class DocsFlowPlugin extends Plugin {
         if (datatype !== "NodeBlockQueryEmbed") {
             return;
         }
-        let sql = blockEle.getAttribute("data-content");
-        sql = unescapeHTML(sql);
+        let blockQuery = blockEle.getAttribute("data-content");
+        blockQuery = unescapeHTML(blockQuery);
         let menu: Menu = detail.menu;
         menu.addItem({
             icon: "iconFlow",
             label: i18n.button.openInDocFlow,
             click: () => {
-                this.tabHub.open(RuleFactory("SQL", sql));
+                if (blockQuery.startsWith('//!js')) {
+                    this.tabHub.open(RuleFactory("JS", blockQuery));
+                } else {
+                    this.tabHub.open(RuleFactory("SQL", blockQuery));
+                }
             }
         });
     }
@@ -368,6 +374,27 @@ export default class DocsFlowPlugin extends Plugin {
                     }
                     // this.openFlow(RuleFactory("SQL", sql));
                     this.tabHub.open(RuleFactory("SQL", sql));
+                }, undefined, '650px');
+            }
+        });
+        menu.addItem({
+            label: this.i18n.rules.js,
+            click: () => {
+                const textarea = document.createElement("textarea");
+                textarea.className = "b3-text-field fn__block";
+                textarea.style.height = "10em";
+                textarea.style.fontSize = "1.1em";
+                textarea.style.lineHeight = "1.25em";
+                textarea.style.fontFamily = 'var(--b3-font-family-code)';
+                textarea.addEventListener('keydown', (e: KeyboardEvent) => {
+                    if (e.key === 'Enter' && !e.ctrlKey) {
+                        e.stopPropagation();
+                    }
+                });
+
+                confirmDialog('JS', textarea, () => {
+                    let js = textarea.value;
+                    this.tabHub.open(RuleFactory("JS", js));
                 }, undefined, '650px');
             }
         });
