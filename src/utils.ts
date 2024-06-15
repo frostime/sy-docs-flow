@@ -3,12 +3,13 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:41:15
  * @FilePath     : /src/utils.ts
- * @LastEditTime : 2024-06-03 21:56:34
+ * @LastEditTime : 2024-06-15 15:51:22
  * @Description  : 
  */
 import { Dialog, getFrontend } from "siyuan";
 import { getBlockByID, listDocsByPath, request } from "./api";
 import type zh_CN from "@/../dev/i18n/zh_CN.json";
+import { createHash } from "crypto";
 
 export let i18n: typeof zh_CN;
 export function setI18n(i18nData: any) {
@@ -33,16 +34,37 @@ export const firstPara2Parent = async (ids: BlockId[]): Promise<BlockId[]> => {
 }
 
 
-const crypto = require('crypto');
+let crypto = require('crypto');
+
 /**
  * 
  * @param input 输入字符串
  * @param N 输出 hash 的长度
  */
-export function simpleHash(input: string): string {
-    let hash = crypto.createHash('md5');
-    hash.update(input);
-    return hash.digest('hex');
+export function simpleHash(input: any): string {
+    if (Array.isArray(input)) input = input.toString();
+    //might not able to require it
+    if (crypto) {
+        let hash = crypto.createHash('md5');
+        hash.update(input);
+        return hash.digest('hex');
+    } else {
+        return customHash(input);
+    }
+}
+
+/**
+ * Simple hash function as a polyfill
+ * @param input 输入字符串
+ */
+function customHash(input: string): string {
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+        let chr = input.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return ('00000000' + (hash >>> 0).toString(16)).slice(-8); // Convert to hex and pad
 }
 
 
@@ -84,7 +106,7 @@ export async function getChildDocs(documentId: DocumentId) {
 
 
 const frontEnd = getFrontend();
-const isMobile = () => (frontEnd === "mobile" || frontEnd === "browser-mobile");
+export const isMobile = () => (frontEnd === "mobile" || frontEnd === "browser-mobile");
 
 export const confirmDialog = (title: string, content: string | HTMLElement, confirm?: (ele?: HTMLElement) => void, cancel?: (ele?: HTMLElement) => void, width?: string, height?: string) => {
     const dialog = new Dialog({

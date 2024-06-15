@@ -2,10 +2,10 @@
   "name": "sy-docs-flow",
   "author": "frostime",
   "url": "https://github.com/frostime/sy-docs-flow",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "minAppVersion": "3.0.12",
   "backends": ["all"],
-  "frontends": ["desktop", "desktop-window", "browser-desktop", "browser-mobile"],
+  "frontends": ["desktop", "desktop-window", "browser-desktop", "browser-mobile", "mobile"],
   "displayName": {
     "en_US": "Documents Flow",
     "zh_CN": "文档流"

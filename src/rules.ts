@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-06-05 20:41:14
+ * @LastEditTime : 2024-06-15 15:46:33
  * @Description  : 
  */
 import { showMessage, fetchPost } from "siyuan";
@@ -493,7 +493,8 @@ class IdList extends MatchRule {
         } else if (Array.isArray(input)) {
             this.input = input;
         }
-        this.hash = `IdList@${simpleHash(this.input)}`;
+        let inputstr = this.input.toString()
+        this.hash = `IdList@${simpleHash(inputstr)}`;
     }
 
     validateInput(): boolean {
