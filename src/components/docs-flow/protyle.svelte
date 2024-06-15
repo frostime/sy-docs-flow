@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2024-06-03 20:28:18
+ LastEditTime : 2024-06-15 14:07:30
  Description  : 
 -->
 <script lang="ts">
@@ -155,14 +155,18 @@
         data-type="NodeDocument"
         on:keypress={() => {}}
         on:click={(e) => {
-            openTab({
-                app: app,
-                doc: {
-                    id: blockId,
-                    zoomIn: false,
-                },
-            });
             e.stopPropagation();
+            if (e.ctrlKey) {
+                openTab({
+                    app: app,
+                    doc: {
+                        id: blockId,
+                        zoomIn: false,
+                    },
+                });
+            } else {
+                expanded = !expanded;
+            }
         }}
     >
         <span

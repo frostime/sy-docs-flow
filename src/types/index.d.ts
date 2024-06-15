@@ -167,6 +167,7 @@ interface ISettingItem {
     text: string;
     key: string;
     value: any;
+    direction?: "row" | "column";
     placeholder?: string;
     options?: { [key: string]: string };
     slider?: {
