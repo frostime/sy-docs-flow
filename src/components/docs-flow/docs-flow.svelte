@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-06-03 20:50:26
+ LastEditTime : 2024-06-15 15:59:05
  Description  : 
 -->
 <script lang="ts">
@@ -345,22 +345,6 @@
 
             <div id="space" />
 
-            <!-- <label
-                class="b3-label__text"
-                for="enableScroll"
-                style="margin-top: 0px;"
-            >
-                {i18n.defaultSetting.scrollMode.title}
-            </label>
-            <span class="fn__space" />
-            <input
-                id="enableScroll"
-                class="b3-switch fn__flex-center"
-                type="checkbox"
-                bind:checked={config.scroll}
-                on:change={refresh}
-            /> -->
-
             <span class="fn__space" />
 
             <label
@@ -420,7 +404,7 @@
     {/if}
 </div>
 
-<div class="docs-flow {hideGutterClass}">
+<div class="docs-flow fn__flex-1 {hideGutterClass}">
     {#each loadIdList as did, i (did)}
         <Protyle
             {app}

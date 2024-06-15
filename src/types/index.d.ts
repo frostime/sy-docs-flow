@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-28 20:49:27
  * @FilePath     : /src/types/index.d.ts
- * @LastEditTime : 2024-06-03 22:37:42
+ * @LastEditTime : 2024-06-15 14:16:39
  * @Description  : 
  */
 
@@ -113,6 +113,10 @@ interface IRule {
     type: TRuleType;
     input: any;
     config: IConfig;
+}
+
+interface IOpenHandler {
+    open(rule: MatchRule, tabTitle?: string);
 }
 
 // interface IRuleFetchData {
