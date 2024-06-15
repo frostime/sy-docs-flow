@@ -3,14 +3,14 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2024-06-15 18:56:23
+ LastEditTime : 2024-06-15 21:34:59
  Description  : 
 -->
 <script lang="ts">
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { Protyle, type TProtyleAction, openTab } from "siyuan";
     import { getBlockByID } from "../../api";
-    import { notebooks, isMobile } from "../../utils";
+    import { notebooks } from "../../utils";
 
     import { setting } from "../../settings";
 
@@ -147,7 +147,7 @@
 
 </script>
 
-<div class="docs-flow__doc" style="min-height: {heightBreadcrumb}px; --display-breadcrumb: {isMobile() ? "none" : "inherit"}">
+<div class="docs-flow__doc" style="min-height: {heightBreadcrumb}px;">
     <li
         class="b3-list-item b3-list-item--hide-action protyle-breadcrumb__item"
         style="gap: 5px; {styleDisplayLi}"
@@ -210,9 +210,5 @@
     }
     div.docs-flow__protyle {
         overflow-y: auto;
-
-        :global(.protyle-breadcrumb) {
-            display: var(--display-breadcrumb);
-        }
     }
 </style>

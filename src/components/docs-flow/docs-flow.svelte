@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-06-15 18:28:58
+ LastEditTime : 2024-06-15 21:35:51
  Description  : 
 -->
 <script lang="ts">
@@ -160,7 +160,7 @@
     --left="calc(calc(100% - var(--width)) / 2)"
 />
 
-<div class="docs-flow fn__flex-1 {hideGutterClass}">
+<div class="docs-flow fn__flex-1 {hideGutterClass}" style="--display-breadcrumb: {isMobile() ? "none" : "flex"}">
     {#each loadIdList as did, i (did)}
         <Protyle
             {app}
@@ -171,3 +171,11 @@
         />
     {/each}
 </div>
+
+<style lang="scss">
+    .docs-flow {
+        :global(div.docs-flow__protyle .protyle-breadcrumb) {
+            display: var(--display-breadcrumb);
+        }
+    }
+</style>
