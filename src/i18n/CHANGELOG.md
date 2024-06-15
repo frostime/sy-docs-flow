@@ -1,7 +1,7 @@
-## [v0.10.0] 文档流插件 | Docs Flow
+## [v0.11.0] 文档流插件 | Docs Flow
 
-- ✨ 支持执行 JS 查询[#61](https://github.com/frostime/sy-docs-flow/issues/61)
+- ✨ 初步适配移动端[#66](https://github.com/frostime/sy-docs-flow/issues/66)
 
 ---
 
-- ✨ Support executing JS queries[#61](https://github.com/frostime/sy-docs-flow/issues/61)
+- ✨ Support mobile device[#66](https://github.com/frostime/sy-docs-flow/issues/66)
