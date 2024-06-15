@@ -367,12 +367,24 @@ export default class DocsFlowPlugin extends Plugin {
             });
         }
 
-        menu.addItem({
-            label: this.i18n.button.saved,
-            type: "submenu",
-            icon: "iconInbox",
-            submenu: submenu
-        });
+        if (!isMobile) {
+            menu.addItem({
+                label: this.i18n.button.saved,
+                type: "submenu",
+                icon: "iconInbox",
+                submenu: submenu
+            });
+        } else {
+            menu.addItem({
+                label: this.i18n.button.saved,
+                type: "readonly",
+                icon: "iconInbox"
+            });
+            submenu.forEach(item => {
+                menu.addItem(item);
+            })
+        }
+        
         // menu.addItem({
         //     label: "设置",
         //     icon: "iconSettings",
