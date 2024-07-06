@@ -30,7 +30,7 @@ jobs:
         # Install pnpm
       - name: Install pnpm
         if: ${{ steps.regex-match.outputs.match != '' }}
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         id: pnpm-install
         with:
           version: 8
