@@ -14,6 +14,7 @@ button:
     reload: "Reload"
     reverse: "Reverse"
     edit: "Edit value"
+    pin: "Pin"
     alterSaved: "Alter these"
     saved: "Saved rules"
     openInDocFlow: "Open in docflow"

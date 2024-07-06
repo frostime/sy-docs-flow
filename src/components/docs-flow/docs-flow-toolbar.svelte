@@ -222,7 +222,7 @@
 
             <svg
                 class="svg-button ariaLabel"
-                aria-label="编辑"
+                aria-label={i18n.button.edit}
                 on:click={editRuleValue}
                 on:keypress={() => {}}
             >
@@ -230,7 +230,7 @@
             </svg>
             <svg
                 class="svg-button ariaLabel"
-                aria-label="固定"
+                aria-label={i18n.button.pin}
                 on:click={() => {
                     pinToolbar = !pinToolbar;
                 }}
