@@ -266,13 +266,13 @@
             </button>
 
             <div id="group-right" class="fn__flex {isMobile() ? "fn__none" : ""}" style="gap: 5px;">
-                <button class="b3-button" on:click={onRenameThis}
+                <button class="b3-button hide-if-need" on:click={onRenameThis}
                     >{i18n.nameTab}</button
                 >
                 <button class="b3-button" on:click={onSaveThis}>
                     {i18n.saveRule}
                 </button>
-                <button class="b3-button" on:click={onCopyLink}>
+                <button class="b3-button hide-if-need" on:click={onCopyLink}>
                     {i18n.copyLink}
                 </button>
             </div>

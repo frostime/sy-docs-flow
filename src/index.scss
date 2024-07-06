@@ -15,3 +15,14 @@ div.docs-flow__protyle:not(:hover) {
 div.docs-flow.hide-gutter .protyle-gutters {
     display: none !important;
 }
+
+.docs-flow__toolbar {
+    container-type: inline-size;
+    container-name: docsflow-toolbar;
+}
+
+@container docsflow-toolbar (width < 600px) {
+    .docs-flow__toolbar-body .hide-if-need {
+        display: none;
+    }
+}
