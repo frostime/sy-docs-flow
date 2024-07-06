@@ -163,14 +163,28 @@
         );
     };
 
+    /****** Pin toolbar ******/
+    let pinToolbar = false;
+    let classNamePin: 'pin' | 'unpin' = 'unpin';
+    $: {
+        if (pinToolbar) {
+            showToolbar = true;
+            classNamePin = 'pin';
+        } else {
+            classNamePin = 'unpin';
+        }
+    }
+
 </script>
 
 <div
-    class="docs-flow__toolbar"
+    class="docs-flow__toolbar {classNamePin}"
     on:mouseenter={() => {
+        if (pinToolbar) return;
         showToolbar = true;
     }}
     on:mouseleave={() => {
+        if (pinToolbar) return;
         showToolbar = false;
     }}
 >
@@ -181,7 +195,8 @@
             out:fly={{ y: -20, duration: 500 }}
         >
             <div class="toolbar__item toolbar__item--active">
-                {i18n.docsCnt}: {listDocumentIds.length}
+                <span class=" {isMobile() ? "fn__none" : ""}">{i18n.docsCnt}:</span>
+                {listDocumentIds.length}
             </div>
 
             <svg
@@ -212,6 +227,20 @@
                 on:keypress={() => {}}
             >
                 <use xlink:href="#iconEdit"></use>
+            </svg>
+            <svg
+                class="svg-button ariaLabel"
+                aria-label="固定"
+                on:click={() => {
+                    pinToolbar = !pinToolbar;
+                }}
+                on:keypress={() => {}}
+            >
+                {#if pinToolbar}
+                    <use xlink:href="#iconLock"></use>
+                {:else}
+                    <use xlink:href="#iconUnlock"></use>
+                {/if}
             </svg>
 
             <div id="space" />
@@ -260,7 +289,7 @@
         width: var(--width);
         left: var(--left);
 
-        top: 25px;
+        top: 15px;
         z-index: 10;
 
         display: flex;
