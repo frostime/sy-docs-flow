@@ -138,7 +138,17 @@ export class TabHub {
             },
             keepCursor: false,
             removeCurrentTab: true
-        });
+        }).then(tab => {
+            console.log(tab);
+            if (window.siyuan.config.fileTree.openFilesUseCurrentTab) {
+                let dblclickEvent = new MouseEvent('dblclick', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true
+                });
+                tab.headElement.dispatchEvent(dblclickEvent);
+            }
+        })
     }
 }
 
