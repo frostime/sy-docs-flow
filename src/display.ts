@@ -189,7 +189,7 @@ export class FullScreen {
 
         flow.$on("configChanged", ({ detail }) => {
             console.log("configChanged", detail);
-            let ruleHash = detail.ruleHash;
+            // let ruleHash = detail.ruleHash;
             const rule = this.rule;
             let config = detail.config;
             for (let key in config) {
@@ -199,13 +199,13 @@ export class FullScreen {
         });
         flow.$on("saveThis", ({ detail }) => {
             console.log("saveThis", detail);
-            let ruleHash = detail.ruleHash;
+            // let ruleHash = detail.ruleHash;
             const rule = this.rule;
             this.plugin.saveRule(rule);
         });
         flow.$on("renameThis", ({ detail }) => {
             console.log("renameThis", detail);
-            let ruleHash = detail.ruleHash;
+            // let ruleHash = detail.ruleHash;
             const rule = this.rule;
 
             confirmDialog(i18n.renameRule,

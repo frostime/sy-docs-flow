@@ -1,5 +1,7 @@
 // import { sql } from "./api";
 
+import { isMobile } from "./utils";
+
 /*
  * Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
  * @Author       : Yp Z
@@ -48,7 +50,13 @@ export const setting = {
 
     getMaxHeight() {
         if (this.protyleMaxHeight === "auto") {
-            let ele = document.querySelector("#layouts .layout__center div[data-type=\"wnd\"]>.layout-tab-container");
+            let selector = ''
+            if (isMobile()) {
+                selector = 'main#docs-flow-fullscreen'
+            } else {
+                selector = '#layouts .layout__center div[data-type=\"wnd\"]>.layout-tab-container';
+            }
+            let ele = document.querySelector(selector);
             let height = ele.clientHeight;
             // console.log("getMaxHeight", height);
             return height;
