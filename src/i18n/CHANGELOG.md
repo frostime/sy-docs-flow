@@ -1,9 +1,8 @@
-## [v0.11.1] 文档流插件 | Docs Flow
+## [v0.12.0] 文档流插件 | Docs Flow
 
-- ✨ 初步适配移动端[#66](https://github.com/frostime/sy-docs-flow/issues/66)
-- 🐛 修复面包屑异常的问题
+本次更新后，文档流内可以显示所有文档的大纲，并支持通过大纲进行跳转。
 
----
+This update enables the outline display for all documents in the document flow and supports navigation through the outline.
 
-- ✨ Support mobile device[#66](https://github.com/frostime/sy-docs-flow/issues/66)
-- 🐛 Fix the abnormal of displaying protyle breadcrumb
+[](https://cdn.jsdelivr.net/gh/frostime/sy-docs-flow/asset/outline.png)
+

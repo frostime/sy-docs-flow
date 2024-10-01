@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-10-01 21:53:37
+ LastEditTime : 2024-10-01 22:10:11
  Description  : 
 -->
 <script lang="ts">
@@ -76,15 +76,16 @@
         }
 
         const MAX_ATTEMPTS = 5;
+        const TRY_INTERVAL = 500;
         let attempts = 0;
 
         const attemptScroll = () => {
             if (queryAndScroll()) {
                 console.debug("滚动成功");
             } else if (attempts < MAX_ATTEMPTS) {
-                console.debug(`滚动失败，${200 * (attempts + 1)}ms 后重试`);
+                console.debug(`滚动失败，${TRY_INTERVAL * (attempts + 1)}ms 后重试`);
                 attempts++;
-                setTimeout(attemptScroll, 200);
+                setTimeout(attemptScroll, TRY_INTERVAL);
             } else {
                 console.debug("滚动失败，已达到最大尝试次数");
             }
