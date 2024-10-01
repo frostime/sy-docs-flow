@@ -3,13 +3,13 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-07-06 17:18:06
+ LastEditTime : 2024-10-01 21:26:32
  Description  : 
 -->
 <script lang="ts">
     import { showMessage } from "siyuan";
     import Protyle from "./protyle.svelte";
-    import { createEventDispatcher, onMount } from "svelte";
+    import { createEventDispatcher, onMount, setContext } from "svelte";
     import { throttle, firstPara2Parent, isMobile } from "@/utils";
 
     import Toolbar from "./docs-flow-toolbar.svelte";
@@ -18,7 +18,7 @@
 
     export let app: any;
     export let rule: MatchRule;
-    export let listDocumentIds: DocumentId[] = [];
+    export let listDocumentIds: DocumentId[] = [];  //所有文档列表
 
     // const ruleHash: string = rule.hash;
     let config: IConfig = rule.config;
@@ -26,7 +26,15 @@
     let loadOffset: number = 0; //当前动态加载的文档偏移量
     let loadLength: number = config.dynamicLoading.capacity; //每次动态加载的文档数量
     let shiftLength: number = config.dynamicLoading.shift; //每次动态加载时的偏移量
-    let loadIdList: DocumentId[] = [];
+    let loadIdList: DocumentId[] = [];  //当前动态加载的文档列表
+
+    setContext('getAllDocIds', () => {
+        return listDocumentIds;
+    });
+
+    setContext('getLoadedDocIds', () => {
+        return loadIdList;
+    });
 
     const reInit = async () => {
         let ids = await rule.fetch();
@@ -42,6 +50,13 @@
     onMount(async () => {
         reInit();
     });
+
+    const jumpToDoc = (id: BlockId) => {
+        console.log("jumpToDoc", id);
+        //TODO
+    }
+
+    setContext('jumpToDoc', jumpToDoc);
 
     const updateLoadIdList = () => {
         if (config.dynamicLoading.enabled !== true) {

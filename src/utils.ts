@@ -9,7 +9,6 @@
 import { Dialog, getFrontend } from "siyuan";
 import { getBlockByID, listDocsByPath, request } from "./api";
 import type zh_CN from "@/../dev/i18n/zh_CN.json";
-import { createHash } from "crypto";
 
 export let i18n: typeof zh_CN;
 export function setI18n(i18nData: any) {
