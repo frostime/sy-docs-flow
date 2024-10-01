@@ -1,12 +1,15 @@
 <script lang="ts">
     import { fly } from "svelte/transition";
 
-
     import { Dialog, showMessage } from "siyuan";
     import { i18n, confirmDialog, isMobile } from "@/utils";
     import { type MatchRule } from "@/rules";
 
     import DefaultSetting from "../config/default-setting.svelte";
+    import { svelteDialog } from "@/libs/dialog";
+
+    import DocsFlowOutline from "./docs-list.svelte";
+    import { getContext } from "svelte";
 
     export let rule: MatchRule;
     export let config: IConfig;
@@ -19,6 +22,10 @@
     const ruleHash: string = rule.hash;
 
     let showToolbar: boolean = false;
+
+    const getAllDocIds = getContext("getAllDocIds") as () => BlockId[];
+    const getLoadedDocIds = getContext("getLoadedDocIds") as () => BlockId[];
+    const jumpToDoc = getContext("jumpToDoc") as (id: BlockId) => void;
 
     function onConfigChanged() {
         dispatch("configChanged", {
@@ -140,7 +147,7 @@
             resize: "vertical",
             height: `${lineCnt * 20}px`,
             whiteSpace: "nowrap",
-            fontFamily: "var(--b3-font-family-code)"
+            fontFamily: "var(--b3-font-family-code)",
         });
         textarea.addEventListener("keydown", (e) => {
             if (e.key === "Enter" && !e.ctrlKey) {
@@ -148,33 +155,53 @@
             }
         });
         confirmDialog(rule.title, textarea, (element: HTMLElement) => {
-                let value = element.querySelector("textarea").value.trim();
-                if (value === oldinput) {
-                    return;
-                }
-                rule.updateInput(value);
-                if (!rule.validateInput()) {
-                    rule.input = oldinput;
-                    rule.hash = oldhash;
-                    return;
-                }
-                reInit();
+            let value = element.querySelector("textarea").value.trim();
+            if (value === oldinput) {
+                return;
             }
-        );
+            rule.updateInput(value);
+            if (!rule.validateInput()) {
+                rule.input = oldinput;
+                rule.hash = oldhash;
+                return;
+            }
+            reInit();
+        });
+    };
+
+    const showDocsFlowOutline = () => {
+
+        const { close } = svelteDialog({
+            title: "Outline",
+            constructor: (container: HTMLElement) => {
+                return new DocsFlowOutline({
+                    target: container,
+                    props: {
+                        allDocIds: getAllDocIds(),
+                        loadedDocIds: getLoadedDocIds(),
+                        jumpToDoc: (id: BlockId) => {
+                            jumpToDoc(id);
+                            close();
+                        }
+                    },
+                });
+            },
+            width: "1000px",
+            height: "80%",
+        });
     };
 
     /****** Pin toolbar ******/
     let pinToolbar = false;
-    let classNamePin: 'pin' | 'unpin' = 'unpin';
+    let classNamePin: "pin" | "unpin" = "unpin";
     $: {
         if (pinToolbar) {
             showToolbar = true;
-            classNamePin = 'pin';
+            classNamePin = "pin";
         } else {
-            classNamePin = 'unpin';
+            classNamePin = "unpin";
         }
     }
-
 </script>
 
 <div
@@ -195,15 +222,27 @@
             out:fly={{ y: -20, duration: 500 }}
         >
             <div class="toolbar__item toolbar__item--active">
-                <span class=" {isMobile() ? "fn__none" : ""}">{i18n.docsCnt}:</span>
+                <span class=" {isMobile() ? 'fn__none' : ''}"
+                    >{i18n.docsCnt}:</span
+                >
                 {listDocumentIds.length}
             </div>
+
+            <svg
+                class="svg-button ariaLabel"
+                aria-label="Outline"
+                on:click={showDocsFlowOutline}
+                on:keypress={() => {}}
+            >
+                <use xlink:href="#iconList"></use>
+            </svg>
 
             <svg
                 bind:this={svgRefresh}
                 class="svg-button ariaLabel"
                 aria-label={i18n.button.reload}
-                on:click={onClickReload} on:keypress={() => {}}
+                on:click={onClickReload}
+                on:keypress={() => {}}
             >
                 <use xlink:href="#iconRefresh"></use>
             </svg>
@@ -261,11 +300,18 @@
                 on:change={onConfigChanged}
             />
 
-            <button class="b3-button {isMobile() ? "b3-button--text" : ""}" on:click={onOpenConfig}>
+            <button
+                class="b3-button {isMobile() ? 'b3-button--text' : ''}"
+                on:click={onOpenConfig}
+            >
                 {i18n.button.moreConfig}
             </button>
 
-            <div id="group-right" class="fn__flex {isMobile() ? "fn__none" : ""}" style="gap: 5px;">
+            <div
+                id="group-right"
+                class="fn__flex {isMobile() ? 'fn__none' : ''}"
+                style="gap: 5px;"
+            >
                 <button class="b3-button hide-if-need" on:click={onRenameThis}
                     >{i18n.nameTab}</button
                 >
@@ -331,5 +377,4 @@
             background-color: var(--b3-toolbar-hover);
         }
     }
-
 </style>

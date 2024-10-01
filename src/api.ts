@@ -369,6 +369,13 @@ export async function getBlockByID(blockId: string): Promise<Block> {
     return data[0];
 }
 
+export async function getBlocksByIds(...ids: BlockId[]) {
+    let idList = ids.map((id) => `"${id}"`);
+    let sqlCode = `select * from blocks where id in (${idList.join(",")})`;
+    let data = await sql(sqlCode);
+    return data;
+}
+
 // **************************************** Template ****************************************
 
 export async function render(id: DocumentId, path: string): Promise<IResGetTemplates> {

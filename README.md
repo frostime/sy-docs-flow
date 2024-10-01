@@ -68,6 +68,7 @@ After enabling the plugin, click the icon in the top bar and select the desired 
 
 1. Hover over the top of the document stream to bring up the toolbar.
 
+    - Jump: Open the outline of the current document stream and jump to the specified position
     - Reload: Reload the current Doc-flow
     - Reverse: Sort the current Doc-flow in reverse order
     - Edit: Manually change the values within the current Doc-flow rules (such as SQL statements, parent document ID, etc.)
@@ -80,7 +81,7 @@ After enabling the plugin, click the icon in the top bar and select the desired 
 
 3. Click on the icon to the left of the document breadcrumbs to collapse the document and save resources
 
-Here is the translation of the markdown:
+![Outline](./asset/outline.png)
 
 ## Doc-flow Configuration
 
