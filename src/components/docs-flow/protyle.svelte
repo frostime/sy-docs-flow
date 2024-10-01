@@ -147,7 +147,7 @@
 
 </script>
 
-<div class="docs-flow__doc" style="min-height: {heightBreadcrumb}px;">
+<div class="docs-flow__doc" style="min-height: {heightBreadcrumb}px;" data-node-id={blockId}>
     <li
         class="b3-list-item b3-list-item--hide-action protyle-breadcrumb__item"
         style="gap: 5px; {styleDisplayLi}"

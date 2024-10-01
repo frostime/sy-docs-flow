@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-10-01 21:26:32
+ LastEditTime : 2024-10-01 21:53:37
  Description  : 
 -->
 <script lang="ts">
@@ -53,7 +53,45 @@
 
     const jumpToDoc = (id: BlockId) => {
         console.log("jumpToDoc", id);
-        //TODO
+        // 如果是动态加载，则先更新 loadOffset，让文档加载到可视区域
+        if (config.dynamicLoading.enabled === true) {
+            let index = listDocumentIds.indexOf(id);
+            if (index === -1) {
+                return;
+            }
+            if (index + loadLength >= listDocumentIds.length) {
+                index = listDocumentIds.length - loadLength - 1;
+            }
+            loadOffset = index;
+            updateLoadIdList();
+        }
+        //然后再滚动到指定文档
+        const queryAndScroll = () => {
+            const ele = document.querySelector(`.docs-flow__doc[data-node-id="${id}"]`);
+            if (ele) {
+                ele.scrollIntoView({ behavior: "smooth" });
+                return true;
+            }
+            return false;
+        }
+
+        const MAX_ATTEMPTS = 5;
+        let attempts = 0;
+
+        const attemptScroll = () => {
+            if (queryAndScroll()) {
+                console.debug("滚动成功");
+            } else if (attempts < MAX_ATTEMPTS) {
+                console.debug(`滚动失败，${200 * (attempts + 1)}ms 后重试`);
+                attempts++;
+                setTimeout(attemptScroll, 200);
+            } else {
+                console.debug("滚动失败，已达到最大尝试次数");
+            }
+        }
+
+        // 立即尝试第一次滚动
+        attemptScroll();
     }
 
     setContext('jumpToDoc', jumpToDoc);
@@ -101,7 +139,7 @@
         }
     };
 
-    const shiftThrottle = throttle(shift, 1000); //防止滚动过快导致的频繁加载
+    const shiftThrottle = throttle(shift, 600); //防止滚动过快导致的频繁加载
 
     const dispatch = createEventDispatcher();
 
@@ -121,12 +159,14 @@
             return;
         }
 
+        const EPSILON = 5;
+
         // epsilon 不能太小，否则会导致无法触发
-        if (approxEqual(scrollTop, 0, 3) && scrollTop <= lastScrollTop) {
+        if (approxEqual(scrollTop, 0, EPSILON) && scrollTop <= lastScrollTop) {
             console.log("到顶了");
             shiftThrottle("left");
         } else if (
-            approxEqual(scrollTop + clientHeight, scrollHeight, 3) &&
+            approxEqual(scrollTop + clientHeight, scrollHeight, EPSILON) &&
             scrollTop > lastScrollTop
         ) {
             console.log("到底了");
