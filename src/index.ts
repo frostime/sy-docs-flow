@@ -16,7 +16,7 @@ import { setting } from "@/settings";
 
 import { TabHub, FullScreen } from "@/display";
 
-import { changelog } from "sy-plugin-changelog";
+// import { changelog } from "sy-plugin-changelog";
 
 const frontEnd = getFrontend();
 const isMobile = frontEnd === "mobile" || frontEnd === "browser-mobile";
@@ -134,10 +134,10 @@ export default class DocsFlowPlugin extends Plugin {
         //@ts-ignore
         this.eventBus.on('SQL', this.eventSQL.bind(this));
 
-        changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
-            ans?.Dialog?.setSize({ width: '45rem', height: '27rem' });
-            ans?.Dialog?.setFont('18px');
-        });
+        // changelog(this, 'i18n/CHANGELOG.md').then((ans) => {
+        //     ans?.Dialog?.setSize({ width: '45rem', height: '27rem' });
+        //     ans?.Dialog?.setFont('18px');
+        // });
     }
 
     onunload() {

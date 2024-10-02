@@ -371,7 +371,7 @@ export async function getBlockByID(blockId: string): Promise<Block> {
 
 export async function getBlocksByIds(...ids: BlockId[]) {
     let idList = ids.map((id) => `"${id}"`);
-    let sqlCode = `select * from blocks where id in (${idList.join(",")})`;
+    let sqlCode = `select * from blocks where id in (${idList.join(",")}) limit 999`;
     let data = await sql(sqlCode);
     return data;
 }
