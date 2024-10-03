@@ -3,7 +3,7 @@
  Author       : frostime
  Date         : 2024-10-01 20:33:19
  FilePath     : /src/components/docs-flow/docs-list.svelte
- LastEditTime : 2024-10-01 21:20:02
+ LastEditTime : 2024-10-03 14:26:17
  Description  : 
 
  显示所有的文档
@@ -29,7 +29,8 @@
         const blocks: Block[] = await getBlocksByIds(...allDocIds);
         blocks.forEach((block: Block) => {
             docInfo[block.id] = {
-                title: truncateString(block.fcontent || block.content, 30),
+                // title: truncateString(block.fcontent || block.content, 40),
+                title: block.fcontent || block.content,
                 hpath: block.hpath,
                 box: notebooks?.[block.box] || ""
             };
@@ -39,11 +40,11 @@
         scrollToFirstLoadedItem();
     });
 
-    function truncateString(str: string, maxLength: number): string {
-        return str.length > maxLength
-            ? str.substring(0, maxLength) + "..."
-            : str;
-    }
+    // function truncateString(str: string, maxLength: number): string {
+    //     return str.length > maxLength
+    //         ? str.substring(0, maxLength) + "..."
+    //         : str;
+    // }
 
     function isLoaded(id: BlockId): boolean {
         return loadedDocIds.includes(id);
@@ -65,13 +66,13 @@
     <h3>Documents List</h3>
     <ul>
         {#each allDocIds as docId, index}
-            <li class:loaded={isLoaded(docId)}>
+            <li class:loaded={isLoaded(docId)} data-node-id={docId}>
                 <span class="doc-number">{index + 1}.</span>
-                <span class="doc-title"
-                    >{docInfo[docId]?.title || `Document ${index + 1}`}</span
-                >
+                <span class="doc-title">
+                    {docInfo[docId]?.title || `Document ${index + 1}`}
+                </span>
                 <span class="doc-hpath">{docInfo[docId]?.box}{docInfo[docId]?.hpath || ""}</span>
-                <button class="jump-button" on:click={() => scrollToDoc(docId)}>
+                <button class="jump-button popover__block" data-id={docId} on:click={() => scrollToDoc(docId)}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -123,6 +124,11 @@
         /* border-radius: 4px; */
         border-radius: 0px;
         transition: background-color 0.3s ease;
+        cursor: default;
+
+        &:hover {
+            color: var(--b3-theme-primary);
+        }
     }
 
     li.loaded {
@@ -147,12 +153,17 @@
     .doc-title {
         flex-grow: 1;
         margin-right: 10px;
+        /* 隐藏超过限度的文字 */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .doc-hpath {
         font-size: 12px;
         color: var(--b3-theme-on-surface-light);
         margin-right: 10px;
+        white-space: nowrap;
     }
 
     .jump-button {

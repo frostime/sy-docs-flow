@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2024-10-01 22:10:11
+ LastEditTime : 2024-10-03 14:10:48
  Description  : 
 -->
 <script lang="ts">
@@ -67,9 +67,10 @@
         }
         //然后再滚动到指定文档
         const queryAndScroll = () => {
-            const ele = document.querySelector(`.docs-flow__doc[data-node-id="${id}"]`);
+            const ele = document.querySelector(`.docs-flow__doc[data-node-id="${id}"] > .protyle-breadcrumb__item`);
             if (ele) {
-                ele.scrollIntoView({ behavior: "smooth" });
+                // ele.scrollIntoView({ behavior: "smooth", block: "start" });
+                ele.scrollIntoView(true);
                 return true;
             }
             return false;
