@@ -3,7 +3,7 @@
  Author       : frostime
  Date         : 2024-10-01 20:33:19
  FilePath     : /src/components/docs-flow/docs-list.svelte
- LastEditTime : 2024-10-03 14:26:17
+ LastEditTime : 2024-11-17 18:41:11
  Description  : 
 
  显示所有的文档
@@ -57,7 +57,7 @@
     function scrollToFirstLoadedItem() {
         const firstLoadedItem = document.querySelector(".loaded");
         if (firstLoadedItem) {
-            firstLoadedItem.scrollIntoView({ behavior: "smooth" });
+            firstLoadedItem.scrollIntoView({ behavior: "instant" });
         }
     }
 </script>
