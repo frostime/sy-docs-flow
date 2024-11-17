@@ -3,7 +3,7 @@
  * @Author       : Yp Z
  * @Date         : 2023-07-29 15:17:15
  * @FilePath     : /src/rules.ts
- * @LastEditTime : 2024-06-15 15:46:33
+ * @LastEditTime : 2024-11-17 18:32:47
  * @Description  : 
  */
 import { showMessage, fetchPost } from "siyuan";
@@ -255,10 +255,17 @@ class DocBacklinks extends MatchRule {
         let resultIds = [];
         for (let backlink of backlinks) {
             backlink.backlinks.forEach((item) => {
-                if (item?.blockPaths) {
-                    const blockPaths = item.blockPaths;
-                    //这个 API 挺好的地方在于会自动处理 li&p 问题
-                    resultIds.push(blockPaths[blockPaths.length - 1].id);
+                // if (item?.blockPaths) {
+                //     const blockPaths = item.blockPaths;
+                //     //这个 API 挺好的地方在于会自动处理 li&p 问题
+                //     resultIds.push(blockPaths[blockPaths.length - 1].id);
+                // }
+                if (item.dom) {
+                    const html = item.dom;
+                    const ele = document.createElement('div');
+                    ele.innerHTML = html;
+                    const id = ele.firstElementChild.getAttribute('data-node-id');
+                    resultIds.push(id);
                 }
             });
         }
@@ -307,9 +314,16 @@ class DocBackmentions extends MatchRule {
         let resultIds = [];
         for (let backmention of backmentions) {
             backmention.backmentions.forEach((item) => {
-                if (item?.blockPaths) {
-                    const blockPaths = item.blockPaths;
-                    resultIds.push(blockPaths[blockPaths.length - 1].id);
+                // if (item?.blockPaths) {
+                //     const blockPaths = item.blockPaths;
+                //     resultIds.push(blockPaths[blockPaths.length - 1].id);
+                // }
+                if (item.dom) {
+                    const html = item.dom;
+                    const ele = document.createElement('div');
+                    ele.innerHTML = html;
+                    const id = ele.firstElementChild.getAttribute('data-node-id');
+                    resultIds.push(id);
                 }
             });
         }
