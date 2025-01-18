@@ -3,12 +3,13 @@
  Author       : Yp Z
  Date         : 2023-07-28 21:14:31
  FilePath     : /src/components/docs-flow/protyle.svelte
- LastEditTime : 2024-06-15 21:34:59
+ LastEditTime : 2025-01-18 16:46:30
  Description  : 
 -->
 <script lang="ts">
     import { onDestroy, onMount, afterUpdate } from "svelte";
-    import { Protyle, type TProtyleAction, openTab } from "siyuan";
+    import { Protyle, openTab } from "siyuan";
+    // import { type TProtyleAction } from "siyuan";
     import { getBlockByID } from "../../api";
     import { notebooks } from "../../utils";
 
@@ -34,7 +35,7 @@
         // scrollingChanged: false,
     };
 
-    let scroll: boolean = config.scroll;
+    // let scroll: boolean = config.scroll;
 
     let hpath: string = "";
     let divProtyle: HTMLDivElement;
@@ -47,7 +48,7 @@
 
     let styleProtyleMaxHeight: string = "";
     const updateProtyleMaxHeight = () => {
-        let maxHeight: number = scroll ? setting.getMaxHeight() : null;
+        let maxHeight: number = config.scroll ? setting.getMaxHeight() : null;
         if (maxHeight) {
             maxHeight = maxHeight - (displayCollapseBar ? heightBreadcrumb : 0);
         }
@@ -112,28 +113,33 @@
         }
     });
 
-    function whichAction(): TProtyleAction[] {
-        if (thisBlock.type == "d") {
-            return ["cb-get-context"];
-        } else {
-            return ["cb-get-all"];
-        }
-    }
+    // function whichAction(): TProtyleAction[] {
+    //     if (thisBlock.type == "d") {
+    //         return ["cb-get-context"];
+    //     } else {
+    //         return ["cb-get-all"];
+    //     }
+    // }
 
     function load() {
         if (!divProtyle) {
             return;
         }
         updateProtyleMaxHeight();
+        console.log("load protyle", {
+            title: config.protyleTitle,
+            mode: config.readonly ? "preview" : "wysiwyg",
+            scroll: config.scroll,
+        });
         protyle = new Protyle(app, divProtyle, {
             mode: config.readonly ? "preview" : "wysiwyg",
-            action: whichAction(),
+            action: ["cb-get-all"],
             blockId: blockId,
             render: {
                 background: false,
                 title: config.protyleTitle,
                 gutter: true,
-                scroll: scroll,
+                scroll: config.scroll,
                 breadcrumb: true,
                 breadcrumbDocName: false,
             },
