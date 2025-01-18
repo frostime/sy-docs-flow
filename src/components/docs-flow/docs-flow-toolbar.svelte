@@ -24,7 +24,7 @@
     let showToolbar: boolean = false;
 
     const getAllDocIds = getContext("getAllDocIds") as () => BlockId[];
-    const getLoadedDocIds = getContext("getLoadedDocIds") as () => BlockId[];
+    // const getLoadedDocIds = getContext("getLoadedDocIds") as () => BlockId[];
     const jumpToDoc = getContext("jumpToDoc") as (id: BlockId) => void;
 
     function onConfigChanged() {
@@ -169,7 +169,36 @@
         });
     };
 
+    const getDocsFlow = getContext("docsFlow") as () => HTMLElement;
+
+    const getCurrentProtyle = (): BlockId[] => {
+        const docsFlow = getDocsFlow();
+        if (!docsFlow) return [];
+
+        // 获取容器在视口中的实际可见位置
+        const rect = docsFlow.getBoundingClientRect();
+        const visibleTop = rect.top;
+        const visibleBottom = rect.bottom;
+
+        const protyles = docsFlow.querySelectorAll(".docs-flow__doc");
+        const visibleIds: BlockId[] = [];
+
+        protyles.forEach((protyle: HTMLElement) => {
+            const protyleRect = protyle.getBoundingClientRect();
+            const id = protyle.getAttribute("data-node-id");
+
+            if (protyleRect.bottom > visibleTop && protyleRect.top < visibleBottom && id) {
+                visibleIds.push(id);
+            }
+        });
+
+        return visibleIds;
+    };
+
     const showDocsFlowOutline = () => {
+        const ids = getCurrentProtyle();
+        // console.log(visibleIds);
+
         const { close } = svelteDialog({
             title: "Outline",
             constructor: (container: HTMLElement) => {
@@ -177,7 +206,7 @@
                     target: container,
                     props: {
                         allDocIds: getAllDocIds(),
-                        loadedDocIds: getLoadedDocIds(),
+                        hightlightIds: ids || [],
                         jumpToDoc: (id: BlockId) => {
                             jumpToDoc(id);
                             close();

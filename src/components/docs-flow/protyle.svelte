@@ -86,7 +86,7 @@
         let prefix = notebookName ? `/${notebookName}` : "";
         hpath = prefix + rootDoc.hpath;
 
-        console.debug("Mount protyle:", notebookName, hpath, blockId);
+        // console.debug("Mount protyle:", notebookName, hpath, blockId);
         Flag.initialised = true;
         ChangeStatus.collapseBarChanged = false; //TODO 这个解决方案很不优雅，后面有空改掉
         // ChangeStatus.scrollingChanged = false;
@@ -126,11 +126,11 @@
             return;
         }
         updateProtyleMaxHeight();
-        console.log("load protyle", {
-            title: config.protyleTitle,
-            mode: config.readonly ? "preview" : "wysiwyg",
-            scroll: config.scroll,
-        });
+        // console.log("load protyle", {
+        //     title: config.protyleTitle,
+        //     mode: config.readonly ? "preview" : "wysiwyg",
+        //     scroll: config.scroll,
+        // });
         protyle = new Protyle(app, divProtyle, {
             mode: config.readonly ? "preview" : "wysiwyg",
             action: ["cb-get-all"],
