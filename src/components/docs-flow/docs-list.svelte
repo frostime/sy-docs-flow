@@ -3,7 +3,7 @@
  Author       : frostime
  Date         : 2024-10-01 20:33:19
  FilePath     : /src/components/docs-flow/docs-list.svelte
- LastEditTime : 2024-11-17 18:41:11
+ LastEditTime : 2025-01-18 19:20:08
  Description  : 
 
  显示所有的文档
@@ -20,7 +20,7 @@
     import { onMount } from "svelte";
 
     export let allDocIds: BlockId[];
-    export let loadedDocIds: BlockId[];
+    export let hightlightIds: BlockId[];
     export let jumpToDoc: (id: BlockId) => void;
 
     let docInfo: Record<BlockId, { title: string; hpath: string; box: string }> = {};
@@ -47,7 +47,7 @@
     // }
 
     function isLoaded(id: BlockId): boolean {
-        return loadedDocIds.includes(id);
+        return hightlightIds.includes(id);
     }
 
     function scrollToDoc(id: BlockId) {

@@ -24,7 +24,7 @@
     let showToolbar: boolean = false;
 
     const getAllDocIds = getContext("getAllDocIds") as () => BlockId[];
-    const getLoadedDocIds = getContext("getLoadedDocIds") as () => BlockId[];
+    // const getLoadedDocIds = getContext("getLoadedDocIds") as () => BlockId[];
     const jumpToDoc = getContext("jumpToDoc") as (id: BlockId) => void;
 
     function onConfigChanged() {
@@ -169,7 +169,35 @@
         });
     };
 
+    const getDocsFlow = getContext("docsFlow") as () => HTMLElement;
+
+    const getCurrentProtyle = (): BlockId[] => {
+        const docsFlow = getDocsFlow();
+        if (!docsFlow) return [];
+
+        // 获取容器在视口中的实际可见位置
+        const rect = docsFlow.getBoundingClientRect();
+        const visibleTop = rect.top;
+        const visibleBottom = rect.bottom;
+
+        const protyles = docsFlow.querySelectorAll(".docs-flow__doc");
+        const visibleIds: BlockId[] = [];
+
+        protyles.forEach((protyle: HTMLElement) => {
+            const protyleRect = protyle.getBoundingClientRect();
+            const id = protyle.getAttribute("data-node-id");
+
+            if (protyleRect.bottom > visibleTop && protyleRect.top < visibleBottom && id) {
+                visibleIds.push(id);
+            }
+        });
+
+        return visibleIds;
+    };
+
     const showDocsFlowOutline = () => {
+        const ids = getCurrentProtyle();
+        // console.log(visibleIds);
 
         const { close } = svelteDialog({
             title: "Outline",
@@ -178,11 +206,11 @@
                     target: container,
                     props: {
                         allDocIds: getAllDocIds(),
-                        loadedDocIds: getLoadedDocIds(),
+                        hightlightIds: ids || [],
                         jumpToDoc: (id: BlockId) => {
                             jumpToDoc(id);
                             close();
-                        }
+                        },
                     },
                 });
             },
@@ -205,7 +233,7 @@
 </script>
 
 <div
-    class="docs-flow__toolbar {classNamePin}"
+    class="docs-flow__toolbar {classNamePin} {isMobile() ? 'is-mobile' : ''}"
     on:mouseenter={() => {
         if (pinToolbar) return;
         showToolbar = true;
@@ -248,7 +276,7 @@
             </svg>
 
             <svg
-                class="svg-button ariaLabel"
+                class="svg-button ariaLabel hide-if-very-narrow"
                 aria-label={i18n.button.reverse}
                 on:click={() => {
                     listDocumentIds = listDocumentIds.reverse();
@@ -260,7 +288,7 @@
             </svg>
 
             <svg
-                class="svg-button ariaLabel"
+                class="svg-button ariaLabel hide-if-very-narrow"
                 aria-label={i18n.button.edit}
                 on:click={editRuleValue}
                 on:keypress={() => {}}
@@ -294,7 +322,7 @@
 
             <input
                 id="displayBreadcrumb"
-                class="b3-switch fn__flex-center"
+                class="b3-switch fn__flex-center hide-if-very-narrow"
                 type="checkbox"
                 bind:checked={config.breadcrumb}
                 on:change={onConfigChanged}
@@ -312,13 +340,16 @@
                 class="fn__flex {isMobile() ? 'fn__none' : ''}"
                 style="gap: 5px;"
             >
-                <button class="b3-button hide-if-need" on:click={onRenameThis}
+                <button class="b3-button hide-if-narrow" on:click={onRenameThis}
                     >{i18n.nameTab}</button
                 >
-                <button class="b3-button" on:click={onSaveThis}>
+                <button
+                    class="b3-button hide-if-very-narrow"
+                    on:click={onSaveThis}
+                >
                     {i18n.saveRule}
                 </button>
-                <button class="b3-button hide-if-need" on:click={onCopyLink}>
+                <button class="b3-button hide-if-narrow" on:click={onCopyLink}>
                     {i18n.copyLink}
                 </button>
             </div>
@@ -330,17 +361,22 @@
     .docs-flow__toolbar {
         height: 3rem;
         padding: 0;
-
         position: absolute;
+
+        --width: 70%;
+        --left: calc(calc(100% - var(--width)) / 2);
+
         width: var(--width);
         left: var(--left);
 
         top: 15px;
         z-index: 10;
-
         display: flex;
         justify-content: center;
         align-items: center;
+
+        container-type: inline-size;
+        container-name: docs-flow-toolbar;
     }
 
     .docs-flow__toolbar section.docs-flow__toolbar-body {
@@ -348,11 +384,9 @@
         flex-wrap: wrap;
         align-items: center;
         gap: 5px;
-
         padding: 4px 5px;
-        width: 600px;
-        height: 30px;
 
+        height: 30px;
         background-color: var(--b3-theme-surface);
         opacity: 1;
         border-radius: 10px;
@@ -360,10 +394,46 @@
             0 0.5em 1em -0.125em var(--b3-theme-primary-light),
             0 0 0 1px var(--b3-theme-primary-light);
 
-        overflow: hidden; /* 添加这行以隐藏溢出的内容 */
-
         #space {
             flex: 1;
+        }
+
+        flex-wrap: nowrap;
+
+        @container docs-flow-toolbar (max-width: 600px) {
+            .b3-label__text {
+                display: none;
+            }
+            .hide-if-narrow {
+                display: none;
+            }
+        }
+
+        @container docs-flow-toolbar (max-width: 400px) {
+            .hide-if-very-narrow {
+                display: none;
+            }
+        }
+    }
+
+    .docs-flow__toolbar.is-mobile {
+        --width: 90%;
+        top: 25px;
+        section.docs-flow__toolbar-body {
+            width: 70%;
+            min-width: max-content;
+        }
+    }
+    .docs-flow__toolbar:not(.is-mobile) {
+        --width: 80%;
+
+        section.docs-flow__toolbar-body {
+            @container docs-flow-toolbar (min-width: 720px) {
+                width: 720px;
+            }
+            @container docs-flow-toolbar (max-width: 720px) {
+                width: 100%;
+            }
         }
     }
 

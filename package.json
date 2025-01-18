@@ -1,6 +1,6 @@
 {
   "name": "sy-docs-flow",
-  "version": "0.12.3",
+  "version": "0.13.0",
   "type": "module",
   "description": "",
   "repository": "",
@@ -8,14 +8,15 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "make-link": "node  --no-warnings ./scripts/make_dev_link.js",
-    "dev": "vite build --watch",
-    "build": "vite build"
+    "dev": "cross-env NODE_ENV=development VITE_SOURCEMAP=inline vite build --watch",
+    "build": "cross-env NODE_ENV=production vite build",
+    "make-install": "vite build && npx make-install"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.5.3",
     "@tsconfig/svelte": "^5.0.4",
     "@types/node": "^20.2.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.42.0",
     "fast-glob": "^3.2.12",
     "glob": "^10.4.5",
@@ -23,7 +24,7 @@
     "minimist": "^1.2.8",
     "rollup-plugin-livereload": "^2.0.5",
     "sass": "^1.62.1",
-    "siyuan": "^1.0.3",
+    "siyuan": "^1.0.8",
     "svelte": "^4.2.19",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
