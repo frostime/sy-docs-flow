@@ -2,7 +2,7 @@
   "name": "sy-docs-flow",
   "author": "frostime",
   "url": "https://github.com/frostime/sy-docs-flow",
-  "version": "0.12.3",
+  "version": "0.13.0",
   "minAppVersion": "3.1.10",
   "backends": [
     "all"

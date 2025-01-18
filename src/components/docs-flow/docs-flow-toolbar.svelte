@@ -170,7 +170,6 @@
     };
 
     const showDocsFlowOutline = () => {
-
         const { close } = svelteDialog({
             title: "Outline",
             constructor: (container: HTMLElement) => {
@@ -182,7 +181,7 @@
                         jumpToDoc: (id: BlockId) => {
                             jumpToDoc(id);
                             close();
-                        }
+                        },
                     },
                 });
             },
@@ -205,7 +204,7 @@
 </script>
 
 <div
-    class="docs-flow__toolbar {classNamePin}"
+    class="docs-flow__toolbar {classNamePin} {isMobile() ? 'is-mobile' : ''}"
     on:mouseenter={() => {
         if (pinToolbar) return;
         showToolbar = true;
@@ -248,7 +247,7 @@
             </svg>
 
             <svg
-                class="svg-button ariaLabel"
+                class="svg-button ariaLabel hide-if-very-narrow"
                 aria-label={i18n.button.reverse}
                 on:click={() => {
                     listDocumentIds = listDocumentIds.reverse();
@@ -260,7 +259,7 @@
             </svg>
 
             <svg
-                class="svg-button ariaLabel"
+                class="svg-button ariaLabel hide-if-very-narrow"
                 aria-label={i18n.button.edit}
                 on:click={editRuleValue}
                 on:keypress={() => {}}
@@ -294,14 +293,16 @@
 
             <input
                 id="displayBreadcrumb"
-                class="b3-switch fn__flex-center"
+                class="b3-switch fn__flex-center hide-if-very-narrow"
                 type="checkbox"
                 bind:checked={config.breadcrumb}
                 on:change={onConfigChanged}
             />
 
             <button
-                class="b3-button {isMobile() ? 'b3-button--text' : ''}"
+                class="b3-button {isMobile()
+                    ? 'b3-button--text'
+                    : ''}"
                 on:click={onOpenConfig}
             >
                 {i18n.button.moreConfig}
@@ -312,13 +313,16 @@
                 class="fn__flex {isMobile() ? 'fn__none' : ''}"
                 style="gap: 5px;"
             >
-                <button class="b3-button hide-if-need" on:click={onRenameThis}
+                <button class="b3-button hide-if-narrow" on:click={onRenameThis}
                     >{i18n.nameTab}</button
                 >
-                <button class="b3-button" on:click={onSaveThis}>
+                <button
+                    class="b3-button hide-if-very-narrow"
+                    on:click={onSaveThis}
+                >
                     {i18n.saveRule}
                 </button>
-                <button class="b3-button hide-if-need" on:click={onCopyLink}>
+                <button class="b3-button hide-if-narrow" on:click={onCopyLink}>
                     {i18n.copyLink}
                 </button>
             </div>
@@ -330,17 +334,22 @@
     .docs-flow__toolbar {
         height: 3rem;
         padding: 0;
-
         position: absolute;
+
+        --width: 70%;
+        --left: calc(calc(100% - var(--width)) / 2);
+
         width: var(--width);
         left: var(--left);
 
         top: 15px;
         z-index: 10;
-
         display: flex;
         justify-content: center;
         align-items: center;
+
+        container-type: inline-size;
+        container-name: docs-flow-toolbar;
     }
 
     .docs-flow__toolbar section.docs-flow__toolbar-body {
@@ -348,11 +357,9 @@
         flex-wrap: wrap;
         align-items: center;
         gap: 5px;
-
         padding: 4px 5px;
-        width: 600px;
-        height: 30px;
 
+        height: 30px;
         background-color: var(--b3-theme-surface);
         opacity: 1;
         border-radius: 10px;
@@ -360,10 +367,50 @@
             0 0.5em 1em -0.125em var(--b3-theme-primary-light),
             0 0 0 1px var(--b3-theme-primary-light);
 
-        overflow: hidden; /* 添加这行以隐藏溢出的内容 */
-
         #space {
             flex: 1;
+        }
+
+        flex-wrap: nowrap;
+
+        @container docs-flow-toolbar (max-width: 600px) {
+            .b3-label__text {
+                display: none;
+            }
+            .hide-if-narrow {
+                display: none;
+            }
+        }
+
+        @container docs-flow-toolbar (max-width: 400px) {
+            .hide-if-very-narrow {
+                display: none;
+            }
+        }
+    }
+
+    .docs-flow__toolbar.is-mobile {
+        --width: 95%;
+    }
+    .docs-flow__toolbar:not(.is-mobile) {
+        @container docs-flow (min-width: 1000px) {
+            --width: 72%;
+        }
+
+        @container docs-flow (max-width: 800px) {
+            --width: 90%;
+        }
+
+        section.docs-flow__toolbar-body {
+            @container docs-flow-toolbar (min-width: 720px) {
+                width: 720px;
+            }
+            @container docs-flow-toolbar (max-width: 720px) {
+                max-width: 100%;
+            }
+            @container docs-flow-toolbar (max-width: 400px) {
+                width: 100%;
+            }
         }
     }
 
