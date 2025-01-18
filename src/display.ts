@@ -72,7 +72,7 @@ export class TabHub {
             this.plugin.saveRule(rule);
         });
         flow.$on("renameThis", ({ detail }) => {
-            console.log("renameThis", detail);
+            // console.log("renameThis", detail);
             let ruleHash = detail.ruleHash;
             const rule = this.tabs[ruleHash].rule;
 
@@ -112,7 +112,7 @@ export class TabHub {
             },
             destroy: () => {
                 delete Tabs[hash];
-                console.log("destroy tab:", hash);
+                // console.log("destroy tab:", hash);
             }
         });
         this.tabs[hash] = {
@@ -124,7 +124,7 @@ export class TabHub {
 
     private openTab(hash: any, title?: string) {
         // let tab = this.tabs[hash].tab;
-        console.log(`Open tab ${hash}`)
+        // console.log(`Open tab ${hash}`)
         let rule = this.tabs[hash].rule;
         title = title || rule.title;
         rule.title = title;
@@ -139,7 +139,7 @@ export class TabHub {
             keepCursor: false,
             removeCurrentTab: true
         }).then(tab => {
-            console.log(tab);
+            // console.log(tab);
             if (window.siyuan.config.fileTree.openFilesUseCurrentTab) {
                 let dblclickEvent = new MouseEvent('dblclick', {
                     view: window,

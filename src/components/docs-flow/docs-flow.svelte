@@ -3,7 +3,7 @@
  Author       : Yp Z
  Date         : 2023-07-28 20:49:27
  FilePath     : /src/components/docs-flow/docs-flow.svelte
- LastEditTime : 2025-01-18 17:31:07
+ LastEditTime : 2025-01-18 18:40:13
  Description  : 
 -->
 <script lang="ts">
@@ -208,9 +208,10 @@
 
     //全局 css，用于隐藏gutter
     let hideGutterClass: "" | "hide-gutter" = "";
+    let container: HTMLElement;
 </script>
 
-<main class="docs-flow-container">
+<main class="docs-flow-container" bind:this={container}>
     <Toolbar
         bind:rule
         bind:config
@@ -237,12 +238,6 @@
 </main>
 
 <style lang="scss">
-    .docs-flow-container {
-        container-type: inline-size;
-        container-name: docs-flow;
-        width: 100%;
-        position: relative;
-    }
 
     .docs-flow {
         :global(div.docs-flow__protyle .protyle-breadcrumb) {

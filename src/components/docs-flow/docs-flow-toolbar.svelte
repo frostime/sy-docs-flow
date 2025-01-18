@@ -300,9 +300,7 @@
             />
 
             <button
-                class="b3-button {isMobile()
-                    ? 'b3-button--text'
-                    : ''}"
+                class="b3-button {isMobile() ? 'b3-button--text' : ''}"
                 on:click={onOpenConfig}
             >
                 {i18n.button.moreConfig}
@@ -390,25 +388,21 @@
     }
 
     .docs-flow__toolbar.is-mobile {
-        --width: 95%;
+        --width: 90%;
+        top: 25px;
+        section.docs-flow__toolbar-body {
+            width: 70%;
+            min-width: max-content;
+        }
     }
     .docs-flow__toolbar:not(.is-mobile) {
-        @container docs-flow (min-width: 1000px) {
-            --width: 72%;
-        }
-
-        @container docs-flow (max-width: 800px) {
-            --width: 90%;
-        }
+        --width: 80%;
 
         section.docs-flow__toolbar-body {
             @container docs-flow-toolbar (min-width: 720px) {
                 width: 720px;
             }
             @container docs-flow-toolbar (max-width: 720px) {
-                max-width: 100%;
-            }
-            @container docs-flow-toolbar (max-width: 400px) {
                 width: 100%;
             }
         }
