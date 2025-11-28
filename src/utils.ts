@@ -24,6 +24,7 @@ export const firstPara2Parent = async (ids: BlockId[]): Promise<BlockId[]> => {
     for (let id of ids) {
         result.push(id);
         let info = data[id];
+        if (!info) continue;
         if (info.type !== 'NodeParagraph') continue;
         if (info.previousID !== '') continue;
         if (!['NodeBlockquote', 'NodeListItem'].includes(info.parentType)) continue;
