@@ -244,6 +244,9 @@
 <style lang="scss">
 
     .docs-flow {
+        @media (max-width: 767px) {
+            width: 100vw;
+        }
         :global(div.docs-flow__protyle .protyle-breadcrumb) {
             display: var(--display-breadcrumb);
         }
