@@ -4,13 +4,13 @@
         "useDefineForClassFields": true,
         "module": "ESNext",
         "lib": [
-            "ES2020",
+            "ESNext",
             "DOM",
             "DOM.Iterable"
         ],
         "skipLibCheck": true,
         /* Bundler mode */
-        "moduleResolution": "Node",
+        "moduleResolution": "bundler",
         // "allowImportingTsExtensions": true,
         "allowSyntheticDefaultImports": true,
         "resolveJsonModule": true,

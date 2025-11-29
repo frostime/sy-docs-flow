@@ -10,8 +10,12 @@ import { Dialog } from "siyuan";
 import type { SvelteComponent } from "svelte";
 
 export const simpleDialog = (args: {
-    title: string, ele: HTMLElement | DocumentFragment,
-    width?: string, height?: string,
+    title: string;
+    ele: HTMLElement | DocumentFragment;
+    width?: string;
+    height?: string;
+    maxWidth?: string;
+    maxHeight?: string;
     callback?: () => void;
 }) => {
     const dialog = new Dialog({
@@ -22,6 +26,13 @@ export const simpleDialog = (args: {
         destroyCallback: args.callback
     });
     dialog.element.querySelector(".dialog-content").appendChild(args.ele);
+    const container = dialog.element.querySelector(".b3-dialog__container") as HTMLElement;
+    if (container) {
+        Object.assign(container.style, {
+            maxWidth: args.maxWidth,
+            maxHeight: args.maxHeight
+        });
+    }
     return dialog;
 }
 
