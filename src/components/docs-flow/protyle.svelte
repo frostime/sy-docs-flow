@@ -1,4 +1,3 @@
-<!-- @migration-task Error while migrating Svelte code: Can't migrate code with afterUpdate. Please migrate by hand. -->
 <!--
  Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
  Author       : Yp Z
@@ -8,7 +7,7 @@
  Description  : 
 -->
 <script lang="ts">
-    import { onDestroy, onMount, afterUpdate } from "svelte";
+    import { onDestroy, onMount, tick } from "svelte";
     import { Protyle, openTab } from "siyuan";
     // import { type TProtyleAction } from "siyuan";
     import { getBlockByID } from "../../api";
@@ -16,30 +15,29 @@
 
     import { setting } from "../../settings";
 
-    export let app: any;
-    export let index: number;
-    export let blockId: BlockId;
-    export let config: IConfig;
-    export let displayCollapseBar: boolean; // 当前是否显示折叠按钮
-    export let expanded: boolean = true;
+    interface Props {
+        app: any;
+        index: number;
+        blockId: BlockId;
+        config: IConfig;
+        displayCollapseBar: boolean;
+        expanded?: boolean;
+    }
+
+    let {
+        app,
+        index,
+        blockId,
+        config,
+        displayCollapseBar,
+        expanded = $bindable(true),
+    }: Props = $props();
 
     //状态标识符
-    const Flag = {
-        initialised: false,
-        // displayGutter: false
-    };
+    let initialised = $state(false);
 
-    //标识, 在执行一些不需要让 Protyle 重载的 DOM 操作时用到
-    //防止 afterUpdate 里面执行 Protyle 重载
-    const ChangeStatus = {
-        collapseBarChanged: false,
-        // scrollingChanged: false,
-    };
-
-    // let scroll: boolean = config.scroll;
-
-    let hpath: string = "";
-    let divProtyle: HTMLDivElement;
+    let hpath: string = $state("");
+    let divProtyle: HTMLDivElement = $state();
     let protyle: Protyle;
 
     let thisBlock: Block;
@@ -47,7 +45,7 @@
 
     let heightBreadcrumb: number = 40;
 
-    let styleProtyleMaxHeight: string = "";
+    let styleProtyleMaxHeight: string = $state("");
     const updateProtyleMaxHeight = () => {
         let maxHeight: number = config.scroll ? setting.getMaxHeight() : null;
         if (maxHeight) {
@@ -56,28 +54,15 @@
         styleProtyleMaxHeight = maxHeight ? `max-height: ${maxHeight}px;` : "";
     };
 
-    let styleDisplayLi: string = "";
-    $: {
-        styleDisplayLi = displayCollapseBar ? "" : "display: none;";
-        ChangeStatus.collapseBarChanged = true;
-    }
-
-    let classArrowOpen: string = "";
-    $: {
-        classArrowOpen = expanded ? "b3-list-item__arrow--open" : "";
-    }
+    let styleDisplayLi: string = $derived(
+        displayCollapseBar ? "" : "display: none;",
+    );
+    let classArrowOpen: string = $derived(
+        expanded ? "b3-list-item__arrow--open" : "",
+    );
 
     onMount(async () => {
         thisBlock = await getBlockByID(blockId);
-
-        //处理 li 下的段落块的特殊情况 @deprecated
-        // if (thisBlock.type == "p") {
-        //     let parentBlock: Block = await getBlockByID(thisBlock.parent_id);
-        //     if (parentBlock.type == "i") {
-        //         thisBlock = parentBlock;
-        //         blockId = thisBlock.id;
-        //     }
-        // }
 
         thisBlock.content = null; //不需要 content，减少占用
 
@@ -87,51 +72,58 @@
         let prefix = notebookName ? `/${notebookName}` : "";
         hpath = prefix + rootDoc.hpath;
 
-        // console.debug("Mount protyle:", notebookName, hpath, blockId);
-        Flag.initialised = true;
-        ChangeStatus.collapseBarChanged = false; //TODO 这个解决方案很不优雅，后面有空改掉
-        // ChangeStatus.scrollingChanged = false;
+        initialised = true;
+
+        // 初始化完成后，如果是展开状态则加载 protyle
+        await tick();
+        if (expanded && divProtyle) {
+            load();
+        }
     });
+
     onDestroy(() => {
-        // protyle?.destroy();
         unload();
     });
 
-    afterUpdate(async () => {
-        if (!Flag.initialised) {
-            return; //由于 onMunt 是 async 所以会出现还没有执行完毕就调用了 afterUpdate 的情况
-        }
+    // 监听 expanded 变化来加载/卸载 protyle
+    $effect(() => {
+        if (!initialised) return;
 
-        if (ChangeStatus.collapseBarChanged === true) {
-            ChangeStatus.collapseBarChanged = false;
-            return;
-        }
+        // 读取 expanded 来建立依赖
+        const shouldExpand = expanded;
 
-        if (divProtyle && expanded) {
-            load();
-        } else if (!divProtyle && !expanded) {
-            unload();
-        }
+        // 需要等待 DOM 更新后再操作
+        tick().then(() => {
+            if (shouldExpand && divProtyle) {
+                load();
+            } else if (!shouldExpand) {
+                unload();
+            }
+        });
     });
 
-    // function whichAction(): TProtyleAction[] {
-    //     if (thisBlock.type == "d") {
-    //         return ["cb-get-context"];
-    //     } else {
-    //         return ["cb-get-all"];
-    //     }
-    // }
+    // 监听 config 变化来重新加载 protyle
+    $effect(() => {
+        if (!initialised || !expanded) return;
+
+        // 读取 config 的关键属性来建立依赖
+        void [config.scroll, config.readonly, config.protyleTitle];
+
+        // 需要等待 DOM 更新后再操作
+        tick().then(() => {
+            if (divProtyle && protyle) {
+                // config 变化时，先卸载再重新加载
+                unload();
+                load();
+            }
+        });
+    });
 
     function load() {
-        if (!divProtyle) {
+        if (!divProtyle || protyle) {
             return;
         }
         updateProtyleMaxHeight();
-        // console.log("load protyle", {
-        //     title: config.protyleTitle,
-        //     mode: config.readonly ? "preview" : "wysiwyg",
-        //     scroll: config.scroll,
-        // });
         protyle = new Protyle(app, divProtyle, {
             mode: config.readonly ? "preview" : "wysiwyg",
             action: ["cb-get-all"],
@@ -148,21 +140,24 @@
     }
 
     function unload() {
-        // console.log('Unload protyle...', blockId);
         protyle?.destroy();
+        protyle = null;
     }
-
 </script>
 
-<div class="docs-flow__doc" style="min-height: {heightBreadcrumb}px;" data-node-id={blockId}>
+<div
+    class="docs-flow__doc"
+    style="min-height: {heightBreadcrumb}px;"
+    data-node-id={blockId}
+>
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
     <li
         class="b3-list-item b3-list-item--hide-action protyle-breadcrumb__item"
         style="gap: 5px; {styleDisplayLi}"
         data-node-id={blockId}
         data-type="NodeDocument"
-        on:keypress={() => {}}
-        on:click={(e) => {
+        onkeypress={() => {}}
+        onclick={(e) => {
             e.stopPropagation();
             if (e.ctrlKey) {
                 openTab({
@@ -177,11 +172,12 @@
             }
         }}
     >
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
         <span
             style="padding-left: 4px;margin-right: 2px"
             class="b3-list-item__toggle b3-list-item__toggle--hl"
-            on:keypress={() => {}}
-            on:click={(e) => {
+            onkeypress={() => {}}
+            onclick={(e) => {
                 expanded = !expanded;
                 e.stopPropagation();
             }}
@@ -203,8 +199,20 @@
             class="docs-flow__protyle"
             bind:this={divProtyle}
             style={styleProtyleMaxHeight}
-        />
+        ></div>
     {/if}
 </div>
 
-<style lang="scss">/*$$__STYLE_CONTENT__$$*/</style>
+<style lang="scss">
+    div.docs-flow__doc {
+        border-top: 3px solid var(--b3-theme-primary);
+        background-color: var(--b3-theme-background);
+    }
+    li.protyle-breadcrumb__item {
+        border-radius: 0;
+        border-bottom: 1px solid var(--b3-theme-primary);
+    }
+    div.docs-flow__protyle {
+        overflow-y: auto;
+    }
+</style>

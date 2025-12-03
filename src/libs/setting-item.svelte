@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     //Optional
     interface Props {
         type: string;
@@ -11,10 +9,12 @@
         placeholder?: string;
         options?: { [key: string]: string };
         slider?: {
-        min: number;
-        max: number;
-        step: number;
-    };
+            min: number;
+            max: number;
+            step: number;
+        };
+        onClick?: (detail: { key: string }) => void;
+        onChanged?: (detail: { key: string; value: any }) => void;
     }
 
     let {
@@ -25,17 +25,17 @@
         settingValue = $bindable(),
         placeholder = "",
         options = {},
-        slider = { min: 0, max: 100, step: 1 }
+        slider = { min: 0, max: 100, step: 1 },
+        onClick,
+        onChanged,
     }: Props = $props();
 
-    const dispatch = createEventDispatcher();
-
     function clicked() {
-        dispatch("clicked");
+        onClick?.({ key: settingKey });
     }
 
     function changed() {
-        dispatch("changed", { key: settingKey, value: settingValue });
+        onChanged?.({ key: settingKey, value: settingValue });
     }
 </script>
 

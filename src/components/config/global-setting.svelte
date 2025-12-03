@@ -22,16 +22,8 @@
     let focusGroup = $state(groups[0]);
 
     /********** Events **********/
-    interface ChangeEvent {
-        group: string;
-        key: string;
-        value: any;
-    }
-
-    const onChanged = ({ detail }: CustomEvent<ChangeEvent>) => {
-        if (detail.group === groups[0]) {
-            setting.set(detail.key, detail.value);
-        }
+    const handleChanged = (detail: { key: string; value: any }) => {
+        setting.set(detail.key, detail.value);
     };
 </script>
 
@@ -56,7 +48,7 @@
         <DefaultSetting
             group={groups[0]}
             display={focusGroup === groups[0]}
-            on:changed={onChanged}
+            onChanged={handleChanged}
         />
     </div>
 </div>

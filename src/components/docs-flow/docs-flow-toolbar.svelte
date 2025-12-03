@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { run } from "svelte/legacy";
-
     import { fly } from "svelte/transition";
 
     import { Dialog, showMessage } from "siyuan";
@@ -56,6 +54,7 @@
 
     function onOpenConfig() {
         console.log("onOpenConfig", config);
+        let changedConfig = {};
         let dialog = new Dialog({
             title: "Config",
             content: `<div id="SettingPanel" style="background: var(--b3-theme-background);"></div>`,
@@ -92,8 +91,7 @@
         });
         const ele: HTMLElement = dialog.element.querySelector("#SettingPanel");
         ele.style.height = "100%";
-        let changedConfig = {};
-        let settingComp = mount(DefaultSetting, {
+        mount(DefaultSetting, {
             target: ele,
             props: {
                 descriptioin: i18n.defaultSetting.descriptioinSpecific,
@@ -106,10 +104,10 @@
                     dynamicLoadingCapacity: config.dynamicLoading.capacity,
                     dynamicLoadingShift: config.dynamicLoading.shift,
                 },
+                onChanged: (detail: { key: string; value: any }) => {
+                    changedConfig[detail.key] = detail.value;
+                },
             },
-        });
-        settingComp.$on("changed", ({ detail }) => {
-            changedConfig[detail.key] = detail.value;
         });
     }
 
@@ -233,13 +231,11 @@
 
     /****** Pin toolbar ******/
     let pinToolbar = $state(false);
-    let classNamePin: "pin" | "unpin" = $state("unpin");
-    run(() => {
+    let classNamePin: "pin" | "unpin" = $derived(pinToolbar ? "pin" : "unpin");
+
+    $effect(() => {
         if (pinToolbar) {
             showToolbar = true;
-            classNamePin = "pin";
-        } else {
-            classNamePin = "unpin";
         }
     });
 </script>

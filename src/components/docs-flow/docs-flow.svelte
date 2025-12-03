@@ -9,7 +9,7 @@
 <script lang="ts">
     import { showMessage } from "siyuan";
     import Protyle from "./protyle.svelte";
-    import { createEventDispatcher, onMount, setContext } from "svelte";
+    import { onMount, setContext } from "svelte";
     import { throttle, firstPara2Parent, isMobile } from "@/utils";
 
     import Toolbar from "./docs-flow-toolbar.svelte";
@@ -20,16 +20,29 @@
         app: any;
         rule: MatchRule;
         listDocumentIds?: DocumentId[];
+        onConfigChanged?: (detail: {
+            ruleHash: string;
+            config: IConfig;
+        }) => void;
+        onSaveThis?: (detail: { ruleHash: string }) => void;
+        onRenameThis?: (detail: { ruleHash: string }) => void;
     }
 
-    let { app, rule = $bindable(), listDocumentIds = $bindable([]) }: Props = $props();
+    let {
+        app,
+        rule = $bindable(),
+        listDocumentIds = $bindable([]),
+        onConfigChanged,
+        onSaveThis,
+        onRenameThis,
+    }: Props = $props();
 
     // const ruleHash: string = rule.hash;
     let config: IConfig = $state(rule.config);
 
     let loadOffset: number = $state(0); //当前动态加载的文档偏移量
-    let loadLength: number = config.dynamicLoading.capacity; //每次动态加载的文档数量
-    let shiftLength: number = config.dynamicLoading.shift; //每次动态加载时的偏移量
+    let loadLength: number = $derived(config.dynamicLoading.capacity); //每次动态加载的文档数量
+    let shiftLength: number = $derived(config.dynamicLoading.shift); //每次动态加载时的偏移量
     let loadIdList: DocumentId[] = $state([]); //当前动态加载的文档列表
 
     setContext("getAllDocIds", () => {
@@ -151,7 +164,15 @@
 
     const shiftThrottle = throttle(shift, 600); //防止滚动过快导致的频繁加载
 
-    const dispatch = createEventDispatcher();
+    const dispatch = (key: string, detail: any) => {
+        if (key === "configChanged") {
+            onConfigChanged?.(detail);
+        } else if (key === "saveThis") {
+            onSaveThis?.(detail);
+        } else if (key === "renameThis") {
+            onRenameThis?.(detail);
+        }
+    };
 
     // 用于判断两个数字是否大致相等
     const approxEqual = (a, b, epsilon = 1) => {
@@ -215,7 +236,6 @@
     let docsFlow: HTMLElement = $state();
 
     setContext("docsFlow", () => docsFlow);
-
 </script>
 
 <main class="docs-flow-container">
@@ -246,7 +266,6 @@
 </main>
 
 <style lang="scss">
-
     .docs-flow {
         @media (max-width: 767px) {
             width: 100vw;

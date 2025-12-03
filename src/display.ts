@@ -2,7 +2,7 @@ import {
     showMessage,
     Dialog,
     openTab,
-    IModel,
+    type Custom,
 } from "siyuan";
 
 import type DocsFlowPlugin from ".";
@@ -16,7 +16,7 @@ export class TabHub {
     tabs: {
         [key: string]: {
             rule: MatchRule;
-            tab: () => IModel;
+            tab: () => Custom;
         }
     }
 
@@ -51,45 +51,40 @@ export class TabHub {
             props: {
                 app: this.plugin.app,
                 // listDocuemntsId: ids,
-                rule: rule
-            }
-        });
+                rule: rule,
+                onConfigChanged: ({ ruleHash, config }) => {
+                    console.log("configChanged", { ruleHash, config });
+                    const rule = this.tabs[ruleHash].rule;
+                    for (let key in config) {
+                        rule.config[key] = config[key];
+                        console.log("configChanged", key, config[key]);
+                    }
+                },
+                onSaveThis: ({ ruleHash }) => {
+                    console.log("saveThis", { ruleHash });
+                    const rule = this.tabs[ruleHash].rule;
+                    this.plugin.saveRule(rule);
+                },
+                onRenameThis: ({ ruleHash }) => {
+                    // console.log("renameThis", { ruleHash });
+                    const rule = this.tabs[ruleHash].rule;
 
-        flow.$on("configChanged", ({ detail }) => {
-            console.log("configChanged", detail);
-            let ruleHash = detail.ruleHash;
-            const rule = this.tabs[ruleHash].rule;
-            let config = detail.config;
-            for (let key in config) {
-                rule.config[key] = config[key];
-                console.log("configChanged", key, config[key]);
-            }
-        });
-        flow.$on("saveThis", ({ detail }) => {
-            console.log("saveThis", detail);
-            let ruleHash = detail.ruleHash;
-            const rule = this.tabs[ruleHash].rule;
-            this.plugin.saveRule(rule);
-        });
-        flow.$on("renameThis", ({ detail }) => {
-            // console.log("renameThis", detail);
-            let ruleHash = detail.ruleHash;
-            const rule = this.tabs[ruleHash].rule;
-
-            confirmDialog(i18n.renameRule,
-                `<input type="text" class="b3-text-field fn__block" value="${rule.title}">`,
-                (ele) => {
-                    let text: HTMLInputElement = ele.querySelector("input");
-                    let title = text.value;
-                    // console.log("rename", title);
-                    rule.title = title;
-                    const span: HTMLSpanElement = document.querySelector(
-                        "ul.layout-tab-bar>li.item--focus>span.item__text"
+                    confirmDialog(i18n.renameRule,
+                        `<input type="text" class="b3-text-field fn__block" value="${rule.title}">`,
+                        (ele) => {
+                            let text: HTMLInputElement = ele.querySelector("input");
+                            let title = text.value;
+                            // console.log("rename", title);
+                            rule.title = title;
+                            const span: HTMLSpanElement = document.querySelector(
+                                "ul.layout-tab-bar>li.item--focus>span.item__text"
+                            );
+                            span.innerText = title;
+                            showMessage(i18n.msg.saveDone);
+                        }
                     );
-                    span.innerText = title;
-                    showMessage(i18n.msg.saveDone);
                 }
-            );
+            }
         });
 
         const Tabs = this.tabs;
@@ -183,45 +178,43 @@ export class FullScreen {
             props: {
                 app: this.plugin.app,
                 // listDocuemntsId: ids,
-                rule: rule
-            }
-        });
+                rule: rule,
+                onConfigChanged: ({ ruleHash, config }) => {
+                    console.log("configChanged", { ruleHash, config });
+                    // let ruleHash = detail.ruleHash;
+                    const rule = this.rule;
+                    for (let key in config) {
+                        rule.config[key] = config[key];
+                        console.log("configChanged", key, config[key]);
+                    }
+                },
+                onSaveThis: ({ ruleHash }) => {
+                    console.log("saveThis", { ruleHash });
+                    // let ruleHash = detail.ruleHash;
+                    const rule = this.rule;
+                    this.plugin.saveRule(rule);
+                },
+                onRenameThis: ({ ruleHash }) => {
+                    console.log("renameThis", { ruleHash });
+                    // let ruleHash = detail.ruleHash;
+                    const rule = this.rule;
 
-        flow.$on("configChanged", ({ detail }) => {
-            console.log("configChanged", detail);
-            // let ruleHash = detail.ruleHash;
-            const rule = this.rule;
-            let config = detail.config;
-            for (let key in config) {
-                rule.config[key] = config[key];
-                console.log("configChanged", key, config[key]);
-            }
-        });
-        flow.$on("saveThis", ({ detail }) => {
-            console.log("saveThis", detail);
-            // let ruleHash = detail.ruleHash;
-            const rule = this.rule;
-            this.plugin.saveRule(rule);
-        });
-        flow.$on("renameThis", ({ detail }) => {
-            console.log("renameThis", detail);
-            // let ruleHash = detail.ruleHash;
-            const rule = this.rule;
-
-            confirmDialog(i18n.renameRule,
-                `<input type="text" class="b3-text-field fn__block" value="${rule.title}">`,
-                (ele) => {
-                    let text: HTMLInputElement = ele.querySelector("input");
-                    let title = text.value;
-                    // console.log("rename", title);
-                    rule.title = title;
-                    const span: HTMLSpanElement = document.querySelector(
-                        "ul.layout-tab-bar>li.item--focus>span.item__text"
+                    confirmDialog(i18n.renameRule,
+                        `<input type="text" class="b3-text-field fn__block" value="${rule.title}">`,
+                        (ele) => {
+                            let text: HTMLInputElement = ele.querySelector("input");
+                            let title = text.value;
+                            // console.log("rename", title);
+                            rule.title = title;
+                            const span: HTMLSpanElement = document.querySelector(
+                                "ul.layout-tab-bar>li.item--focus>span.item__text"
+                            );
+                            span.innerText = title;
+                            showMessage(i18n.msg.saveDone);
+                        }
                     );
-                    span.innerText = title;
-                    showMessage(i18n.msg.saveDone);
                 }
-            );
+            }
         });
 
         //Close the side panel

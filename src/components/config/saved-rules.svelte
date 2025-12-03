@@ -7,16 +7,15 @@
  Description  : 
 -->
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
     import { i18n } from "@/utils";
 
     interface Props {
         savedRules?: { [key: string]: IRule };
+        onCancel?: () => void;
+        onConfirm?: (savedRules: { [key: string]: IRule }) => void;
     }
 
-    let { savedRules = $bindable({}) }: Props = $props();
-
-    const dispatch = createEventDispatcher();
+    let { savedRules = $bindable({}), onCancel, onConfirm }: Props = $props();
 
     const deleteRule = (hash: string) => {
         // delete savedRules[hash];
@@ -38,11 +37,11 @@
     };
 
     const cancel = () => {
-        dispatch("cancel");
+        onCancel?.();
     };
 
     const confirm = () => {
-        dispatch("confirm", savedRules);
+        onConfirm?.(savedRules);
     };
 
     /********** Dragging **********/

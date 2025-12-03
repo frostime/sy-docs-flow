@@ -1,24 +1,25 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount } from "svelte";
+    import { onMount } from "svelte";
     import SettingPanel from "@/libs/setting-panel.svelte";
     import { setting } from "@/settings";
     import { i18n } from "@/utils";
 
     const I18N = i18n.defaultSetting;
 
-
     interface Props {
         group?: string;
         display?: boolean;
         settingValue?: any;
         descriptioin?: any;
+        onChanged?: (detail: { key: string; value: any }) => void;
     }
 
     let {
         group = "",
         display = true,
         settingValue = {},
-        descriptioin = I18N.descriptioin
+        descriptioin = I18N.descriptioin,
+        onChanged,
     }: Props = $props();
 
     const SettingItemsValue = {
@@ -92,10 +93,12 @@
         ];
     });
 
-    const dispatch = createEventDispatcher();
-
-    function onChanged({ detail }) {
-        dispatch("changed", detail);
+    function handleChanged({
+        detail,
+    }: {
+        detail: { key: string; value: any };
+    }) {
+        onChanged?.(detail);
     }
 </script>
 
@@ -103,17 +106,17 @@
     {group}
     settingItems={DefaultSettingItems}
     {display}
-    on:changed={onChanged}
+    onChanged={handleChanged}
 >
     {#snippet top()}
-        <div  class="fn__flex b3-label">
+        <div class="top-description fn__flex b3-label">
             💡 {descriptioin}
         </div>
     {/snippet}
 </SettingPanel>
 
 <style lang="scss">
-    div[slot="top"] {
+    .top-description {
         color: var(--b3-theme-primary);
         font-weight: bold;
         font-size: 1.2em;

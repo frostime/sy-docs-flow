@@ -7,15 +7,18 @@
  Description  : 
 -->
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
     import SettingItem from "./setting-item.svelte";
 
     interface Props {
         group: string;
         settingItems: ISettingItem[];
         display?: boolean;
-        top?: import('svelte').Snippet;
-        bottom?: import('svelte').Snippet;
+        top?: import("svelte").Snippet;
+        bottom?: import("svelte").Snippet;
+        onClick?: (detail: { key: string }) => void;
+        onChanged?: (detail: {
+            detail: { group: string; key: string; value: any };
+        }) => void;
     }
 
     let {
@@ -23,20 +26,19 @@
         settingItems,
         display = true,
         top,
-        bottom
+        bottom,
+        onClick,
+        onChanged,
     }: Props = $props();
 
-    const dispatch = createEventDispatcher();
-
-    function onClick( {detail}) {
-        dispatch("click", { key: detail.key });
+    function handleClick(detail: { key: string }) {
+        onClick?.({ key: detail.key });
     }
-    function onChanged( {detail}) {
-        dispatch("changed", {group: group, ...detail});
+    function handleChanged(detail: { key: string; value: any }) {
+        onChanged?.({ detail: { group: group, ...detail } });
     }
 
     let fn__none = $derived(display ? "" : "fn__none");
-
 </script>
 
 <div class="config__tab-container {fn__none}" data-name={group}>
@@ -51,8 +53,8 @@
             placeholder={item?.placeholder}
             options={item?.options}
             slider={item?.slider}
-            on:click={onClick}
-            on:changed={onChanged}
+            onClick={handleClick}
+            onChanged={handleChanged}
         />
     {/each}
     {@render bottom?.()}
