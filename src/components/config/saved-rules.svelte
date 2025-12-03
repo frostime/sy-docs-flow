@@ -10,7 +10,11 @@
     import { createEventDispatcher } from "svelte";
     import { i18n } from "@/utils";
 
-    export let savedRules: { [key: string]: IRule } = {};
+    interface Props {
+        savedRules?: { [key: string]: IRule };
+    }
+
+    let { savedRules = $bindable({}) }: Props = $props();
 
     const dispatch = createEventDispatcher();
 
@@ -84,30 +88,31 @@
         <div class="b3-menu__item" style="text-align: end;">
             {i18n.configSavedRule}
         </div>
-        <div class="b3-menu__separator" />
+        <div class="b3-menu__separator"></div>
         <div class="save-rule-list">
             {#each Object.entries(savedRules) as [hash, rule]}
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div
                     class="b3-menu__item"
                     draggable="true"
-                    on:dragstart={(e) => onDragStart(e, hash)}
-                    on:drop={(e) => onDrop(e, hash)}
-                    on:dragover={(e) => onDragOver(e)}
-                    on:dragend={() => onDragEnd()}
+                    ondragstart={(e) => onDragStart(e, hash)}
+                    ondrop={(e) => onDrop(e, hash)}
+                    ondragover={(e) => onDragOver(e)}
+                    ondragend={() => onDragEnd()}
                 >
                     <div
                         class="b3-menu__label"
                         contenteditable="true"
                         data-hash={hash}
-                        on:input={(e) => onTextChange(e)}
+                        oninput={(e) => onTextChange(e)}
                     >
                         {rule.title}
                     </div>
-                    <span class="fn__space" />
+                    <span class="fn__space"></span>
                     <svg
                         class="b3-menu__icon"
-                        on:click={() => deleteRule(hash)}
-                        on:keypress={() => {}}
+                        onclick={() => deleteRule(hash)}
+                        onkeypress={() => {}}
                     >
                         <use xlink:href="#iconClose" />
                     </svg>
@@ -121,11 +126,11 @@
     </div>
 </div>
 <div class="b3-dialog__action">
-    <button class="b3-button b3-button--cancel" on:click={() => cancel()}>
+    <button class="b3-button b3-button--cancel" onclick={() => cancel()}>
         {window.siyuan.languages.cancel}
     </button>
-    <div class="fn__space" />
-    <button class="b3-button b3-button--text" on:click={() => confirm()}>{
+    <div class="fn__space"></div>
+    <button class="b3-button b3-button--text" onclick={() => confirm()}>{
         window.siyuan.languages.confirm}
     </button>
 </div>

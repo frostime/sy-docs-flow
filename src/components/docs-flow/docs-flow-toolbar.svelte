@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from "svelte/legacy";
+
     import { fly } from "svelte/transition";
 
     import { Dialog, showMessage } from "siyuan";
@@ -9,19 +11,29 @@
     import { svelteDialog } from "@/libs/dialog";
 
     import DocsFlowOutline from "./docs-list.svelte";
-    import { getContext } from "svelte";
+    import { getContext, mount } from "svelte";
 
-    export let rule: MatchRule;
-    export let config: IConfig;
-    export let listDocumentIds: DocumentId[];
+    interface Props {
+        rule: MatchRule;
+        config: IConfig;
+        listDocumentIds: DocumentId[];
+        dispatch: (key: string, detail: any) => void;
+        reInit: () => void;
+        updateLoadIdList: () => void;
+    }
 
-    export let dispatch: (key: string, detail: any) => void;
-    export let reInit: () => void;
-    export let updateLoadIdList: () => void;
+    let {
+        rule = $bindable(),
+        config = $bindable(),
+        listDocumentIds = $bindable(),
+        dispatch,
+        reInit,
+        updateLoadIdList,
+    }: Props = $props();
 
     const ruleHash: string = rule.hash;
 
-    let showToolbar: boolean = false;
+    let showToolbar: boolean = $state(false);
 
     const getAllDocIds = getContext("getAllDocIds") as () => BlockId[];
     // const getLoadedDocIds = getContext("getLoadedDocIds") as () => BlockId[];
@@ -81,7 +93,7 @@
         const ele: HTMLElement = dialog.element.querySelector("#SettingPanel");
         ele.style.height = "100%";
         let changedConfig = {};
-        let settingComp = new DefaultSetting({
+        let settingComp = mount(DefaultSetting, {
             target: ele,
             props: {
                 descriptioin: i18n.defaultSetting.descriptioinSpecific,
@@ -120,7 +132,7 @@
     };
 
     /****** Button reload ******/
-    let svgRefresh: SVGElement;
+    let svgRefresh: SVGElement = $state();
     const onClickReload = () => {
         svgRefresh.classList.add("fn__rotate");
         svgRefresh.style.setProperty("background-color", "unset");
@@ -187,7 +199,11 @@
             const protyleRect = protyle.getBoundingClientRect();
             const id = protyle.getAttribute("data-node-id");
 
-            if (protyleRect.bottom > visibleTop && protyleRect.top < visibleBottom && id) {
+            if (
+                protyleRect.bottom > visibleTop &&
+                protyleRect.top < visibleBottom &&
+                id
+            ) {
                 visibleIds.push(id);
             }
         });
@@ -201,18 +217,14 @@
 
         const { close } = svelteDialog({
             title: "Outline",
-            constructor: (container: HTMLElement) => {
-                return new DocsFlowOutline({
-                    target: container,
-                    props: {
-                        allDocIds: getAllDocIds(),
-                        hightlightIds: ids || [],
-                        jumpToDoc: (id: BlockId) => {
-                            jumpToDoc(id);
-                            close();
-                        },
-                    },
-                });
+            component: DocsFlowOutline,
+            props: {
+                allDocIds: getAllDocIds(),
+                hightlightIds: ids || [],
+                jumpToDoc: (id: BlockId) => {
+                    jumpToDoc(id);
+                    close();
+                },
             },
             width: "1000px",
             height: "80%",
@@ -220,25 +232,26 @@
     };
 
     /****** Pin toolbar ******/
-    let pinToolbar = false;
-    let classNamePin: "pin" | "unpin" = "unpin";
-    $: {
+    let pinToolbar = $state(false);
+    let classNamePin: "pin" | "unpin" = $state("unpin");
+    run(() => {
         if (pinToolbar) {
             showToolbar = true;
             classNamePin = "pin";
         } else {
             classNamePin = "unpin";
         }
-    }
+    });
 </script>
 
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
     class="docs-flow__toolbar {classNamePin} {isMobile() ? 'is-mobile' : ''}"
-    on:mouseenter={() => {
+    onmouseenter={() => {
         if (pinToolbar) return;
         showToolbar = true;
     }}
-    on:mouseleave={() => {
+    onmouseleave={() => {
         if (pinToolbar) return;
         showToolbar = false;
     }}
@@ -259,8 +272,8 @@
             <svg
                 class="svg-button ariaLabel"
                 aria-label="Outline"
-                on:click={showDocsFlowOutline}
-                on:keypress={() => {}}
+                onclick={showDocsFlowOutline}
+                onkeypress={() => {}}
             >
                 <use xlink:href="#iconList"></use>
             </svg>
@@ -269,8 +282,8 @@
                 bind:this={svgRefresh}
                 class="svg-button ariaLabel"
                 aria-label={i18n.button.reload}
-                on:click={onClickReload}
-                on:keypress={() => {}}
+                onclick={onClickReload}
+                onkeypress={() => {}}
             >
                 <use xlink:href="#iconRefresh"></use>
             </svg>
@@ -278,11 +291,11 @@
             <svg
                 class="svg-button ariaLabel hide-if-very-narrow"
                 aria-label={i18n.button.reverse}
-                on:click={() => {
+                onclick={() => {
                     listDocumentIds = listDocumentIds.reverse();
                     updateLoadIdList();
                 }}
-                on:keypress={() => {}}
+                onkeypress={() => {}}
             >
                 <use xlink:href="#iconScrollVert"></use>
             </svg>
@@ -290,18 +303,18 @@
             <svg
                 class="svg-button ariaLabel hide-if-very-narrow"
                 aria-label={i18n.button.edit}
-                on:click={editRuleValue}
-                on:keypress={() => {}}
+                onclick={editRuleValue}
+                onkeypress={() => {}}
             >
                 <use xlink:href="#iconEdit"></use>
             </svg>
             <svg
                 class="svg-button ariaLabel"
                 aria-label={i18n.button.pin}
-                on:click={() => {
+                onclick={() => {
                     pinToolbar = !pinToolbar;
                 }}
-                on:keypress={() => {}}
+                onkeypress={() => {}}
             >
                 {#if pinToolbar}
                     <use xlink:href="#iconLock"></use>
@@ -310,7 +323,7 @@
                 {/if}
             </svg>
 
-            <div id="space" />
+            <div id="space"></div>
 
             <label
                 class="b3-label__text"
@@ -325,12 +338,12 @@
                 class="b3-switch fn__flex-center hide-if-very-narrow"
                 type="checkbox"
                 bind:checked={config.breadcrumb}
-                on:change={onConfigChanged}
+                onchange={onConfigChanged}
             />
 
             <button
                 class="b3-button {isMobile() ? 'b3-button--text' : ''}"
-                on:click={onOpenConfig}
+                onclick={onOpenConfig}
             >
                 {i18n.button.moreConfig}
             </button>
@@ -340,16 +353,16 @@
                 class="fn__flex {isMobile() ? 'fn__none' : ''}"
                 style="gap: 5px;"
             >
-                <button class="b3-button hide-if-narrow" on:click={onRenameThis}
+                <button class="b3-button hide-if-narrow" onclick={onRenameThis}
                     >{i18n.nameTab}</button
                 >
                 <button
                     class="b3-button hide-if-very-narrow"
-                    on:click={onSaveThis}
+                    onclick={onSaveThis}
                 >
                     {i18n.saveRule}
                 </button>
-                <button class="b3-button hide-if-narrow" on:click={onCopyLink}>
+                <button class="b3-button hide-if-narrow" onclick={onCopyLink}>
                     {i18n.copyLink}
                 </button>
             </div>

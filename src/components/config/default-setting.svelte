@@ -6,11 +6,20 @@
 
     const I18N = i18n.defaultSetting;
 
-    export let group: string = "";
-    export let display: boolean = true;
-    export let settingValue = {};
 
-    export let descriptioin = I18N.descriptioin;
+    interface Props {
+        group?: string;
+        display?: boolean;
+        settingValue?: any;
+        descriptioin?: any;
+    }
+
+    let {
+        group = "",
+        display = true,
+        settingValue = {},
+        descriptioin = I18N.descriptioin
+    }: Props = $props();
 
     const SettingItemsValue = {
         protyleScroll: setting.protyleScroll,
@@ -22,7 +31,7 @@
         dynamicLoadingShift: setting.dynamicLoadingShift,
     };
 
-    let DefaultSettingItems: ISettingItem[] = [];
+    let DefaultSettingItems: ISettingItem[] = $state([]);
 
     onMount(() => {
         for (let key in settingValue) {
@@ -96,9 +105,11 @@
     {display}
     on:changed={onChanged}
 >
-    <div slot="top" class="fn__flex b3-label">
-        💡 {descriptioin}
-    </div>
+    {#snippet top()}
+        <div  class="fn__flex b3-label">
+            💡 {descriptioin}
+        </div>
+    {/snippet}
 </SettingPanel>
 
 <style lang="scss">

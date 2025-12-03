@@ -1,19 +1,32 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    export let type: string; // Setting Type
-    export let title: string; // Displayint Setting Title
-    export let text: string; // Displaying Setting Text
-    export let settingKey: string;
-    export let settingValue: any;
 
     //Optional
-    export let placeholder: string = ""; // Use it if type is input
-    export let options: { [key: string]: string } = {}; // Use it if type is select
-    export let slider: {
+    interface Props {
+        type: string;
+        title: string;
+        text: string;
+        settingKey: string;
+        settingValue: any;
+        placeholder?: string;
+        options?: { [key: string]: string };
+        slider?: {
         min: number;
         max: number;
         step: number;
-    } = { min: 0, max: 100, step: 1 }; // Use it if type is slider
+    };
+    }
+
+    let {
+        type,
+        title,
+        text,
+        settingKey,
+        settingValue = $bindable(),
+        placeholder = "",
+        options = {},
+        slider = { min: 0, max: 100, step: 1 }
+    }: Props = $props();
 
     const dispatch = createEventDispatcher();
 
@@ -33,7 +46,7 @@
             {@html text}
         </div>
     </div>
-    <span class="fn__space" />
+    <span class="fn__space"></span>
     <!-- <slot /> -->
     {#if type === "checkbox"}
         <!-- Checkbox -->
@@ -42,7 +55,7 @@
             id={settingKey}
             type="checkbox"
             bind:checked={settingValue}
-            on:change={changed}
+            onchange={changed}
         />
     {:else if type === "input"}
         <!-- Text Input -->
@@ -51,7 +64,7 @@
             id={settingKey}
             {placeholder}
             bind:value={settingValue}
-            on:change={changed}
+            onchange={changed}
         />
     {:else if type === "number"}
         <input
@@ -59,14 +72,14 @@
             id={settingKey}
             type="number"
             bind:value={settingValue}
-            on:change={changed}
+            onchange={changed}
         />
     {:else if type === "button"}
         <!-- Button Input -->
         <button
             class="b3-button b3-button--outline fn__flex-center fn__size200"
             id={settingKey}
-            on:click={clicked}
+            onclick={clicked}
         >
             {settingValue}
         </button>
@@ -76,7 +89,7 @@
             class="b3-select fn__flex-center fn__size200"
             id={settingKey}
             bind:value={settingValue}
-            on:change={changed}
+            onchange={changed}
         >
             {#each Object.entries(options) as [value, text]}
                 <option {value}>{text}</option>
@@ -93,7 +106,7 @@
                 step={slider.step}
                 type="range"
                 bind:value={settingValue}
-                on:change={changed}
+                onchange={changed}
             />
         </div>
     {/if}

@@ -7,7 +7,7 @@
  * @Description  : 
  */
 import { Dialog } from "siyuan";
-import type { SvelteComponent } from "svelte";
+import { Component, mount, unmount } from "svelte";
 
 export const simpleDialog = (args: {
     title: string;
@@ -30,32 +30,46 @@ export const simpleDialog = (args: {
     if (container) {
         Object.assign(container.style, {
             maxWidth: args.maxWidth,
-            maxHeight: args.maxHeight
+            maxHeight: args.maxHeight ?? '95%'
         });
     }
-    return dialog;
+    return {
+        dialog,
+        close: dialog.destroy.bind(dialog)
+    };
 }
 
 
 export const svelteDialog = (args: {
-    title: string, constructor: (container: HTMLElement) => SvelteComponent,
-    width?: string, height?: string,
+    title: string,
+    component: Component<any>, // Svelte 5 component constructor
+    props?: Record<string, any>,
+    width?: string,
+    height?: string,
     callback?: () => void;
 }) => {
     let container = document.createElement('div')
     container.style.display = 'contents';
-    let component = args.constructor(container);
-    const dialog = simpleDialog({
-        ...args, ele: container, callback: () => {
-            component.$destroy();
-            if (args.callback) args.callback();;
+
+    // 内部处理 mount
+    let componentInstance = mount(args.component, {
+        target: container,
+        props: args.props || {}
+    });
+
+    const { dialog, close } = simpleDialog({
+        ...args,
+        ele: container,
+        callback: () => {
+            // 内部处理 unmount
+            unmount(componentInstance);
+            if (args.callback) args.callback();
         }
     });
+
     return {
-        component,
-        dialog: dialog,
-        close: () => {
-            dialog.destroy();
-        }
+        component: componentInstance,
+        dialog,
+        close
     }
 }

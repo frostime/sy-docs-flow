@@ -16,17 +16,21 @@
 
     import { type MatchRule } from "@/rules";
 
-    export let app: any;
-    export let rule: MatchRule;
-    export let listDocumentIds: DocumentId[] = []; //所有文档列表
+    interface Props {
+        app: any;
+        rule: MatchRule;
+        listDocumentIds?: DocumentId[];
+    }
+
+    let { app, rule = $bindable(), listDocumentIds = $bindable([]) }: Props = $props();
 
     // const ruleHash: string = rule.hash;
-    let config: IConfig = rule.config;
+    let config: IConfig = $state(rule.config);
 
-    let loadOffset: number = 0; //当前动态加载的文档偏移量
+    let loadOffset: number = $state(0); //当前动态加载的文档偏移量
     let loadLength: number = config.dynamicLoading.capacity; //每次动态加载的文档数量
     let shiftLength: number = config.dynamicLoading.shift; //每次动态加载时的偏移量
-    let loadIdList: DocumentId[] = []; //当前动态加载的文档列表
+    let loadIdList: DocumentId[] = $state([]); //当前动态加载的文档列表
 
     setContext("getAllDocIds", () => {
         return listDocumentIds;
@@ -207,8 +211,8 @@
     };
 
     //全局 css，用于隐藏gutter
-    let hideGutterClass: "" | "hide-gutter" = "";
-    let docsFlow: HTMLElement;
+    let hideGutterClass: "" | "hide-gutter" = $state("");
+    let docsFlow: HTMLElement = $state();
 
     setContext("docsFlow", () => docsFlow);
 

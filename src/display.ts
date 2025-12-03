@@ -9,7 +9,7 @@ import type DocsFlowPlugin from ".";
 import DocsFlow from "@/components/docs-flow/docs-flow.svelte";
 import { MatchRule } from "@/rules";
 import { confirmDialog, i18n } from "@/utils";
-
+import { mount, unmount } from "svelte";
 
 export class TabHub {
     plugin: DocsFlowPlugin;
@@ -46,7 +46,7 @@ export class TabHub {
 
         let tabDiv = document.createElement("div");
         tabDiv.classList.add("docs-flow-page");
-        let flow = new DocsFlow({
+        let flow = mount(DocsFlow, {
             target: tabDiv,
             props: {
                 app: this.plugin.app,
@@ -107,7 +107,7 @@ export class TabHub {
                 if (dynamicLoadingEnabled === true) {
                     this.element.removeEventListener("scroll", flow.onscroll);
                 }
-                flow?.$destroy();
+                unmount(flow);
                 tabDiv?.remove();
             },
             destroy: () => {
@@ -178,7 +178,7 @@ export class FullScreen {
 
         let tabDiv = document.createElement("div");
         tabDiv.classList.add("docs-flow-page", "fn__flex-1", "fn__flex");
-        let flow = new DocsFlow({
+        let flow = mount(DocsFlow, {
             target: tabDiv,
             props: {
                 app: this.plugin.app,
@@ -236,7 +236,7 @@ export class FullScreen {
             width: '100%',
             height: '100%',
             destroyCallback: () => {
-                flow.$destroy();
+                unmount(flow);
                 this.dialog = null;
             }
         });

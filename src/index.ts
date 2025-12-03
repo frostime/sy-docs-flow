@@ -15,6 +15,7 @@ import { MatchRule, RuleFactory } from "@/rules";
 import { setting } from "@/settings";
 
 import { TabHub, FullScreen } from "@/display";
+import { mount, unmount } from "svelte";
 
 // import { changelog } from "sy-plugin-changelog";
 
@@ -307,7 +308,7 @@ export default class DocsFlowPlugin extends Plugin {
                 let options = notebooks.map((n: Notebook) => {
                     return `<option value="${n.id}" ${lastOpen === n.id ? 'selected' : ''}>${n.name}</option>`;
                 });
-                
+
                 let html = `
                 <select class="b3-select fn__flex-center" style="width: 100%;">
                     ${options.join('\n')}
@@ -350,7 +351,7 @@ export default class DocsFlowPlugin extends Plugin {
                     });
                     dialog.element.style.maxHeight = "70%";
                     const div = dialog.element.querySelector("#AlterSavedRules");
-                    const compo = new SavedRules({
+                    const compo = mount(SavedRules, {
                         target: div,
                         props: {
                             savedRules: this.savedRules,
@@ -384,7 +385,7 @@ export default class DocsFlowPlugin extends Plugin {
                 menu.addItem(item);
             })
         }
-        
+
         // menu.addItem({
         //     label: "设置",
         //     icon: "iconSettings",
@@ -419,13 +420,13 @@ export default class DocsFlowPlugin extends Plugin {
             width: "780px",
             height: "500px",
             destroyCallback: () => {
-                pannel.$destroy();
+                unmount(pannel);
                 this.saveSetting();
             }
         });
         const ele: HTMLElement = dialog.element.querySelector("#SettingPanel");
         ele.style.height = "100%";
-        let pannel = new GlobalSetting({
+        let pannel = mount(GlobalSetting, {
             target: ele,
         });
     }

@@ -19,7 +19,7 @@
     import { setting } from "@/settings";
 
     let groups: string[] = ["🌈 Default"];
-    let focusGroup = groups[0];
+    let focusGroup = $state(groups[0]);
 
     /********** Events **********/
     interface ChangeEvent {
@@ -38,14 +38,15 @@
 <div class="fn__flex-1 fn__flex config__panel">
     <ul class="b3-tab-bar b3-list b3-list--background">
         {#each groups as group}
+            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
             <li
                 data-name="editor"
                 class:b3-list-item--focus={group === focusGroup}
                 class="b3-list-item"
-                on:click={() => {
+                onclick={() => {
                     focusGroup = group;
                 }}
-                on:keydown={() => {}}
+                onkeydown={() => {}}
             >
                 <span class="b3-list-item__text">{group}</span>
             </li>

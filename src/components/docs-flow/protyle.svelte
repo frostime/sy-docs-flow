@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Can't migrate code with afterUpdate. Please migrate by hand. -->
 <!--
  Copyright (c) 2023 by Yp Z (frostime). All Rights Reserved.
  Author       : Yp Z
@@ -154,6 +155,7 @@
 </script>
 
 <div class="docs-flow__doc" style="min-height: {heightBreadcrumb}px;" data-node-id={blockId}>
+    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
     <li
         class="b3-list-item b3-list-item--hide-action protyle-breadcrumb__item"
         style="gap: 5px; {styleDisplayLi}"
@@ -205,16 +207,4 @@
     {/if}
 </div>
 
-<style lang="scss">
-    div.docs-flow__doc {
-        border-top: 3px solid var(--b3-theme-primary);
-        background-color: var(--b3-theme-background);
-    }
-    li.protyle-breadcrumb__item {
-        border-radius: 0;
-        border-bottom: 1px solid var(--b3-theme-primary);
-    }
-    div.docs-flow__protyle {
-        overflow-y: auto;
-    }
-</style>
+<style lang="scss">/*$$__STYLE_CONTENT__$$*/</style>

@@ -10,9 +10,21 @@
     import { createEventDispatcher } from "svelte";
     import SettingItem from "./setting-item.svelte";
 
-    export let group: string;
-    export let settingItems: ISettingItem[];
-    export let display: boolean = true;
+    interface Props {
+        group: string;
+        settingItems: ISettingItem[];
+        display?: boolean;
+        top?: import('svelte').Snippet;
+        bottom?: import('svelte').Snippet;
+    }
+
+    let {
+        group,
+        settingItems,
+        display = true,
+        top,
+        bottom
+    }: Props = $props();
 
     const dispatch = createEventDispatcher();
 
@@ -23,12 +35,12 @@
         dispatch("changed", {group: group, ...detail});
     }
 
-    $: fn__none = display ? "" : "fn__none";
+    let fn__none = $derived(display ? "" : "fn__none");
 
 </script>
 
 <div class="config__tab-container {fn__none}" data-name={group}>
-    <slot name="top"/>
+    {@render top?.()}
     {#each settingItems as item (item.key)}
         <SettingItem
             type={item.type}
@@ -43,5 +55,5 @@
             on:changed={onChanged}
         />
     {/each}
-    <slot name="bottom"/>
+    {@render bottom?.()}
 </div>

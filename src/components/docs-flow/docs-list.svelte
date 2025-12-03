@@ -19,11 +19,15 @@
     import { notebooks } from "@/utils";
     import { onMount } from "svelte";
 
-    export let allDocIds: BlockId[];
-    export let hightlightIds: BlockId[];
-    export let jumpToDoc: (id: BlockId) => void;
+    interface Props {
+        allDocIds: BlockId[];
+        hightlightIds: BlockId[];
+        jumpToDoc: (id: BlockId) => void;
+    }
 
-    let docInfo: Record<BlockId, { title: string; hpath: string; box: string }> = {};
+    let { allDocIds, hightlightIds, jumpToDoc }: Props = $props();
+
+    let docInfo: Record<BlockId, { title: string; hpath: string; box: string }> = $state({});
 
     onMount(async () => {
         const blocks: Block[] = await getBlocksByIds(...allDocIds);
@@ -72,7 +76,8 @@
                     {docInfo[docId]?.title || `Document ${index + 1}`}
                 </span>
                 <span class="doc-hpath">{docInfo[docId]?.box}{docInfo[docId]?.hpath || ""}</span>
-                <button class="jump-button popover__block" data-id={docId} on:click={() => scrollToDoc(docId)}>
+                <!-- svelte-ignore a11y_consider_explicit_label -->
+                <button class="jump-button popover__block" data-id={docId} onclick={() => scrollToDoc(docId)}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
